@@ -4,4 +4,5 @@
     <string name="email">Correo Electrónico</string>
     <string name="password">Contraseña</string>
     <string name="signin">ACCEDER</string>
+    <string name="errorData">Datos Incorrectos</string>
 </resources>
