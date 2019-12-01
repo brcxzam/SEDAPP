@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">SEDAPP</string>
+    <string name="app_name">Sistema de Educación Dual</string>
+    <string name="signin_message">Nos da gusto tenerte de vuelta…</string>
+    <string name="email">Correo Electrónico</string>
+    <string name="password">Contraseña</string>
+    <string name="signin">ACCEDER</string>
 </resources>
