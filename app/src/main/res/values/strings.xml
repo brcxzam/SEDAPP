@@ -5,4 +5,5 @@
     <string name="password">Contraseña</string>
     <string name="signin">ACCEDER</string>
     <string name="errorData">Datos Incorrectos</string>
+    <string name="error_connection">Error de Conexión</string>
 </resources>

@@ -1,0 +1,9 @@
+mutation SignIn($data: iSignIn) {
+  signIn(data: $data) {
+    success
+    token
+    cargo
+    nombre
+    message
+  }
+}

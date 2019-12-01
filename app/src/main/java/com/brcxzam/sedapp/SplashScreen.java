@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.widget.Toast;
 
 public class SplashScreen extends AppCompatActivity {
 
@@ -14,7 +15,12 @@ public class SplashScreen extends AppCompatActivity {
     Runnable runnable = new Runnable() {
         @Override
         public void run() {
-            startSignIn();
+            boolean status = new  Token(getApplicationContext()).getStatus();
+            if (status) {
+                inside();
+            } else {
+                startSignIn();
+            }
         }
     };
     View view;
@@ -28,9 +34,15 @@ public class SplashScreen extends AppCompatActivity {
     }
 
     public void startSignIn() {
-        Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+        Intent intent = new Intent(getApplicationContext(), SignInActivity.class);
         ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this, view, "bgGradient");
-        startActivity(intent,
-               options.toBundle());
+        startActivity(intent, options.toBundle());
+        finishAfterTransition();
+    }
+
+    public void inside() {
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent,ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
+        finishAfterTransition();
     }
 }
