@@ -10,6 +10,11 @@ import android.os.Looper;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.transition.ChangeBounds;
+import android.transition.ChangeImageTransform;
+import android.transition.Explode;
+import android.transition.Fade;
+import android.transition.Slide;
 import android.view.View;
 import android.widget.TextView;
 
@@ -34,6 +39,8 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setEnterTransition(new ChangeBounds());
+        getWindow().setSharedElementEnterTransition(new ChangeBounds().setDuration(400));
         setContentView(R.layout.activity_main);
 
         TextView relativeLayout = findViewById(R.id.title);

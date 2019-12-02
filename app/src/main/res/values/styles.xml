@@ -7,6 +7,10 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
 
+        <!-- enable window content transitions -->
+        <item name="android:windowActivityTransitions">true</item>
+        <item name="android:windowContentTransitions">true</item>
+
     </style>
 
     <style name="SignIn" parent="Theme.MaterialComponents.DayNight.NoActionBar">
@@ -20,14 +24,14 @@
         <item name="android:windowContentTransitions">true</item>
 
         <!-- specify enter and exit transitions -->
-        <item name="android:windowEnterTransition">@transition/fade</item>
-        <item name="android:windowExitTransition">@transition/fade</item>
+<!--        <item name="android:windowEnterTransition">@transition/fade</item>-->
+<!--        <item name="android:windowExitTransition">@transition/fade</item>-->
 
-        <!-- specify shared element transitions -->
-        <item name="android:windowSharedElementEnterTransition">
-            @transition/change_bounds</item>
-        <item name="android:windowSharedElementExitTransition">
-            @transition/change_bounds</item>
+<!--        &lt;!&ndash; specify shared element transitions &ndash;&gt;-->
+<!--        <item name="android:windowSharedElementEnterTransition">-->
+<!--            @transition/change_bounds</item>-->
+<!--        <item name="android:windowSharedElementExitTransition">-->
+<!--            @transition/change_bounds</item>-->
 
     </style>
 

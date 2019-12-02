@@ -6,6 +6,11 @@ import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.transition.ChangeBounds;
+import android.transition.ChangeImageTransform;
+import android.transition.Explode;
+import android.transition.Fade;
+import android.transition.Slide;
 import android.view.View;
 import android.widget.Toast;
 
@@ -42,7 +47,7 @@ public class SplashScreen extends AppCompatActivity {
 
     public void inside() {
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(intent,ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
+        startActivity(intent);
         finishAfterTransition();
     }
 }
