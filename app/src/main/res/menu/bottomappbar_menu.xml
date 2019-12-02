@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/app_bar_fav"
+        android:icon="@drawable/ic_bubble_chart_black_24dp"
+        android:title="looks good"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/app_bar_search"
+        android:icon="@drawable/ic_place_black_24dp"
+        android:title="looks good"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/app_bar_settings"
+        android:title="loooks good"
+        app:showAsAction="never"/>
+</menu>
