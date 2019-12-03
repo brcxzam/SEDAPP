@@ -1,11 +1,14 @@
 package com.brcxzam.sedapp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.biometric.BiometricPrompt;
 
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -17,6 +20,7 @@ import android.transition.Fade;
 import android.transition.Slide;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.api.Response;
@@ -29,12 +33,22 @@ import com.google.android.material.textfield.TextInputLayout;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
+import java.util.concurrent.Executor;
 
 public class SignInActivity extends AppCompatActivity implements View.OnClickListener {
 
     AnimationDrawable animationDrawable;
     TextInputLayout email, password;
     MaterialButton signIn;
+
+    private Handler handler = new Handler();
+
+    private Executor executor = new Executor() {
+        @Override
+        public void execute(Runnable command) {
+            handler.post(command);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +70,13 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
         clearError(email);
         clearError(password);
+
+        Token token = new  Token(getApplicationContext());
+        boolean status = token.getStatus();
+        boolean auth = token.getBiometricAuth();
+        if (auth && status) {
+            showBiometricPrompt();
+        }
     }
 
     @Override
@@ -155,7 +176,44 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
     public void inside() {
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(intent,ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
-        finishAfterTransition();
+        startActivity(intent);
+        finish();
+    }
+
+    public void showBiometricPrompt() {
+        BiometricPrompt.PromptInfo promptInfo =
+                new BiometricPrompt.PromptInfo.Builder()
+                .setTitle(getString(R.string.biometric_title))
+                .setSubtitle(getString(R.string.biometric_message))
+                .setNegativeButtonText(getString(R.string.negative_button))
+                .setConfirmationRequired(false)
+                .build();
+
+        BiometricPrompt biometricPrompt = new BiometricPrompt(this,
+                executor, new BiometricPrompt.AuthenticationCallback() {
+            @Override
+            public void onAuthenticationError(int errorCode, @NonNull CharSequence errString) {
+                super.onAuthenticationError(errorCode, errString);
+                Toast.makeText(getApplicationContext(),
+                        "Authentication error", Toast.LENGTH_SHORT)
+                        .show();
+            }
+
+            @Override
+            public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
+                super.onAuthenticationSucceeded(result);
+                inside();
+            }
+
+            @Override
+            public void onAuthenticationFailed() {
+                super.onAuthenticationFailed();
+                Toast.makeText(getApplicationContext(),
+                        "Authentication failed", Toast.LENGTH_SHORT)
+                        .show();
+            }
+        });
+
+        biometricPrompt.authenticate(promptInfo);
     }
 }

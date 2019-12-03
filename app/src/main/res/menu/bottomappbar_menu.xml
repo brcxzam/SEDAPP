@@ -4,6 +4,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/app_bar_biometric_auth"
+        android:title="@string/biometric_auth"
+        app:showAsAction="never"/>
+
+    <item
         android:id="@+id/app_bar_sign_off"
         android:title="@string/sign_off"
         app:showAsAction="never"/>

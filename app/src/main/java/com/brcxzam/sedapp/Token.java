@@ -39,4 +39,12 @@ public class Token {
     public void clearToken() {
         sharedPref.edit().clear().apply();
     }
+
+    public void setBiometricAuth(boolean auth) {
+        sharedPref.edit().putBoolean("biometric-auth",auth).apply();
+    }
+
+    public boolean getBiometricAuth() {
+        return sharedPref.getBoolean("biometric-auth",false);
+    }
 }

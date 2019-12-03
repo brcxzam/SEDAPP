@@ -63,6 +63,27 @@ public class MainActivity extends AppCompatActivity {
                         })
                         .show();
                 break;
+            case R.id.app_bar_biometric_auth:
+                final Token token = new Token(getApplicationContext());
+                new MaterialAlertDialogBuilder(this, R.style.ThemeOverlay_MaterialComponents_MaterialAlertDialog_Centered)
+                        .setTitle(R.string.biometric_auth)
+                        .setMessage(R.string.biometric_auth_message)
+                        .setPositiveButton(R.string.biometric_true, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                token.setBiometricAuth(true);
+                                snackMessage(getString(R.string.biometric_on));
+                            }
+                        })
+                        .setNegativeButton(R.string.biometric_false, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                token.setBiometricAuth(false);
+                                snackMessage(getString(R.string.biometric_off));
+                            }
+                        })
+                        .show();
+                break;
             case android.R.id.home:
                 BottomNavigationDrawerFragment bottomNavigationDrawerFragment = new BottomNavigationDrawerFragment();
                 bottomNavigationDrawerFragment.show(getSupportFragmentManager(),
@@ -70,5 +91,10 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void snackMessage(String message) {
+        Snackbar.make(findViewById(R.id.viewSnack), message, Snackbar.LENGTH_SHORT)
+                .show();
     }
 }

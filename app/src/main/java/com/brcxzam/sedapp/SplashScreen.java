@@ -20,8 +20,10 @@ public class SplashScreen extends AppCompatActivity {
     Runnable runnable = new Runnable() {
         @Override
         public void run() {
-            boolean status = new  Token(getApplicationContext()).getStatus();
-            if (status) {
+            Token token = new  Token(getApplicationContext());
+            boolean status = token.getStatus();
+            boolean auth = token.getBiometricAuth();
+            if (status && !auth) {
                 inside();
             } else {
                 startSignIn();
