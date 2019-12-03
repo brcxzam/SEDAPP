@@ -4,18 +4,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/app_bar_fav"
-        android:icon="@drawable/ic_bubble_chart_black_24dp"
-        android:title="looks good"
-        app:showAsAction="ifRoom"/>
-
-    <item
-        android:id="@+id/app_bar_search"
-        android:icon="@drawable/ic_place_black_24dp"
-        android:title="looks good"
-        app:showAsAction="always"/>
-    <item
-        android:id="@+id/app_bar_settings"
-        android:title="loooks good"
+        android:id="@+id/app_bar_sign_off"
+        android:title="@string/sign_off"
         app:showAsAction="never"/>
+
 </menu>

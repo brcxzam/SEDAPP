@@ -7,6 +7,11 @@
     <string name="errorData">Datos Incorrectos</string>
     <string name="error_connection">Error de Conexión</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="charts">Graficas</string>
+    <string name="places">Ubicación UE</string>
+    <string name="evaluationED">Evaluación Psicometrica</string>
+    <string name="evaluationUE">Evaluación de Selección de UE</string>
+    <string name="sign_off">Cerrar Sesión</string>
+    <string name="sign_off_message">¿Quieres cerrar sesión?</string>
+    <string name="positive_button">ACEPTAR</string>
 </resources>

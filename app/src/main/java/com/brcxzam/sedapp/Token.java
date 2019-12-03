@@ -32,7 +32,11 @@ public class Token {
         sharedPref.edit().putString("token",token).apply();
     }
 
-    public String getToken(){
-        return sharedPref.getString("token","");
+    public String getToken() {
+        return sharedPref.getString("token", "");
+    }
+
+    public void clearToken() {
+        sharedPref.edit().clear().apply();
     }
 }

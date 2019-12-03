@@ -5,14 +5,19 @@
         <item
             android:id="@+id/nav1"
             android:icon="@drawable/ic_bubble_chart_black_24dp"
-            android:title="string/nav_item1" />
+            android:title="@string/charts" />
         <item
             android:id="@+id/nav2"
             android:icon="@drawable/ic_place_black_24dp"
-            android:title="string/nav_item2" />
+            android:title="@string/places"
+            />
         <item
             android:id="@+id/nav3"
             android:icon="@drawable/ic_done_all_black_24dp"
-            android:title="string/nav_item3" />
+            android:title="@string/evaluationED" />
+        <item
+            android:id="@+id/nav4"
+            android:icon="@drawable/ic_business_black_24dp"
+            android:title="@string/evaluationUE" />
     </group>
 </menu>
