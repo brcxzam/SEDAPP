@@ -5,11 +5,15 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.NavOptions;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.navigation.NavigationView;
@@ -37,26 +41,36 @@ public class BottomNavigationDrawerFragment extends BottomSheetDialogFragment {
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                NavController navController = Navigation.findNavController(getActivity(),R.id.nav_host_fragment);
+                NavOptions navOptions = new NavOptions.Builder()
+                        .setEnterAnim(R.anim.slide_in_right)
+                        .setExitAnim(R.anim.slide_out_left)
+                        .setPopEnterAnim(R.anim.slide_in_left)
+                        .setPopExitAnim(R.anim.slide_out_right)
+                        .build();
                 switch (item.getItemId()) {
                     case R.id.nav1:
-                        Snackbar.make(((MainActivity) Objects.requireNonNull(getActivity())).findViewById(R.id.viewSnack),
-                                "nav1",
-                                Snackbar.LENGTH_SHORT)
-                                .show();
+                        if (navController.getCurrentDestination().getId() != R.id.charts){
+                            navController.navigate(R.id.charts,null,navOptions);
+                        }
                         dismiss();
                         break;
                     case R.id.nav2:
-                        Snackbar.make(((MainActivity) Objects.requireNonNull(getActivity())).findViewById(R.id.viewSnack),
-                                "nav2",
-                                Snackbar.LENGTH_SHORT)
-                                .show();
+                        if (navController.getCurrentDestination().getId() != R.id.action_charts_to_placesUE){
+                            navController.navigate(R.id.placesUE,null,navOptions);
+                        }
                         dismiss();
                         break;
                     case R.id.nav3:
-                        Snackbar.make(((MainActivity) Objects.requireNonNull(getActivity())).findViewById(R.id.viewSnack),
-                                "nav3",
-                                Snackbar.LENGTH_SHORT)
-                                .show();
+                        if (navController.getCurrentDestination().getId() != R.id.evaluationED){
+                            navController.navigate(R.id.evaluationED,null,navOptions);
+                        }
+                        dismiss();
+                        break;
+                    case R.id.nav4:
+                        if (navController.getCurrentDestination().getId() != R.id.evaluationUE){
+                            navController.navigate(R.id.evaluationUE,null,navOptions);
+                        }
                         dismiss();
                         break;
                 }

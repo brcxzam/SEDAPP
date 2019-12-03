@@ -3,6 +3,7 @@ package com.brcxzam.sedapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.navigation.Navigation;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
@@ -96,5 +97,9 @@ public class MainActivity extends AppCompatActivity {
     public void snackMessage(String message) {
         Snackbar.make(findViewById(R.id.viewSnack), message, Snackbar.LENGTH_SHORT)
                 .show();
+    }
+
+    public void moveToPlacesUE() {
+
     }
 }

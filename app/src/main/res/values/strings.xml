@@ -23,4 +23,7 @@
     <string name="biometric_off">Acceso con sensor de huellas desactivado</string>
     <string name="biometric_title">Iniciar sesión</string>
     <string name="biometric_message">Confirme la huella digital para continuar</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

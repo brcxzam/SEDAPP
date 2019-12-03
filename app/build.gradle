@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.apollographql.android'
+apply plugin: "androidx.navigation.safeargs"
 
 android {
     compileSdkVersion 29
@@ -40,4 +41,11 @@ dependencies {
 
     // biometric-auth
     implementation 'androidx.biometric:biometric:1.0.0'
+
+    // navigation component
+    def nav_version = "2.1.0-rc01"
+
+    // Java
+    implementation "androidx.navigation:navigation-fragment:$nav_version"
+    implementation "androidx.navigation:navigation-ui:$nav_version"
 }
