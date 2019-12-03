@@ -20,7 +20,7 @@ import java.util.Objects;
 import java.util.zip.Inflater;
 
 public class MainActivity extends AppCompatActivity {
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +59,11 @@ public class MainActivity extends AppCompatActivity {
                         "Configuración",
                         Snackbar.LENGTH_SHORT)
                         .show();
+                break;
+            case android.R.id.home:
+                BottomNavigationDrawerFragment bottomNavigationDrawerFragment = new BottomNavigationDrawerFragment();
+                bottomNavigationDrawerFragment.show(getSupportFragmentManager(),
+                        bottomNavigationDrawerFragment.getTag());
                 break;
         }
         return super.onOptionsItemSelected(item);
