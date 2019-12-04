@@ -8,7 +8,7 @@ class ApolloConnector {
 
     private static final String BASE_URL = "http://192.168.50.43:3001/graphql";
 
-    static ApolloClient setupApollo(){
+    public static ApolloClient setupApollo(){
 
         OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
 

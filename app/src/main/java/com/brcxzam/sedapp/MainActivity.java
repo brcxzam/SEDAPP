@@ -2,30 +2,24 @@ package com.brcxzam.sedapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.navigation.Navigation;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.transition.ChangeBounds;
-import android.transition.Explode;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Toast;
-import android.widget.Toolbar;
 
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
-import java.util.Objects;
-import java.util.zip.Inflater;
-
 public class MainActivity extends AppCompatActivity {
+
+    FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,16 +27,19 @@ public class MainActivity extends AppCompatActivity {
         getWindow().setEnterTransition(new ChangeBounds());
         getWindow().setSharedElementEnterTransition(new ChangeBounds().setDuration(400));
         setContentView(R.layout.activity_main2);
-        BottomAppBar bar = (BottomAppBar) findViewById(R.id.bottom_app_bar);
+        final BottomAppBar bar = findViewById(R.id.bottom_app_bar);
         setSupportActionBar(bar);
         bar.replaceMenu(R.menu.bottomappbar_menu);
+
+        fab = findViewById(R.id.fab);
+        fab.hide();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.bottomappbar_menu, menu);
-        return true;
+        return super.onCreateOptionsMenu(menu);
     }
 
     @SuppressLint("PrivateResource")
@@ -99,7 +96,12 @@ public class MainActivity extends AppCompatActivity {
                 .show();
     }
 
-    public void moveToPlacesUE() {
-
+    public void toggleFab(boolean show) {
+        if (fab.isShown() && !show) {
+            fab.hide();
+        } else {
+            fab.show();
+        }
     }
+
 }

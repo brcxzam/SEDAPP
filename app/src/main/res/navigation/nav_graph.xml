@@ -9,38 +9,32 @@
         android:id="@+id/charts"
         android:name="com.brcxzam.sedapp.Charts"
         android:label="fragment_charts"
-        tools:layout="@layout/fragment_charts" >
-        <action
-            android:id="@+id/action_charts_to_placesUE"
-            app:destination="@id/placesUE" />
-    </fragment>
+        tools:layout="@layout/fragment_charts" />
     <fragment
         android:id="@+id/placesUE"
         android:name="com.brcxzam.sedapp.PlacesUE"
         android:label="fragment_places_ue"
-        tools:layout="@layout/fragment_places_ue" >
-        <action
-            android:id="@+id/action_placesUE_to_evaluationED"
-            app:destination="@id/evaluationED" />
-    </fragment>
+        tools:layout="@layout/fragment_places_ue" />
     <fragment
         android:id="@+id/evaluationED"
         android:name="com.brcxzam.sedapp.EvaluationED"
         android:label="fragment_evaluation_ed"
-        tools:layout="@layout/fragment_evaluation_ed" >
-        <action
-            android:id="@+id/action_evaluationED_to_evaluationUE"
-            app:destination="@id/evaluationUE" />
-    </fragment>
+        tools:layout="@layout/fragment_evaluation_ed" />
     <fragment
         android:id="@+id/evaluationUE"
         android:name="com.brcxzam.sedapp.EvaluationUE"
         android:label="fragment_evaluation_ue"
-        tools:layout="@layout/fragment_evaluation_ue" >
-        <action
-            android:id="@+id/action_evaluationUE_to_charts"
-            app:destination="@id/charts"
-            app:popUpTo="@id/charts"
-            app:popUpToInclusive="true"/>
-    </fragment>
+        tools:layout="@layout/fragment_evaluation_ue" />
+    <action
+        android:id="@+id/action_global_charts"
+        app:destination="@id/charts" />
+    <action
+        android:id="@+id/action_global_evaluationUE"
+        app:destination="@id/evaluationUE" />
+    <action
+        android:id="@+id/action_global_evaluationED"
+        app:destination="@id/evaluationED" />
+    <action
+        android:id="@+id/action_global_placesUE"
+        app:destination="@id/placesUE" />
 </navigation>

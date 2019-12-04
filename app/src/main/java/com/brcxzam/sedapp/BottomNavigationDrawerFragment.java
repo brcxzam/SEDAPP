@@ -51,25 +51,25 @@ public class BottomNavigationDrawerFragment extends BottomSheetDialogFragment {
                 switch (item.getItemId()) {
                     case R.id.nav1:
                         if (navController.getCurrentDestination().getId() != R.id.charts){
-                            navController.navigate(R.id.charts,null,navOptions);
+                            navController.navigate(R.id.action_global_charts,null,navOptions);
                         }
                         dismiss();
                         break;
                     case R.id.nav2:
-                        if (navController.getCurrentDestination().getId() != R.id.action_charts_to_placesUE){
-                            navController.navigate(R.id.placesUE,null,navOptions);
+                        if (navController.getCurrentDestination().getId() != R.id.placesUE){
+                            navController.navigate(R.id.action_global_placesUE, null,navOptions);
                         }
                         dismiss();
                         break;
                     case R.id.nav3:
                         if (navController.getCurrentDestination().getId() != R.id.evaluationED){
-                            navController.navigate(R.id.evaluationED,null,navOptions);
+                            navController.navigate(R.id.action_global_evaluationED,null,navOptions);
                         }
                         dismiss();
                         break;
                     case R.id.nav4:
                         if (navController.getCurrentDestination().getId() != R.id.evaluationUE){
-                            navController.navigate(R.id.evaluationUE,null,navOptions);
+                            navController.navigate(R.id.action_global_evaluationUE,null,navOptions);
                         }
                         dismiss();
                         break;
