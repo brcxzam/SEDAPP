@@ -24,6 +24,41 @@
     <string name="biometric_title">Iniciar sesión</string>
     <string name="biometric_message">Confirme la huella digital para continuar</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="ue">Unidad Económica</string>
+    <string name="period">Periodo</string>
+    <string name="date">Fecha</string>
+    <string name="section1">Situación Legal</string>
+    <string name="section2">Situación Educativa/Formativa</string>
+    <string name="section3">Factores Socioeconómicos</string>
+    <string-array name="questions_ue">
+        <item>¿La UE está legalmente constituida, acreditada con el ordenamiento de creación o registro ante al Servicio de Administración Tributaria? *</item>
+        <item>¿La UE está dispuesta a firmar el Convenio Especifico de Cooperación, con la Institución Educativa? *</item>
+        <item>¿La UE está dispuesta a firmar el Convenio de Aprendizaje, entre la IE, la UE y el Estudiante Dual? *</item>
+        <item>¿La UE está dispuesta a firmar el Convenio Marco de Colaboración con la IE? *</item>
+        <item>¿La UE cuenta con personal capacitado y actualizado en las áreas de conocimiento afines al perfil de egreso del estudiante dual? *</item>
+        <item>¿La UE cuenta con áreas especializadas afines al perfil de egreso del Estudiante Dual? *</item>
+        <item>¿La UE puede designar a un Mentor que cuente con al menos titulo de nivel licenciatura, responsable de conducir el proceso de aprendizaje del estudiante dual? *</item>
+        <item>¿La UE puede cumplir con un plan de formación acorde a los planes y programas de la IE? *</item>
+        <item>¿La UE, tiene capacidad de llevar a cabo el plan de formación por un año como mínimo y tres años como máximo? *</item>
+        <item>¿La UE puede generar Puestos de Aprendizaje? *</item>
+        <item>¿La UE está en posibilidad de brindar apoyos económicos, transporte, alimentación, en su caso? *</item>
+        <item>¿La UE está a menos de 20km de distancia de la IE? *</item>
+        <item>¿La UE cuida que las actividades de los Estudiantes Dual no sean peligrosas para su salud, seguridad, moralidad, etc.? *</item>
+    </string-array>
+    <string name="answer_1">No</string>
+    <string name="answer_2">Si</string>
+    <string name="answer_3">No Cumple</string>
+    <string name="answer_4">Parcialmente</string>
+    <string name="answer_5">Cumple</string>
+
+    <string-array name="planets_array">
+        <item>Mercury</item>
+        <item>Venus</item>
+        <item>Earth</item>
+        <item>Mars</item>
+        <item>Jupiter</item>
+        <item>Saturn</item>
+        <item>Uranus</item>
+        <item>Neptune</item>
+    </string-array>
 </resources>
