@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,14 +16,25 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.apollographql.apollo.ApolloCall;
+import com.apollographql.apollo.api.Response;
+import com.apollographql.apollo.exception.ApolloException;
+import com.apollographql.apollo.fetcher.ApolloResponseFetchers;
 import com.brcxzam.sedapp.MainActivity;
 import com.brcxzam.sedapp.R;
+import com.brcxzam.sedapp.ReadAllUEsQuery;
+import com.brcxzam.sedapp.apollo_client.ApolloConnector;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 
 /**
@@ -30,22 +42,22 @@ import java.lang.reflect.Array;
  */
 public class QuestionsUE extends Fragment {
 
-    MaterialButton back;
-    TextView sectionTextView;
-    TextView unidadesEconomicasTextView;
-    Spinner unidadesEconomicasSpinner;
-    TextInputLayout periodTextInputLayout;
-    TextInputLayout dateTextInputLayout;
-    MaterialCardView questionCard;
-    TextView questionTextView;
-    RadioGroup answers;
-    RadioButton first;
-    RadioButton second;
-    RadioButton third;
-    FloatingActionButton fab;
+    private MaterialButton back;
+    private TextView sectionTextView;
+    private TextView unidadesEconomicasTextView;
+    private Spinner unidadesEconomicasSpinner;
+    private TextInputLayout periodTextInputLayout;
+    private TextInputLayout dateTextInputLayout;
+    private MaterialCardView questionCard;
+    private TextView questionTextView;
+    private RadioGroup answers;
+    private RadioButton first;
+    private RadioButton second;
+    private RadioButton third;
+    private FloatingActionButton fab;
 
-    int section = 0;
-    int question = -1;
+    private int section = 0;
+    private int question = -1;
 
 
     public QuestionsUE() {
@@ -56,14 +68,8 @@ public class QuestionsUE extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_questions_ue, container, false);
-        Spinner spinner = (Spinner) view.findViewById(R.id.unidades_economicas);
-        // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
-                R.array.planets_array, android.R.layout.simple_spinner_item);
-        // Specify the layout to use when the list of choices appears
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
-        spinner.setAdapter(adapter);
+
+        fetchUEs();
 
         back = view.findViewById(R.id.back);
         sectionTextView = view.findViewById(R.id.section);
@@ -78,18 +84,18 @@ public class QuestionsUE extends Fragment {
         second = view.findViewById(R.id.second);
         third = view.findViewById(R.id.third);
 
-        final String[] questions = getContext().getResources().getStringArray(R.array.questions_ue);
+        final String[] questions = Objects.requireNonNull(getContext()).getResources().getStringArray(R.array.questions_ue);
 
-        fab = ((MainActivity) getActivity()).findViewById(R.id.fab);
+        fab = ((MainActivity) Objects.requireNonNull(getActivity())).findViewById(R.id.fab);
         
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 question++;
                 if (question < 13) {
-                    lol(questions);
+                    handleQuestions(questions);
                 } else {
-                    getActivity().onBackPressed();
+                    Objects.requireNonNull(getActivity()).onBackPressed();
                 }
             }
         });
@@ -98,18 +104,18 @@ public class QuestionsUE extends Fragment {
             @Override
             public void onClick(View v) {
                 question--;
-                lol(questions);
+                handleQuestions(questions);
             }
         });
 
 
 
-        lol(questions);
+        handleQuestions(questions);
 
         return view;
     }
 
-    private void lol(String[] questions) {
+    private void handleQuestions(String[] questions) {
         if (question == -1) {
             section = 0;
             sectionTextView.setText(R.string.ue);
@@ -173,8 +179,39 @@ public class QuestionsUE extends Fragment {
         }
     }
 
-    public int toggleVisibility(int visibility) {
-        return visibility ^ 1;
+    private void fetchUEs() {
+        ApolloConnector.setupApollo(getContext()).query(new ReadAllUEsQuery())
+                .responseFetcher(ApolloResponseFetchers.NETWORK_FIRST)
+                .enqueue(new ApolloCall.Callback<ReadAllUEsQuery.Data>() {
+                    @Override
+                    public void onResponse(@NotNull final Response<ReadAllUEsQuery.Data> response) {
+
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(getContext(), "looks good"+response.data().UEs(), Toast.LENGTH_SHORT).show();
+                                // Create an ArrayAdapter using the string array and a default spinner layout
+                                List<String> ues = new ArrayList<>();
+                                for (ReadAllUEsQuery.UE ue: Objects.requireNonNull(response.data().UEs())) {
+                                    ues.add(ue.razon_social());
+                                }
+                                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item, ues);
+                                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                // Specify the layout to use when the list of choices appears
+                                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                // Apply the adapter to the spinner
+                                unidadesEconomicasSpinner.setAdapter(adapter);
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onFailure(@NotNull ApolloException e) {
+                        Looper.prepare();
+                        Toast.makeText(getContext(), "looks bad", Toast.LENGTH_SHORT).show();
+                        Looper.loop();
+                    }
+                });
     }
 
 }

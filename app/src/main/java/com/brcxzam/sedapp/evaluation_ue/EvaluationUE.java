@@ -45,6 +45,14 @@ public class EvaluationUE extends Fragment {
         if (!fab.isShown()) {
             fab.show();
         }
+        fab.hide(new FloatingActionButton.OnVisibilityChangedListener() {
+            @Override
+            public void onHidden(FloatingActionButton fab) {
+                super.onHidden(fab);
+                fab.setImageResource(R.drawable.ic_add_black_24dp);
+                fab.show();
+            }
+        });
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

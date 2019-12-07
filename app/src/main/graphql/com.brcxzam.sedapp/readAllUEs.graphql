@@ -1,0 +1,6 @@
+query readAllUEs {
+    UEs {
+    RFC
+    razon_social
+  }
+}

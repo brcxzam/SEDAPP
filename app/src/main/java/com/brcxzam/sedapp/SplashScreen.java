@@ -6,13 +6,9 @@ import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.transition.ChangeBounds;
-import android.transition.ChangeImageTransform;
-import android.transition.Explode;
-import android.transition.Fade;
-import android.transition.Slide;
 import android.view.View;
-import android.widget.Toast;
+
+import com.brcxzam.sedapp.apollo_client.Token;
 
 public class SplashScreen extends AppCompatActivity {
 

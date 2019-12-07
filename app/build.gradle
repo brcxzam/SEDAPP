@@ -35,6 +35,7 @@ dependencies {
 
     // Apollo Client
     implementation 'com.apollographql.apollo:apollo-runtime:1.2.1'
+    implementation 'com.apollographql.apollo:apollo-android-support:1.2.1'
 
     compileOnly("org.jetbrains:annotations:13.0")
     testCompileOnly("org.jetbrains:annotations:13.0")

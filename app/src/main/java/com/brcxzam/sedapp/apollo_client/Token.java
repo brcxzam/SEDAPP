@@ -1,4 +1,4 @@
-package com.brcxzam.sedapp;
+package com.brcxzam.sedapp.apollo_client;
 
 import android.content.Context;
 import android.content.SharedPreferences;
