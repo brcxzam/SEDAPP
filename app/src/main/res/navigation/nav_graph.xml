@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/charts">
+    app:startDestination="@id/evaluationUE">
 
     <fragment
         android:id="@+id/charts"
@@ -22,9 +22,13 @@
         tools:layout="@layout/fragment_evaluation_ed" />
     <fragment
         android:id="@+id/evaluationUE"
-        android:name="com.brcxzam.sedapp.EvaluationUE"
+        android:name="com.brcxzam.sedapp.evaluation_ue.EvaluationUE"
         android:label="fragment_evaluation_ue"
-        tools:layout="@layout/fragment_evaluation_ue" />
+        tools:layout="@layout/fragment_evaluation_ue" >
+        <action
+            android:id="@+id/action_evaluationUE_to_questionsUE"
+            app:destination="@id/questionsUE" />
+    </fragment>
     <action
         android:id="@+id/action_global_charts"
         app:destination="@id/charts" />
@@ -37,4 +41,9 @@
     <action
         android:id="@+id/action_global_placesUE"
         app:destination="@id/placesUE" />
+    <fragment
+        android:id="@+id/questionsUE"
+        android:name="com.brcxzam.sedapp.evaluation_ue.QuestionsUE"
+        android:label="fragment_questions_ue"
+        tools:layout="@layout/fragment_questions_ue" />
 </navigation>
