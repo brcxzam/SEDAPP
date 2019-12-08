@@ -1,6 +1,5 @@
 package com.brcxzam.sedapp.evaluation_ue;
 
-
 import android.app.DatePickerDialog;
 import android.icu.text.DateFormat;
 import android.icu.text.SimpleDateFormat;
@@ -34,6 +33,7 @@ import com.brcxzam.sedapp.apollo_client.ApolloConnector;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 
 import org.jetbrains.annotations.NotNull;
@@ -41,6 +41,7 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -48,9 +49,6 @@ import java.util.Locale;
 import java.util.Objects;
 
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class QuestionsUE extends Fragment {
 
     private MaterialButton back;
@@ -67,19 +65,28 @@ public class QuestionsUE extends Fragment {
     private RadioButton third;
     private FloatingActionButton fab;
 
+    // Array contenedor de las respuestas a las preguntas
+    private Integer[] answersArray = new Integer[13];
+
+    // Contadores de sección y número de pregunta; -1 Datos iniciales de la evaluación
     private int section = 0;
     private int question = -1;
 
+    // ArrayList contenedor de la razón social de las Unidades Económicas
+    List<String> ues = new ArrayList<>();
+
+    View viewSnack;
 
     public QuestionsUE() {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.fragment_questions_ue, container, false);
 
+        //Obtención de Unidades Económicas a travez de cache y network
         fetchUEs();
 
         back = view.findViewById(R.id.back);
@@ -94,6 +101,7 @@ public class QuestionsUE extends Fragment {
         first = view.findViewById(R.id.first);
         second = view.findViewById(R.id.second);
         third = view.findViewById(R.id.third);
+        viewSnack = ((MainActivity) Objects.requireNonNull(getActivity())).findViewById(R.id.viewSnack);
 
         final String[] questions = Objects.requireNonNull(getContext()).getResources().getStringArray(R.array.questions_ue);
 
@@ -102,8 +110,10 @@ public class QuestionsUE extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                handleRadioButton();
                 question++;
                 if (question < 13) {
+                    answers.clearCheck();
                     handleQuestions(questions);
                 } else {
                     Objects.requireNonNull(getActivity()).onBackPressed();
@@ -116,17 +126,25 @@ public class QuestionsUE extends Fragment {
             public void onClick(View v) {
                 question--;
                 handleQuestions(questions);
+                if (question == 11) {
+                    fab.hide(new FloatingActionButton.OnVisibilityChangedListener() {
+                        @Override
+                        public void onHidden(FloatingActionButton fab) {
+                            super.onHidden(fab);
+                            fab.setImageResource(R.drawable.ic_arrow_forward_black_24dp);
+                            fab.show();
+                        }
+                    });
+                }
             }
         });
 
-
-
         handleQuestions(questions);
+
         final DialogFragment dialogFragment = new DatePickerFragment(new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 String[] dates = dateFormat(year, month, dayOfMonth);
-
                 dateTextInputLayout.getEditText().setText(dates[1]);
             }
         });
@@ -141,6 +159,14 @@ public class QuestionsUE extends Fragment {
         return view;
     }
 
+    /**
+     * Metodo para dar formato a las fechas
+     * @param year
+     * @param month
+     * @param dayOfMonth
+     * @return String Array que contiene como primer posición el formato de visualización
+ *              y como segundo el de almacenamiento
+     */
     public String[] dateFormat(int year, int month, int dayOfMonth) {
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(0);
@@ -161,6 +187,21 @@ public class QuestionsUE extends Fragment {
         if (question == -1) {
             section = 0;
             sectionTextView.setText(R.string.ue);
+        } else {
+            if (answersArray[question] != null){
+                int answer = answersArray[question];
+                switch (answer) {
+                    case 1:
+                        first.toggle();
+                        break;
+                    case 2:
+                        second.toggle();
+                        break;
+                    case 3:
+                        third.toggle();
+                        break;
+                }
+            }
         }
 
         if (question >= 0 && question < 4){
@@ -223,37 +264,49 @@ public class QuestionsUE extends Fragment {
 
     private void fetchUEs() {
         ApolloConnector.setupApollo(getContext()).query(new ReadAllUEsQuery())
-                .responseFetcher(ApolloResponseFetchers.NETWORK_FIRST)
+                .responseFetcher(ApolloResponseFetchers.CACHE_AND_NETWORK)
                 .enqueue(new ApolloCall.Callback<ReadAllUEsQuery.Data>() {
                     @Override
                     public void onResponse(@NotNull final Response<ReadAllUEsQuery.Data> response) {
+                        if (response.data() !=  null) {
+                            Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
 
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast.makeText(getContext(), "looks good"+response.data().UEs(), Toast.LENGTH_SHORT).show();
-                                // Create an ArrayAdapter using the string array and a default spinner layout
-                                List<String> ues = new ArrayList<>();
-                                for (ReadAllUEsQuery.UE ue: Objects.requireNonNull(response.data().UEs())) {
-                                    ues.add(ue.razon_social());
+                                    for (ReadAllUEsQuery.UE ue: Objects.requireNonNull(response.data().UEs())) {
+                                        ues.add(ue.razon_social());
+                                    }
+
+                                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(Objects.requireNonNull(getContext()),
+                                            android.R.layout.simple_spinner_item, ues);
+                                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                    unidadesEconomicasSpinner.setAdapter(adapter);
                                 }
-                                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item, ues);
-                                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                                // Specify the layout to use when the list of choices appears
-                                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                                // Apply the adapter to the spinner
-                                unidadesEconomicasSpinner.setAdapter(adapter);
-                            }
-                        });
+                            });
+                        }
                     }
-
                     @Override
                     public void onFailure(@NotNull ApolloException e) {
-                        Looper.prepare();
-                        Toast.makeText(getContext(), "looks bad", Toast.LENGTH_SHORT).show();
-                        Looper.loop();
+                        Snackbar.make(viewSnack, R.string.error_connection, Snackbar.LENGTH_SHORT)
+                                .show();
                     }
                 });
     }
 
+    private void handleRadioButton() {
+        if (question != -1) {
+            int checkedId = answers.getCheckedRadioButtonId();
+            switch (checkedId) {
+                case R.id.first:
+                    answersArray[question] = 1;
+                    break;
+                case R.id.second:
+                    answersArray[question] = 2;
+                    break;
+                case R.id.third:
+                    answersArray[question] = 3;
+                    break;
+            }
+        }
+    }
 }
