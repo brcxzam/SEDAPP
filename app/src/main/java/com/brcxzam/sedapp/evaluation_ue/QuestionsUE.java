@@ -25,11 +25,13 @@ import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
 import com.apollographql.apollo.fetcher.ApolloResponseFetchers;
+import com.brcxzam.sedapp.CreateAnexo_2_1Mutation;
 import com.brcxzam.sedapp.DatePickerFragment;
 import com.brcxzam.sedapp.MainActivity;
 import com.brcxzam.sedapp.R;
 import com.brcxzam.sedapp.ReadAllUEsQuery;
 import com.brcxzam.sedapp.apollo_client.ApolloConnector;
+import com.brcxzam.sedapp.type.IAnexo_2_1;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -74,8 +76,14 @@ public class QuestionsUE extends Fragment {
 
     // ArrayList contenedor de la razón social de las Unidades Económicas
     List<String> ues = new ArrayList<>();
+    // ArrayList contenedor de los datos de Unidades Económicas
+    List<ReadAllUEsQuery.UE> ueArrayList = new ArrayList<>();
 
+
+    // Ubicación de la notificación
     View viewSnack;
+
+    String fecha;
 
     public QuestionsUE() {
         // Required empty public constructor
@@ -116,7 +124,7 @@ public class QuestionsUE extends Fragment {
                     answers.clearCheck();
                     handleQuestions(questions);
                 } else {
-                    Objects.requireNonNull(getActivity()).onBackPressed();
+                    createEvaluation();
                 }
             }
         });
@@ -145,6 +153,7 @@ public class QuestionsUE extends Fragment {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 String[] dates = dateFormat(year, month, dayOfMonth);
+                fecha = dates[0];
                 dateTextInputLayout.getEditText().setText(dates[1]);
             }
         });
@@ -262,6 +271,11 @@ public class QuestionsUE extends Fragment {
         }
     }
 
+    private void errorMessage() {
+        Snackbar.make(viewSnack, R.string.error_connection, Snackbar.LENGTH_SHORT)
+                .show();
+    }
+
     private void fetchUEs() {
         ApolloConnector.setupApollo(getContext()).query(new ReadAllUEsQuery())
                 .responseFetcher(ApolloResponseFetchers.CACHE_AND_NETWORK)
@@ -272,6 +286,8 @@ public class QuestionsUE extends Fragment {
                             Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
+
+                                    ueArrayList = Objects.requireNonNull(response.data().UEs());
 
                                     for (ReadAllUEsQuery.UE ue: Objects.requireNonNull(response.data().UEs())) {
                                         ues.add(ue.razon_social());
@@ -287,8 +303,57 @@ public class QuestionsUE extends Fragment {
                     }
                     @Override
                     public void onFailure(@NotNull ApolloException e) {
-                        Snackbar.make(viewSnack, R.string.error_connection, Snackbar.LENGTH_SHORT)
+                        errorMessage();
+                    }
+                });
+    }
+
+    private void createEvaluation() {
+        String periodo = Objects.requireNonNull(periodTextInputLayout.getEditText()).getText().toString();
+        int positionUE = unidadesEconomicasSpinner.getSelectedItemPosition();
+        String uERFC = ueArrayList.get(positionUE).RFC();
+        CreateAnexo_2_1Mutation anexo21Mutation = CreateAnexo_2_1Mutation.builder()
+                .data(IAnexo_2_1.builder()
+                        .periodo(periodo)
+                        .fecha(fecha)
+                        .s1_p1(answersArray[0])
+                        .s1_p2(answersArray[1])
+                        .s1_p3(answersArray[2])
+                        .s1_p4(answersArray[3])
+                        .s1_total_no(3)
+                        .s1_total_si(0)
+                        .s2_p1(answersArray[4])
+                        .s2_p2(answersArray[5])
+                        .s2_p3(answersArray[6])
+                        .s2_p4(answersArray[7])
+                        .s2_p5(answersArray[8])
+                        .s2_p6(answersArray[9])
+                        .s2_suma_no_cumple(6)
+                        .s2_suma_parcialmente(0)
+                        .s2_suma_cumple(0)
+                        .s3_p1(answersArray[10])
+                        .s3_p2(answersArray[11])
+                        .s3_p3(answersArray[12])
+                        .s3_suma_no_cumple(3)
+                        .s3_suma_parcialmente(0)
+                        .s3_suma_cumple(0)
+                        .total(13)
+                        .aplicador("Don Pedro")
+                        .iEId("1")
+                        .uERFC(uERFC)
+                        .build())
+                .build();
+        ApolloConnector.setupApollo(getContext()).mutate(anexo21Mutation)
+                .enqueue(new ApolloCall.Callback<CreateAnexo_2_1Mutation.Data>() {
+                    @Override
+                    public void onResponse(@NotNull final Response<CreateAnexo_2_1Mutation.Data> response) {
+                        Objects.requireNonNull(getActivity()).onBackPressed();
+                        Snackbar.make(viewSnack, R.string.success_save, Snackbar.LENGTH_SHORT)
                                 .show();
+                    }
+                    @Override
+                    public void onFailure(@NotNull ApolloException e) {
+                        errorMessage();
                     }
                 });
     }

@@ -1,0 +1,40 @@
+query readAllAnexo_2_1 {
+    Anexo_2_1s {
+        id
+        periodo
+        fecha
+        s1_p1
+        s1_p2
+        s1_p3
+        s1_p4
+        s1_total_no
+        s1_total_si
+        s2_p1
+        s2_p2
+        s2_p3
+        s2_p4
+        s2_p5
+        s2_p6
+        s2_suma_no_cumple
+        s2_suma_parcialmente
+        s2_suma_cumple
+        s3_p1
+        s3_p2
+        s3_p3
+        s3_suma_no_cumple
+        s3_suma_parcialmente
+        s3_suma_cumple
+        total
+        aplicador
+        IEId
+        IE {
+            id
+            institucion_educativa
+        }
+        UERFC
+        UE {
+            RFC
+            razon_social
+        }
+    }
+}

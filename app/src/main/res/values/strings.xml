@@ -5,7 +5,9 @@
     <string name="password">Contraseña</string>
     <string name="signin">ACCEDER</string>
     <string name="errorData">Datos Incorrectos</string>
+
     <string name="error_connection">Error de Conexión</string>
+    <string name="success_save">Guardado</string>
 
     <string name="charts">Graficas</string>
     <string name="places">Ubicación UE</string>

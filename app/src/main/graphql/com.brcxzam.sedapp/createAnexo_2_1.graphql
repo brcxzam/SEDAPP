@@ -1,0 +1,5 @@
+mutation createAnexo_2_1($data: iAnexo_2_1) {
+    cAnexo_2_1(data: $data) {
+        id
+    }
+}
