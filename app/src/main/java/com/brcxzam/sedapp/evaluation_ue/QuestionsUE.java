@@ -1,8 +1,13 @@
 package com.brcxzam.sedapp.evaluation_ue;
 
 
+import android.app.DatePickerDialog;
+import android.icu.text.DateFormat;
+import android.icu.text.SimpleDateFormat;
+import android.icu.util.TimeZone;
 import android.os.Bundle;
 
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import android.os.Looper;
@@ -10,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -20,6 +26,7 @@ import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
 import com.apollographql.apollo.fetcher.ApolloResponseFetchers;
+import com.brcxzam.sedapp.DatePickerFragment;
 import com.brcxzam.sedapp.MainActivity;
 import com.brcxzam.sedapp.R;
 import com.brcxzam.sedapp.ReadAllUEsQuery;
@@ -32,8 +39,12 @@ import com.google.android.material.textfield.TextInputLayout;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Array;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 
@@ -111,8 +122,39 @@ public class QuestionsUE extends Fragment {
 
 
         handleQuestions(questions);
+        final DialogFragment dialogFragment = new DatePickerFragment(new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                String[] dates = dateFormat(year, month, dayOfMonth);
+
+                dateTextInputLayout.getEditText().setText(dates[1]);
+            }
+        });
+        dateTextInputLayout.getEditText().setEnabled(false);
+        dateTextInputLayout.setEndIconOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogFragment.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(),"datePicker");
+            }
+        });
 
         return view;
+    }
+
+    public String[] dateFormat(int year, int month, int dayOfMonth) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(0);
+        cal.set(year, month, dayOfMonth, 0, 0, 0);
+
+        Date chosenDate = cal.getTime();
+
+        DateFormat dateLong = DateFormat.getDateInstance(DateFormat.LONG, Locale.forLanguageTag("spa"));
+        String dateLongString = dateLong.format(chosenDate);
+
+        SimpleDateFormat sqlFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.forLanguageTag("spa"));
+        String dateSqlFormat = sqlFormat.format(chosenDate);
+
+        return new String[]{dateLongString,dateSqlFormat};
     }
 
     private void handleQuestions(String[] questions) {

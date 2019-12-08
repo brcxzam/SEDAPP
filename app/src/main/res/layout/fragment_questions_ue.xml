@@ -92,11 +92,14 @@
                 android:hint="@string/date"
                 android:layout_marginBottom="@dimen/margin"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:visibility="gone">
+                android:visibility="gone"
+                app:endIconMode="custom"
+                app:endIconDrawable="@drawable/ic_event_black_24dp"
+                app:endIconContentDescription="@string/date">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
