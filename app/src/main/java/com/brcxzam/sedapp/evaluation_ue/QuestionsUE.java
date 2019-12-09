@@ -23,14 +23,18 @@ import android.widget.Toast;
 
 import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.api.Response;
+import com.apollographql.apollo.cache.ApolloCacheHeaders;
+import com.apollographql.apollo.cache.CacheHeaders;
 import com.apollographql.apollo.exception.ApolloException;
 import com.apollographql.apollo.fetcher.ApolloResponseFetchers;
+import com.apollographql.apollo.internal.fetcher.CacheAndNetworkFetcher;
 import com.brcxzam.sedapp.CreateAnexo_2_1Mutation;
 import com.brcxzam.sedapp.DatePickerFragment;
 import com.brcxzam.sedapp.MainActivity;
 import com.brcxzam.sedapp.R;
 import com.brcxzam.sedapp.ReadAllUEsQuery;
 import com.brcxzam.sedapp.apollo_client.ApolloConnector;
+import com.brcxzam.sedapp.apollo_client.Token;
 import com.brcxzam.sedapp.type.IAnexo_2_1;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
@@ -153,8 +157,8 @@ public class QuestionsUE extends Fragment {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 String[] dates = dateFormat(year, month, dayOfMonth);
-                fecha = dates[0];
-                dateTextInputLayout.getEditText().setText(dates[1]);
+                fecha = dates[1];
+                dateTextInputLayout.getEditText().setText(dates[0]);
             }
         });
         dateTextInputLayout.getEditText().setEnabled(false);
@@ -347,12 +351,19 @@ public class QuestionsUE extends Fragment {
                 .enqueue(new ApolloCall.Callback<CreateAnexo_2_1Mutation.Data>() {
                     @Override
                     public void onResponse(@NotNull final Response<CreateAnexo_2_1Mutation.Data> response) {
-                        Objects.requireNonNull(getActivity()).onBackPressed();
-                        Snackbar.make(viewSnack, R.string.success_save, Snackbar.LENGTH_SHORT)
-                                .show();
+
+                        if (response.data() != null) {
+                            Objects.requireNonNull(getActivity()).onBackPressed();
+                            Snackbar.make(viewSnack, R.string.success_save, Snackbar.LENGTH_SHORT)
+                                    .show();
+                        } else {
+                            Snackbar.make(viewSnack, R.string.error_save, Snackbar.LENGTH_SHORT)
+                                    .show();
+                        }
                     }
                     @Override
                     public void onFailure(@NotNull ApolloException e) {
+                        System.out.println(e.toString());
                         errorMessage();
                     }
                 });
