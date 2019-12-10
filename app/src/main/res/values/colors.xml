@@ -10,4 +10,7 @@
     <color name="colorGradientEnd">#30F2F2</color>
 
     <color name="white">#FFFFFF</color>
+    <color name="red">#F44336</color>
+    <color name="yellow">#FF9800</color>
+    <color name="green">@color/colorPrimary</color>
 </resources>

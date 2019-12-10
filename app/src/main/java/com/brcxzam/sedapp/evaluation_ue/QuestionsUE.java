@@ -119,7 +119,9 @@ public class QuestionsUE extends Fragment {
         final String[] questions = Objects.requireNonNull(getContext()).getResources().getStringArray(R.array.questions_ue);
 
         fab = ((MainActivity) Objects.requireNonNull(getActivity())).findViewById(R.id.fab);
-        
+        if (!fab.isShown()) {
+            fab.show();
+        }
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -269,10 +271,15 @@ public class QuestionsUE extends Fragment {
         if (section <= 1) {
             first.setText(R.string.answer_1);
             second.setText(R.string.answer_2);
+            first.setBackgroundResource(R.drawable.radio_states_red);
+            second.setBackgroundResource(R.drawable.radio_states_green);
         } else {
             first.setText(R.string.answer_3);
             second.setText(R.string.answer_4);
             third.setText(R.string.answer_5);
+            first.setBackgroundResource(R.drawable.radio_states_red);
+            second.setBackgroundResource(R.drawable.radio_states_yellow);
+            third.setBackgroundResource(R.drawable.radio_states_green);
         }
     }
 

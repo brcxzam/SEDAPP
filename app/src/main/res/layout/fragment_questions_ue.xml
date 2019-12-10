@@ -110,7 +110,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin"
-                android:visibility="gone">
+                android:visibility="gone"
+                android:minHeight="200dp">
 
                 <TextView
                     android:id="@+id/question"
@@ -118,32 +119,50 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
                     android:gravity="center"
-                    android:layout_margin="@dimen/margin"/>
+                    android:layout_gravity="center"
+                    android:layout_margin="@dimen/margin" />
 
             </com.google.android.material.card.MaterialCardView>
 
             <RadioGroup
                 android:id="@+id/answers"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:visibility="gone">
+                android:visibility="visible">
                 <RadioButton
                     android:id="@+id/first"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:button="@null"
+                    android:background="@drawable/radio_states_red"
+                    android:padding="10dp"
+                    android:textColor="@drawable/radio_text"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
+                    android:gravity="center"
                     android:layout_marginBottom="@dimen/margin"/>
                 <RadioButton
                     android:id="@+id/second"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:button="@null"
+                    android:background="@drawable/radio_states_yellow"
+                    android:padding="10dp"
+                    android:textColor="@drawable/radio_text"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
+                    android:gravity="center"
                     android:layout_marginBottom="@dimen/margin"/>
                 <RadioButton
                     android:id="@+id/third"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/margin"
-                    android:visibility="gone"/>
+                    android:button="@null"
+                    android:background="@drawable/radio_states_green"
+                    android:padding="10dp"
+                    android:textColor="@drawable/radio_text"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
+                    android:gravity="center"
+                    android:layout_marginBottom="@dimen/margin"/>
             </RadioGroup>
 
         </LinearLayout>
