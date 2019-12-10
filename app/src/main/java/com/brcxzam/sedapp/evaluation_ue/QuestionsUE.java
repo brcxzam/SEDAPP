@@ -32,6 +32,7 @@ import com.brcxzam.sedapp.CreateAnexo_2_1Mutation;
 import com.brcxzam.sedapp.DatePickerFragment;
 import com.brcxzam.sedapp.MainActivity;
 import com.brcxzam.sedapp.R;
+import com.brcxzam.sedapp.ReadAllAnexo_2_1Query;
 import com.brcxzam.sedapp.ReadAllUEsQuery;
 import com.brcxzam.sedapp.apollo_client.ApolloConnector;
 import com.brcxzam.sedapp.apollo_client.Token;

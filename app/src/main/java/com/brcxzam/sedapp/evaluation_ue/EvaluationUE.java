@@ -7,16 +7,29 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.apollographql.apollo.ApolloCall;
+import com.apollographql.apollo.api.Response;
+import com.apollographql.apollo.exception.ApolloException;
+import com.apollographql.apollo.fetcher.ApolloResponseFetchers;
 import com.brcxzam.sedapp.MainActivity;
 import com.brcxzam.sedapp.R;
+import com.brcxzam.sedapp.ReadAllAnexo_2_1Query;
+import com.brcxzam.sedapp.ReadAllUEsQuery;
+import com.brcxzam.sedapp.apollo_client.ApolloConnector;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 
@@ -25,6 +38,11 @@ import java.util.Objects;
  */
 public class EvaluationUE extends Fragment {
 
+    private RecyclerView recyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager layoutManager;
+    // ArrayList contenedor de los datos de los Anexos 2.1
+    List<ReadAllAnexo_2_1Query.Anexo_2_1> anexo21List = new ArrayList<>();
 
     public EvaluationUE() {
         // Required empty public constructor
@@ -33,7 +51,8 @@ public class EvaluationUE extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_evaluation_ed, container, false);
+        fetchAnexo21();
+        View view = inflater.inflate(R.layout.fragment_evaluation_ue, container, false);
         final FloatingActionButton fab = ((MainActivity) Objects.requireNonNull(getActivity())).findViewById(R.id.fab);
         final NavController navController = Navigation.findNavController(getActivity(),R.id.nav_host_fragment);
         final NavOptions navOptions = new NavOptions.Builder()
@@ -69,8 +88,46 @@ public class EvaluationUE extends Fragment {
                 }
             }
         });
+        ArrayList<String> anexo21ArrayList;
+        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerViewUE);
+
+        // use this setting to improve performance if you know that changes
+        // in content do not change the layout size of the RecyclerView
+        recyclerView.setHasFixedSize(true);
+
+        // use a linear layout manager
+        layoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(layoutManager);
+
+        anexo21ArrayList = new ArrayList<>();
+        anexo21ArrayList.add("lol");
+        // specify an adapter (see also next example)
         return view;
 
     }
 
+    private void fetchAnexo21() {
+        ApolloConnector.setupApollo(getContext()).query(new ReadAllAnexo_2_1Query())
+                .responseFetcher(ApolloResponseFetchers.CACHE_AND_NETWORK)
+                .enqueue(new ApolloCall.Callback<ReadAllAnexo_2_1Query.Data>() {
+                    @Override
+                    public void onResponse(@NotNull Response<ReadAllAnexo_2_1Query.Data> response) {
+                        if (response.data() != null) {
+                            anexo21List = response.data().Anexo_2_1s();
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mAdapter = new EvaluationUEAdapter(anexo21List);
+                                    recyclerView.setAdapter(mAdapter);
+                                }
+                            });
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NotNull ApolloException e) {
+
+                    }
+                });
+    }
 }

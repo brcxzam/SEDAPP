@@ -1,14 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".evaluation_ue.EvaluationUE">
+    tools:context=".evaluation_ue.EvaluationUE"
+    android:layout_margin="@dimen/margin">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/evaluationUE"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+        android:gravity="center"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="@dimen/margin"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewUE"
+        android:layout_below="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="EVALUACIÓN UE" />
+        android:scrollbars="vertical"/>
 
-</FrameLayout>
+</RelativeLayout>
