@@ -1,18 +1,21 @@
 package com.brcxzam.sedapp.evaluation_ue;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.icu.text.DateFormat;
 import android.icu.text.SimpleDateFormat;
-import android.icu.util.TimeZone;
 import android.os.Bundle;
 
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
-import android.os.Looper;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.RadioButton;
@@ -23,19 +26,14 @@ import android.widget.Toast;
 
 import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.api.Response;
-import com.apollographql.apollo.cache.ApolloCacheHeaders;
-import com.apollographql.apollo.cache.CacheHeaders;
 import com.apollographql.apollo.exception.ApolloException;
 import com.apollographql.apollo.fetcher.ApolloResponseFetchers;
-import com.apollographql.apollo.internal.fetcher.CacheAndNetworkFetcher;
 import com.brcxzam.sedapp.CreateAnexo_2_1Mutation;
 import com.brcxzam.sedapp.DatePickerFragment;
 import com.brcxzam.sedapp.MainActivity;
 import com.brcxzam.sedapp.R;
-import com.brcxzam.sedapp.ReadAllAnexo_2_1Query;
 import com.brcxzam.sedapp.ReadAllUEsQuery;
 import com.brcxzam.sedapp.apollo_client.ApolloConnector;
-import com.brcxzam.sedapp.apollo_client.Token;
 import com.brcxzam.sedapp.type.IAnexo_2_1;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
@@ -45,15 +43,13 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.Array;
-import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 
 public class QuestionsUE extends Fragment {
@@ -80,15 +76,15 @@ public class QuestionsUE extends Fragment {
     private int question = -1;
 
     // ArrayList contenedor de la razón social de las Unidades Económicas
-    List<String> ues = new ArrayList<>();
+    private List<String> ues = new ArrayList<>();
     // ArrayList contenedor de los datos de Unidades Económicas
-    List<ReadAllUEsQuery.UE> ueArrayList = new ArrayList<>();
+    private List<ReadAllUEsQuery.UE> ueArrayList = new ArrayList<>();
 
 
     // Ubicación de la notificación
-    View viewSnack;
+    private View viewSnack;
 
-    String fecha;
+    private String fecha;
 
     public QuestionsUE() {
         // Required empty public constructor
@@ -98,6 +94,8 @@ public class QuestionsUE extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_questions_ue, container, false);
+
+        final String[] questions = Objects.requireNonNull(getContext()).getResources().getStringArray(R.array.questions_ue);
 
         //Obtención de Unidades Económicas a travez de cache y network
         fetchUEs();
@@ -114,19 +112,42 @@ public class QuestionsUE extends Fragment {
         first = view.findViewById(R.id.first);
         second = view.findViewById(R.id.second);
         third = view.findViewById(R.id.third);
-        viewSnack = ((MainActivity) Objects.requireNonNull(getActivity())).findViewById(R.id.viewSnack);
 
-        final String[] questions = Objects.requireNonNull(getContext()).getResources().getStringArray(R.array.questions_ue);
+        viewSnack = Objects.requireNonNull(getActivity()).findViewById(R.id.viewSnack);
+        fab = Objects.requireNonNull(getActivity()).findViewById(R.id.fab);
 
-        fab = ((MainActivity) Objects.requireNonNull(getActivity())).findViewById(R.id.fab);
-        if (!fab.isShown()) {
-            fab.show();
-        }
+        fab.hide(new FloatingActionButton.OnVisibilityChangedListener() {
+            @Override
+            public void onHidden(FloatingActionButton fab) {
+                super.onHidden(fab);
+                fab.setImageResource(R.drawable.ic_arrow_forward_black_24dp);
+                fab.show();
+            }
+        });
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                handleRadioButton();
-                question++;
+                if (question == -1) {
+                    CharSequence period = Objects.requireNonNull(periodTextInputLayout.getEditText()).getText();
+                    CharSequence date = Objects.requireNonNull(dateTextInputLayout.getEditText()).getText();
+                    boolean perioV = isValidPeriod(period);
+                    boolean dateV = isValidDate(date);
+                    if (!perioV) {
+                        periodTextInputLayout.setError("Periodo invalido");
+                    }
+                    if (!dateV) {
+                        dateTextInputLayout.setError("Ingresa una fecha");
+                    }
+                    dateTextInputLayout.setErrorIconDrawable(null);
+                    if (perioV && dateV) {
+                        question++;
+                    }
+                } else {
+                    boolean answer = handleRadioButton();
+                    if (answer) {
+                        question++;
+                    }
+                }
                 if (question < 13) {
                     answers.clearCheck();
                     handleQuestions(questions);
@@ -135,7 +156,6 @@ public class QuestionsUE extends Fragment {
                 }
             }
         });
-
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -161,29 +181,86 @@ public class QuestionsUE extends Fragment {
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 String[] dates = dateFormat(year, month, dayOfMonth);
                 fecha = dates[1];
-                dateTextInputLayout.getEditText().setText(dates[0]);
+                Objects.requireNonNull(dateTextInputLayout.getEditText()).setText(dates[0]);
             }
         });
-        dateTextInputLayout.getEditText().setEnabled(false);
+        Objects.requireNonNull(dateTextInputLayout.getEditText()).setEnabled(false);
         dateTextInputLayout.setEndIconOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                closeKeyboard();
+                dateTextInputLayout.setError(null);
                 dialogFragment.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(),"datePicker");
             }
         });
 
+        clearError(periodTextInputLayout);
+
         return view;
+    }
+
+    private boolean isValidPeriod(CharSequence target) {
+        Pattern pattern = Pattern.compile("^[0-9-]+$");
+        return !TextUtils.isEmpty(target) && pattern.matcher(target).matches() && target.length() <= 6;
+    }
+
+    private boolean isValidDate(CharSequence target) {
+        return !TextUtils.isEmpty(target);
+    }
+
+    public void clearError(final TextInputLayout textInputLayout) {
+        Objects.requireNonNull(textInputLayout.getEditText()).addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                textInputLayout.setError(null);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+    }
+
+    private boolean handleRadioButton() {
+        int checkedId = answers.getCheckedRadioButtonId();
+        switch (checkedId) {
+            case R.id.first:
+                answersArray[question] = 1;
+                return true;
+            case R.id.second:
+                answersArray[question] = 2;
+                return true;
+            case R.id.third:
+                answersArray[question] = 3;
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    private void closeKeyboard() {
+        View view = Objects.requireNonNull(getActivity()).getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            Objects.requireNonNull(imm).hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 
     /**
      * Metodo para dar formato a las fechas
-     * @param year
-     * @param month
-     * @param dayOfMonth
+     * @param year año
+     * @param month mes del 0-11
+     * @param dayOfMonth dia del mes
      * @return String Array que contiene como primer posición el formato de visualización
  *              y como segundo el de almacenamiento
      */
-    public String[] dateFormat(int year, int month, int dayOfMonth) {
+    private String[] dateFormat(int year, int month, int dayOfMonth) {
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(0);
         cal.set(year, month, dayOfMonth, 0, 0, 0);
@@ -305,7 +382,7 @@ public class QuestionsUE extends Fragment {
                                         ues.add(ue.razon_social());
                                     }
 
-                                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(Objects.requireNonNull(getContext()),
+                                    ArrayAdapter<String> adapter = new ArrayAdapter<>(Objects.requireNonNull(getContext()),
                                             android.R.layout.simple_spinner_item, ues);
                                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                     unidadesEconomicasSpinner.setAdapter(adapter);
@@ -375,22 +452,5 @@ public class QuestionsUE extends Fragment {
                         errorMessage();
                     }
                 });
-    }
-
-    private void handleRadioButton() {
-        if (question != -1) {
-            int checkedId = answers.getCheckedRadioButtonId();
-            switch (checkedId) {
-                case R.id.first:
-                    answersArray[question] = 1;
-                    break;
-                case R.id.second:
-                    answersArray[question] = 2;
-                    break;
-                case R.id.third:
-                    answersArray[question] = 3;
-                    break;
-            }
-        }
     }
 }

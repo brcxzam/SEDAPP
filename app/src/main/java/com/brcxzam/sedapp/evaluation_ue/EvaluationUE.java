@@ -83,14 +83,6 @@ public class EvaluationUE extends Fragment {
             public void onClick(View v) {
                 if (navController.getCurrentDestination().getId() == R.id.evaluationUE) {
                     navController.navigate(R.id.action_evaluationUE_to_questionsUE,null,navOptions);
-                    fab.hide(new FloatingActionButton.OnVisibilityChangedListener() {
-                        @Override
-                        public void onHidden(FloatingActionButton fab) {
-                            super.onHidden(fab);
-                            fab.setImageResource(R.drawable.ic_arrow_forward_black_24dp);
-                            fab.show();
-                        }
-                    });
                 }
             }
         });
