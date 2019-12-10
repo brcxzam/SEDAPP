@@ -14,6 +14,7 @@
         android:orientation="horizontal">
 
         <LinearLayout
+            android:id="@+id/edit"
             android:layout_width="100dp"
             android:layout_height="match_parent"
             android:orientation="vertical"
@@ -24,18 +25,19 @@
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:src="@drawable/ic_dvr_black_24dp"
-                android:tint="@android:color/white"/>
+                android:tint="@android:color/white"
+                android:contentDescription="@string/edit"/>
 
             <TextView
-                android:id="@+id/txtEdit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="EDIT"
+                android:text="@string/edit"
                 android:textColor="#ffffff" />
 
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/delete"
             android:layout_width="100dp"
             android:layout_height="match_parent"
             android:orientation="vertical"
@@ -46,14 +48,15 @@
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:src="@drawable/ic_close_black_24dp"
-                android:tint="@android:color/white"/>
+                android:tint="@android:color/white"
+                android:contentDescription="@string/delete"/>
 
             <TextView
                 android:id="@+id/txtDelete"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="DELETE"
+                android:text="@string/delete"
                 android:textColor="#ffffff" />
 
         </LinearLayout>

@@ -29,6 +29,7 @@ import com.brcxzam.sedapp.ReadAllAnexo_2_1Query;
 import com.brcxzam.sedapp.ReadAllUEsQuery;
 import com.brcxzam.sedapp.apollo_client.ApolloConnector;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -43,8 +44,9 @@ import java.util.Objects;
 public class EvaluationUE extends Fragment {
 
     private RecyclerView recyclerView;
-    private RecyclerView.Adapter mAdapter;
+    private EvaluationUEAdapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
+    private View viewSnack;
     // ArrayList contenedor de los datos de los Anexos 2.1
     List<ReadAllAnexo_2_1Query.Anexo_2_1> anexo21List = new ArrayList<>();
 
@@ -92,22 +94,12 @@ public class EvaluationUE extends Fragment {
                 }
             }
         });
-        ArrayList<String> anexo21ArrayList;
+        viewSnack = ((MainActivity) Objects.requireNonNull(getActivity())).findViewById(R.id.viewSnack);
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerViewUE);
-
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
         recyclerView.setHasFixedSize(true);
-
-        // use a linear layout manager
         layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
-
-        anexo21ArrayList = new ArrayList<>();
-        anexo21ArrayList.add("lol");
-        // specify an adapter (see also next example)
         return view;
-
     }
 
     private void fetchAnexo21() {
@@ -123,6 +115,26 @@ public class EvaluationUE extends Fragment {
                                 public void run() {
                                     mAdapter = new EvaluationUEAdapter(anexo21List);
                                     recyclerView.setAdapter(mAdapter);
+                                    mAdapter.setOnItemClickListener(new EvaluationUEAdapter.OnItemClickListener() {
+                                        @Override
+                                        public void onDeleteClick(int position) {
+                                            ReadAllAnexo_2_1Query.Anexo_2_1 data = anexo21List.get(position);
+                                            Snackbar.make(viewSnack, "¿Quieres eliminar la evaluación de \""+data.UE().razon_social()+"\"?",
+                                                    Snackbar.LENGTH_LONG)
+                                                    .setAction(getString(R.string.positive_button), new View.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(View v) {
+
+                                                        }
+                                                    })
+                                                    .show();
+                                        }
+
+                                        @Override
+                                        public void onEditClick(int position) {
+                                            Toast.makeText(getContext(), ""+position, Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
                                 }
                             });
                         }

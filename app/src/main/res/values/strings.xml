@@ -10,14 +10,19 @@
     <string name="success_save">Guardado</string>
     <string name="error_save">Error al guardar</string>
 
+    <string name="edit">Editar</string>
+    <string name="delete">Eliminar</string>
+
     <string name="charts">Graficas</string>
     <string name="places">Ubicación UE</string>
     <string name="evaluationED">Evaluación Psicometrica</string>
     <string name="evaluationUE">Evaluación de Selección de UE</string>
     <string name="sign_off">Cerrar Sesión</string>
     <string name="sign_off_message">¿Quieres cerrar sesión?</string>
+
     <string name="positive_button">ACEPTAR</string>
     <string name="negative_button">CANCELAR</string>
+
     <string name="biometric_auth">Acceso con Sensor</string>
     <string name="biometric_auth_message">¿Quieres activar el acceso con sensor de huellas?</string>
     <string name="biometric_true">ACTIVAR</string>
