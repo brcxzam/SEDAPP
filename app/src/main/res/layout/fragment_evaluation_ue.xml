@@ -11,16 +11,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/evaluationUE"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
         android:gravity="center"
         android:layout_alignParentTop="true"
         android:layout_marginBottom="@dimen/margin"/>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewUE"
-        android:layout_below="@+id/title"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="vertical"/>
+        android:layout_below="@+id/title">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewUE"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="86dp"/>
+
+    </androidx.core.widget.NestedScrollView>
 
 </RelativeLayout>
