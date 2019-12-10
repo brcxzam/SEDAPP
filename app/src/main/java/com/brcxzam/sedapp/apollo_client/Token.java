@@ -47,4 +47,12 @@ public class Token {
     public boolean getBiometricAuth() {
         return sharedPref.getBoolean("biometric-auth",false);
     }
+
+    public void setNombre(String nombre) {
+        sharedPref.edit().putString("nombre",nombre).apply();
+    }
+
+    public String getNombre() {
+        return sharedPref.getString("nombre", "");
+    }
 }

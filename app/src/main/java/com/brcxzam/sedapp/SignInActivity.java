@@ -142,10 +142,12 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                                 assert response.data().signIn != null;
                                 String cargo = response.data().signIn.cargo;
                                 String token = response.data().signIn.token;
+                                String nombre = response.data().signIn.nombre;
                                 Token tokenSP = new Token(getApplicationContext());
                                 tokenSP.setStatus(true);
                                 tokenSP.setCargo(cargo);
                                 tokenSP.setToken(token);
+                                tokenSP.setNombre(nombre);
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {

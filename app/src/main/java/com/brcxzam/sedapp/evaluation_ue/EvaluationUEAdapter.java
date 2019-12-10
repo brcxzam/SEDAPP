@@ -52,7 +52,7 @@ public class EvaluationUEAdapter extends RecyclerView.Adapter<EvaluationUEAdapte
         viewBinderHelper.setOpenOnlyOne(true);
         viewBinderHelper.bind(holder.swipelayout, data.id());
         viewBinderHelper.closeLayout(data.id());
-        holder.bindData(data.periodo(),data.UE().razon_social(),data.total());
+        holder.bindData(data.periodo(),data.UE().razon_social(), data.total());
     }
 
     @Override
@@ -104,16 +104,16 @@ public class EvaluationUEAdapter extends RecyclerView.Adapter<EvaluationUEAdapte
                 }
             });
         }
-        void bindData(String period, String name, int total) {
+        void bindData(String period, String name, double total) {
             this.period.setText(period);
             this.name.setText(name);
-            if (total <= 16) {
+            if (total <= 45) {
                 this.icon.setImageResource(R.drawable.ic_cancel_black_24dp);
                 this.icon.setColorFilter(errorColor);
-            } else if (total <= 24) {
+            } else if (total <= 66) {
                 this.icon.setImageResource(R.drawable.baseline_check_circle_outline_white_48dp);
                 this.icon.setColorFilter(warningColor);
-            } else if (total <= 35) {
+            } else if (total <= 100) {
                 this.icon.setImageResource(R.drawable.ic_check_circle_black_24dp);
                 this.icon.setColorFilter(successColor);
             }

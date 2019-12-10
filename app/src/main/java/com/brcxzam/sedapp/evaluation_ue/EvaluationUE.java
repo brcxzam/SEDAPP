@@ -23,6 +23,7 @@ import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
 import com.apollographql.apollo.fetcher.ApolloResponseFetchers;
+import com.brcxzam.sedapp.DeleteAnexo_2_1Mutation;
 import com.brcxzam.sedapp.MainActivity;
 import com.brcxzam.sedapp.R;
 import com.brcxzam.sedapp.ReadAllAnexo_2_1Query;
@@ -94,6 +95,11 @@ public class EvaluationUE extends Fragment {
         return view;
     }
 
+    private void errorMessage() {
+        Snackbar.make(viewSnack, R.string.error_connection, Snackbar.LENGTH_SHORT)
+                .show();
+    }
+
     private void fetchAnexo21() {
         ApolloConnector.setupApollo(getContext()).query(new ReadAllAnexo_2_1Query())
                 .responseFetcher(ApolloResponseFetchers.CACHE_AND_NETWORK)
@@ -110,13 +116,13 @@ public class EvaluationUE extends Fragment {
                                     mAdapter.setOnItemClickListener(new EvaluationUEAdapter.OnItemClickListener() {
                                         @Override
                                         public void onDeleteClick(int position) {
-                                            ReadAllAnexo_2_1Query.Anexo_2_1 data = anexo21List.get(position);
+                                            final ReadAllAnexo_2_1Query.Anexo_2_1 data = anexo21List.get(position);
                                             Snackbar.make(viewSnack, "¿Quieres eliminar la evaluación de \""+data.UE().razon_social()+"\"?",
                                                     Snackbar.LENGTH_LONG)
                                                     .setAction(getString(R.string.positive_button), new View.OnClickListener() {
                                                         @Override
                                                         public void onClick(View v) {
-
+                                                            deleteAnexo21(data.id());
                                                         }
                                                     })
                                                     .show();
@@ -134,7 +140,25 @@ public class EvaluationUE extends Fragment {
 
                     @Override
                     public void onFailure(@NotNull ApolloException e) {
+                        errorMessage();
+                    }
+                });
+    }
 
+    private void deleteAnexo21(String id) {
+        DeleteAnexo_2_1Mutation deleteAnexo21Mutation = DeleteAnexo_2_1Mutation.builder().id(id).build();
+        ApolloConnector.setupApollo(getContext()).mutate(deleteAnexo21Mutation)
+                .enqueue(new ApolloCall.Callback<DeleteAnexo_2_1Mutation.Data>() {
+                    @Override
+                    public void onResponse(@NotNull Response<DeleteAnexo_2_1Mutation.Data> response) {
+                        if (response.data() != null) {
+                            fetchAnexo21();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NotNull ApolloException e) {
+                        errorMessage();
                     }
                 });
     }

@@ -22,7 +22,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.api.Response;
@@ -30,10 +29,11 @@ import com.apollographql.apollo.exception.ApolloException;
 import com.apollographql.apollo.fetcher.ApolloResponseFetchers;
 import com.brcxzam.sedapp.CreateAnexo_2_1Mutation;
 import com.brcxzam.sedapp.DatePickerFragment;
-import com.brcxzam.sedapp.MainActivity;
 import com.brcxzam.sedapp.R;
+import com.brcxzam.sedapp.ReadAllAnexo_2_1Query;
 import com.brcxzam.sedapp.ReadAllUEsQuery;
 import com.brcxzam.sedapp.apollo_client.ApolloConnector;
+import com.brcxzam.sedapp.apollo_client.Token;
 import com.brcxzam.sedapp.type.IAnexo_2_1;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
@@ -208,7 +208,7 @@ public class QuestionsUE extends Fragment {
         return !TextUtils.isEmpty(target);
     }
 
-    public void clearError(final TextInputLayout textInputLayout) {
+    private void clearError(final TextInputLayout textInputLayout) {
         Objects.requireNonNull(textInputLayout.getEditText()).addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -401,6 +401,40 @@ public class QuestionsUE extends Fragment {
         String periodo = Objects.requireNonNull(periodTextInputLayout.getEditText()).getText().toString();
         int positionUE = unidadesEconomicasSpinner.getSelectedItemPosition();
         String uERFC = ueArrayList.get(positionUE).RFC();
+
+        int s1TotalNo = 0, s1TotalSi = 0;
+        int s2SumaNoCumple = 0, s2SumaParcialmente = 0, s2SumaCumple = 0;
+        int s3SumaNoCumple = 0, s3SumaParcialmente = 0, s3SumaCumple = 0;
+        for (int i = 0; i < answersArray.length; i++) {
+            if (i < 4) {
+                if (answersArray[i] == 1) {
+                    s1TotalNo++;
+                } else {
+                    s1TotalSi++;
+                }
+            } else if (i < 10){
+                if (answersArray[i] == 1) {
+                    s2SumaNoCumple++;
+                } else if (answersArray[i] == 2){
+                    s2SumaParcialmente++;
+                } else {
+                    s2SumaCumple++;
+                }
+            } else if (i < 13){
+                if (answersArray[i] == 1) {
+                    s3SumaNoCumple++;
+                } else if (answersArray[i] == 2){
+                    s3SumaParcialmente++;
+                } else {
+                    s3SumaCumple++;
+                }
+            }
+        }
+        double section1 = ( (double) ( s1TotalNo + ( s1TotalSi * 2 ) ) / 8 ) * 100;
+        double section2 = ( (double) ( s2SumaNoCumple + ( s2SumaParcialmente * 2 ) + ( s2SumaCumple * 3 ) ) / 18 ) * 100;
+        double section3 = ( (double) ( s3SumaNoCumple + ( s3SumaParcialmente * 2 ) + ( s3SumaCumple * 3 ) ) / 9) * 100;
+        double total = ( section1 + section2 + section3)/3;
+        String aplicador = new Token(getContext()).getNombre();
         CreateAnexo_2_1Mutation anexo21Mutation = CreateAnexo_2_1Mutation.builder()
                 .data(IAnexo_2_1.builder()
                         .periodo(periodo)
@@ -409,25 +443,25 @@ public class QuestionsUE extends Fragment {
                         .s1_p2(answersArray[1])
                         .s1_p3(answersArray[2])
                         .s1_p4(answersArray[3])
-                        .s1_total_no(3)
-                        .s1_total_si(0)
+                        .s1_total_no(s1TotalNo)
+                        .s1_total_si(s1TotalSi)
                         .s2_p1(answersArray[4])
                         .s2_p2(answersArray[5])
                         .s2_p3(answersArray[6])
                         .s2_p4(answersArray[7])
                         .s2_p5(answersArray[8])
                         .s2_p6(answersArray[9])
-                        .s2_suma_no_cumple(6)
-                        .s2_suma_parcialmente(0)
-                        .s2_suma_cumple(0)
+                        .s2_suma_no_cumple(s2SumaNoCumple)
+                        .s2_suma_parcialmente(s2SumaParcialmente)
+                        .s2_suma_cumple(s2SumaCumple)
                         .s3_p1(answersArray[10])
                         .s3_p2(answersArray[11])
                         .s3_p3(answersArray[12])
-                        .s3_suma_no_cumple(3)
-                        .s3_suma_parcialmente(0)
-                        .s3_suma_cumple(0)
-                        .total(13)
-                        .aplicador("Don Pedro")
+                        .s3_suma_no_cumple(s3SumaNoCumple)
+                        .s3_suma_parcialmente(s3SumaParcialmente)
+                        .s3_suma_cumple(s3SumaCumple)
+                        .total(total)
+                        .aplicador(aplicador)
                         .iEId("1")
                         .uERFC(uERFC)
                         .build())
