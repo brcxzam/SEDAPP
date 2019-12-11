@@ -7,17 +7,17 @@
 
     <fragment
         android:id="@+id/charts"
-        android:name="com.brcxzam.sedapp.Charts"
+        android:name="com.brcxzam.sedapp.charts.Charts"
         android:label="fragment_charts"
         tools:layout="@layout/fragment_charts" />
     <fragment
         android:id="@+id/placesUE"
-        android:name="com.brcxzam.sedapp.PlacesUE"
+        android:name="com.brcxzam.sedapp.places_ue.PlacesUE"
         android:label="fragment_places_ue"
         tools:layout="@layout/fragment_places_ue" />
     <fragment
         android:id="@+id/evaluationED"
-        android:name="com.brcxzam.sedapp.EvaluationED"
+        android:name="com.brcxzam.sedapp.evaluation_ed.EvaluationED"
         android:label="fragment_evaluation_ed"
         tools:layout="@layout/fragment_evaluation_ed" />
     <fragment

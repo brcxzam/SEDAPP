@@ -1,4 +1,4 @@
-package com.brcxzam.sedapp;
+package com.brcxzam.sedapp.charts;
 
 
 import android.os.Bundle;
@@ -11,6 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.brcxzam.sedapp.MainActivity;
+import com.brcxzam.sedapp.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 

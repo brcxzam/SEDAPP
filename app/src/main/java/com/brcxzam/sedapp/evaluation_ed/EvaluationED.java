@@ -1,4 +1,4 @@
-package com.brcxzam.sedapp;
+package com.brcxzam.sedapp.evaluation_ed;
 
 
 import android.os.Bundle;
