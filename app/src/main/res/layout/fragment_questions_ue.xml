@@ -129,7 +129,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:visibility="visible">
+                android:visibility="gone">
                 <RadioButton
                     android:id="@+id/first"
                     android:layout_width="match_parent"
@@ -168,5 +168,22 @@
         </LinearLayout>
 
     </ScrollView>
+
+    <RelativeLayout
+        android:id="@+id/totalLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:layout_margin="@dimen/margin">
+
+        <TextView
+            android:id="@+id/total"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"/>
+
+    </RelativeLayout>
 
 </RelativeLayout>

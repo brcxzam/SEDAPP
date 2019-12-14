@@ -3,6 +3,7 @@ package com.brcxzam.sedapp.evaluation_ue;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.icu.text.DateFormat;
+import android.icu.text.DecimalFormat;
 import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
 
@@ -20,6 +21,7 @@ import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -67,6 +69,8 @@ public class QuestionsUE extends Fragment {
     private RadioButton second;
     private RadioButton third;
     private FloatingActionButton fab;
+    private RelativeLayout totalLayout;
+    private TextView totalTextView;
 
     // Array contenedor de las respuestas a las preguntas
     private Integer[] answersArray = new Integer[13];
@@ -86,6 +90,8 @@ public class QuestionsUE extends Fragment {
 
     private String fecha;
 
+    String[] totals;
+
     public QuestionsUE() {
         // Required empty public constructor
     }
@@ -96,6 +102,7 @@ public class QuestionsUE extends Fragment {
         View view = inflater.inflate(R.layout.fragment_questions_ue, container, false);
 
         final String[] questions = Objects.requireNonNull(getContext()).getResources().getStringArray(R.array.questions_ue);
+        totals = Objects.requireNonNull(getContext()).getResources().getStringArray(R.array.totals);
 
         //Obtención de Unidades Económicas a travez de cache y network
         fetchUEs();
@@ -112,6 +119,8 @@ public class QuestionsUE extends Fragment {
         first = view.findViewById(R.id.first);
         second = view.findViewById(R.id.second);
         third = view.findViewById(R.id.third);
+        totalLayout = view.findViewById(R.id.totalLayout);
+        totalTextView = view.findViewById(R.id.total);
 
         viewSnack = Objects.requireNonNull(getActivity()).findViewById(R.id.viewSnack);
         fab = Objects.requireNonNull(getActivity()).findViewById(R.id.fab);
@@ -144,11 +153,11 @@ public class QuestionsUE extends Fragment {
                     }
                 } else {
                     boolean answer = handleRadioButton();
-                    if (answer) {
+                    if (answer || question == 13) {
                         question++;
                     }
                 }
-                if (question < 13) {
+                if (question < 14) {
                     answers.clearCheck();
                     handleQuestions(questions);
                 } else {
@@ -161,16 +170,6 @@ public class QuestionsUE extends Fragment {
             public void onClick(View v) {
                 question--;
                 handleQuestions(questions);
-                if (question == 11) {
-                    fab.hide(new FloatingActionButton.OnVisibilityChangedListener() {
-                        @Override
-                        public void onHidden(FloatingActionButton fab) {
-                            super.onHidden(fab);
-                            fab.setImageResource(R.drawable.ic_arrow_forward_black_24dp);
-                            fab.show();
-                        }
-                    });
-                }
             }
         });
 
@@ -280,7 +279,7 @@ public class QuestionsUE extends Fragment {
         if (question == -1) {
             section = 0;
             sectionTextView.setText(R.string.ue);
-        } else {
+        } else if (question < 13) {
             if (answersArray[question] != null){
                 int answer = answersArray[question];
                 switch (answer) {
@@ -310,6 +309,26 @@ public class QuestionsUE extends Fragment {
         }
 
         if (question == 12) {
+            totalLayout.setVisibility(View.GONE);
+            fab.hide(new FloatingActionButton.OnVisibilityChangedListener() {
+                @Override
+                public void onHidden(FloatingActionButton fab) {
+                    super.onHidden(fab);
+                    fab.setImageResource(R.drawable.ic_arrow_forward_black_24dp);
+                    fab.show();
+                }
+            });
+        } else if (question == 13) {
+            percentTotal();
+            DecimalFormat format = new DecimalFormat("#.00");
+            if (total <= 45) {
+                totalTextView.setText(format.format(total)+"% "+totals[0]);
+            } else if (total <= 66) {
+                totalTextView.setText(format.format(total)+"% "+totals[1]);
+            } else if (total <= 100) {
+                totalTextView.setText(format.format(total)+"% "+totals[2]);
+            }
+            totalLayout.setVisibility(View.VISIBLE);
             fab.hide(new FloatingActionButton.OnVisibilityChangedListener() {
                 @Override
                 public void onHidden(FloatingActionButton fab) {
@@ -326,12 +345,14 @@ public class QuestionsUE extends Fragment {
             sectionTextView.setText(R.string.section2);
         } else if (section == 3 && question < 13) {
             sectionTextView.setText(R.string.section3);
+        } else {
+            sectionTextView.setText("Resultado");
         }
 
         int visibilityBack = section > 0 ? View.VISIBLE : View.INVISIBLE;
-        int visibilitySection0 = section == 0 ? View.VISIBLE : View.GONE;
-        int visibilitySection1 = section > 0 ? View.VISIBLE : View.GONE;
-        int visibilitySections2_3 = section > 1 ? View.VISIBLE : View.GONE;
+        int visibilitySection0 = section == 0 && question < 13 ? View.VISIBLE : View.GONE;
+        int visibilitySection1 = section > 0 && question < 13 ? View.VISIBLE : View.GONE;
+        int visibilitySections2_3 = section > 1 && question < 13 ? View.VISIBLE : View.GONE;
 
         back.setVisibility(visibilityBack);
 
@@ -397,14 +418,14 @@ public class QuestionsUE extends Fragment {
                 });
     }
 
-    private void createEvaluation() {
-        String periodo = Objects.requireNonNull(periodTextInputLayout.getEditText()).getText().toString();
-        int positionUE = unidadesEconomicasSpinner.getSelectedItemPosition();
-        String uERFC = ueArrayList.get(positionUE).RFC();
-
-        int s1TotalNo = 0, s1TotalSi = 0;
-        int s2SumaNoCumple = 0, s2SumaParcialmente = 0, s2SumaCumple = 0;
-        int s3SumaNoCumple = 0, s3SumaParcialmente = 0, s3SumaCumple = 0;
+    int s1TotalNo = 0, s1TotalSi = 0;
+    int s2SumaNoCumple = 0, s2SumaParcialmente = 0, s2SumaCumple = 0;
+    int s3SumaNoCumple = 0, s3SumaParcialmente = 0, s3SumaCumple = 0;
+    double total = 0;
+    public void percentTotal() {
+        s1TotalNo = 0; s1TotalSi = 0;
+        s2SumaNoCumple = 0; s2SumaParcialmente = 0; s2SumaCumple = 0;
+        s3SumaNoCumple = 0; s3SumaParcialmente = 0; s3SumaCumple = 0;
         for (int i = 0; i < answersArray.length; i++) {
             if (i < 4) {
                 if (answersArray[i] == 1) {
@@ -433,7 +454,13 @@ public class QuestionsUE extends Fragment {
         double section1 = ( (double) ( s1TotalNo + ( s1TotalSi * 2 ) ) / 8 ) * 100;
         double section2 = ( (double) ( s2SumaNoCumple + ( s2SumaParcialmente * 2 ) + ( s2SumaCumple * 3 ) ) / 18 ) * 100;
         double section3 = ( (double) ( s3SumaNoCumple + ( s3SumaParcialmente * 2 ) + ( s3SumaCumple * 3 ) ) / 9) * 100;
-        double total = ( section1 + section2 + section3)/3;
+        total = ( section1 + section2 + section3) / 3;
+    }
+
+    private void createEvaluation() {
+        String periodo = Objects.requireNonNull(periodTextInputLayout.getEditText()).getText().toString();
+        int positionUE = unidadesEconomicasSpinner.getSelectedItemPosition();
+        String uERFC = ueArrayList.get(positionUE).RFC();
         String aplicador = new Token(getContext()).getNombre();
         CreateAnexo_2_1Mutation anexo21Mutation = CreateAnexo_2_1Mutation.builder()
                 .data(IAnexo_2_1.builder()

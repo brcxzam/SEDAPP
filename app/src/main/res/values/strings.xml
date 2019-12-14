@@ -58,16 +58,10 @@
     <string name="answer_3">No Cumple</string>
     <string name="answer_4">Parcialmente</string>
     <string name="answer_5">Cumple</string>
-
-    <string-array name="planets_array">
-        <item>Mercury</item>
-        <item>Venus</item>
-        <item>Earth</item>
-        <item>Mars</item>
-        <item>Jupiter</item>
-        <item>Saturn</item>
-        <item>Uranus</item>
-        <item>Neptune</item>
+    <string-array name="totals">
+        <item>Alta Vulnerabilidad; Unidad Económica no viable para incorporarse a Educación Dual</item>
+        <item>Mediana Vulnerabilidad; Unidad Económica con opción a incorporarse a Educación Dual</item>
+        <item>Baja Vulnerabilidad; Unidad Económica apta para incorporar a Educación Dual</item>
     </string-array>
 
     <!-- TODO: Remove or change this placeholder text -->
