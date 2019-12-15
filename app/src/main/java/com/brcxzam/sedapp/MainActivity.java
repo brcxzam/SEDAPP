@@ -2,10 +2,13 @@ package com.brcxzam.sedapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.transition.ChangeBounds;
 import android.view.Menu;
@@ -13,6 +16,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.brcxzam.sedapp.apollo_client.Token;
+import com.brcxzam.sedapp.database.NetworkStateChecker;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -21,6 +25,8 @@ import com.google.android.material.snackbar.Snackbar;
 public class MainActivity extends AppCompatActivity {
 
     FloatingActionButton fab;
+
+    NetworkStateChecker checker = new NetworkStateChecker();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,8 +38,16 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(bar);
         bar.replaceMenu(R.menu.bottomappbar_menu);
 
+        registerReceiver(checker, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+
         fab = findViewById(R.id.fab);
         fab.hide();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(checker);
     }
 
     @Override

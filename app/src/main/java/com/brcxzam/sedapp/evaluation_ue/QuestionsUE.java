@@ -24,6 +24,7 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.api.Response;
@@ -36,6 +37,11 @@ import com.brcxzam.sedapp.ReadAllAnexo_2_1Query;
 import com.brcxzam.sedapp.ReadAllUEsQuery;
 import com.brcxzam.sedapp.apollo_client.ApolloConnector;
 import com.brcxzam.sedapp.apollo_client.Token;
+import com.brcxzam.sedapp.database.Anexo21;
+import com.brcxzam.sedapp.database.Anexo21Dao;
+import com.brcxzam.sedapp.database.AppDatabase;
+import com.brcxzam.sedapp.database.UEs;
+import com.brcxzam.sedapp.database.UEsDao;
 import com.brcxzam.sedapp.type.IAnexo_2_1;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
@@ -51,6 +57,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 
@@ -72,18 +79,20 @@ public class QuestionsUE extends Fragment {
     private RelativeLayout totalLayout;
     private TextView totalTextView;
 
+    // Unidades Económicas
+    UEsDao uesDao;
+    List<UEs> uesList = new ArrayList<>();
+    ArrayAdapter<UEs> adapter;
+
+    // Anexo 2.1
+    Anexo21Dao anexo21Dao;
+
     // Array contenedor de las respuestas a las preguntas
     private Integer[] answersArray = new Integer[13];
 
     // Contadores de sección y número de pregunta; -1 Datos iniciales de la evaluación
     private int section = 0;
     private int question = -1;
-
-    // ArrayList contenedor de la razón social de las Unidades Económicas
-    private List<String> ues = new ArrayList<>();
-    // ArrayList contenedor de los datos de Unidades Económicas
-    private List<ReadAllUEsQuery.UE> ueArrayList = new ArrayList<>();
-
 
     // Ubicación de la notificación
     private View viewSnack;
@@ -100,12 +109,6 @@ public class QuestionsUE extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_questions_ue, container, false);
-
-        final String[] questions = Objects.requireNonNull(getContext()).getResources().getStringArray(R.array.questions_ue);
-        totals = Objects.requireNonNull(getContext()).getResources().getStringArray(R.array.totals);
-
-        //Obtención de Unidades Económicas a travez de cache y network
-        fetchUEs();
 
         back = view.findViewById(R.id.back);
         sectionTextView = view.findViewById(R.id.section);
@@ -124,6 +127,22 @@ public class QuestionsUE extends Fragment {
 
         viewSnack = Objects.requireNonNull(getActivity()).findViewById(R.id.viewSnack);
         fab = Objects.requireNonNull(getActivity()).findViewById(R.id.fab);
+
+        // Conexión con la base de datos
+        AppDatabase database = AppDatabase.getAppDatabase(getContext());
+        uesDao = database.uesDao();
+        anexo21Dao = database.anexo21Dao();
+
+        // Spinner con de UE
+        adapter = new ArrayAdapter<>(Objects.requireNonNull(getContext()), android.R.layout.simple_spinner_item, uesList);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        unidadesEconomicasSpinner.setAdapter(adapter);
+
+        // Carga de registros UE
+        showUEs(); fetchUEs();
+
+        final String[] questions = Objects.requireNonNull(getContext()).getResources().getStringArray(R.array.questions_ue);
+        totals = Objects.requireNonNull(getContext()).getResources().getStringArray(R.array.totals);
 
         fab.hide(new FloatingActionButton.OnVisibilityChangedListener() {
             @Override
@@ -195,6 +214,8 @@ public class QuestionsUE extends Fragment {
 
         clearError(periodTextInputLayout);
 
+
+
         return view;
     }
 
@@ -251,14 +272,7 @@ public class QuestionsUE extends Fragment {
         }
     }
 
-    /**
-     * Metodo para dar formato a las fechas
-     * @param year año
-     * @param month mes del 0-11
-     * @param dayOfMonth dia del mes
-     * @return String Array que contiene como primer posición el formato de visualización
- *              y como segundo el de almacenamiento
-     */
+    // Formato de fecha
     private String[] dateFormat(int year, int month, int dayOfMonth) {
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(0);
@@ -381,32 +395,40 @@ public class QuestionsUE extends Fragment {
         }
     }
 
+    // Mensaje de error de conexión con el servidor
     private void errorMessage() {
         Snackbar.make(viewSnack, R.string.error_connection, Snackbar.LENGTH_SHORT)
                 .show();
     }
 
+    // Actualización de la lista con las UEs
+    private void showUEs() {
+        uesList.clear();
+        uesList.addAll(uesDao.readAll());
+        adapter.notifyDataSetChanged();
+    }
+
+    // Sincronización de las UEs con el servidor
     private void fetchUEs() {
-        ApolloConnector.setupApollo(getContext()).query(new ReadAllUEsQuery())
-                .responseFetcher(ApolloResponseFetchers.CACHE_AND_NETWORK)
+        ApolloConnector
+                .setupApollo(getContext())
+                .query(ReadAllUEsQuery.builder().build())
                 .enqueue(new ApolloCall.Callback<ReadAllUEsQuery.Data>() {
                     @Override
                     public void onResponse(@NotNull final Response<ReadAllUEsQuery.Data> response) {
                         if (response.data() !=  null) {
+                            List<UEs> uesList = new ArrayList<>();
+
+                            for (ReadAllUEsQuery.UE ue:
+                                    Objects.requireNonNull(response.data().UEs())) {
+                                uesList.add(new UEs(ue.RFC(),ue.razon_social()));
+                            }
+
+                            uesDao.insertAll(uesList);
                             Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-
-                                    ueArrayList = Objects.requireNonNull(response.data().UEs());
-
-                                    for (ReadAllUEsQuery.UE ue: Objects.requireNonNull(response.data().UEs())) {
-                                        ues.add(ue.razon_social());
-                                    }
-
-                                    ArrayAdapter<String> adapter = new ArrayAdapter<>(Objects.requireNonNull(getContext()),
-                                            android.R.layout.simple_spinner_item, ues);
-                                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                                    unidadesEconomicasSpinner.setAdapter(adapter);
+                                    showUEs();
                                 }
                             });
                         }
@@ -457,11 +479,48 @@ public class QuestionsUE extends Fragment {
         total = ( section1 + section2 + section3) / 3;
     }
 
+    private void createEvaluationLocal(String periodo, String UERFC, String aplicador) {
+        Anexo21 res = new Anexo21();
+        res.setId(UUID.randomUUID().toString());
+        res.setPeriodo(periodo);
+        res.setFecha(fecha);
+        res.setS1_p1(answersArray[0]);
+        res.setS1_p2(answersArray[1]);
+        res.setS1_p3(answersArray[2]);
+        res.setS1_p4(answersArray[3]);
+        res.setS1_total_no(s1TotalNo);
+        res.setS1_total_si(s1TotalSi);
+        res.setS2_p1(answersArray[4]);
+        res.setS2_p2(answersArray[5]);
+        res.setS2_p3(answersArray[6]);
+        res.setS2_p4(answersArray[7]);
+        res.setS2_p5(answersArray[8]);
+        res.setS2_p6(answersArray[9]);
+        res.setS2_suma_no_cumple(s2SumaNoCumple);
+        res.setS2_suma_parcialmente(s2SumaParcialmente);
+        res.setS2_suma_cumple(s2SumaCumple);
+        res.setS3_p1(answersArray[10]);
+        res.setS3_p2(answersArray[11]);
+        res.setS3_p3(answersArray[12]);
+        res.setS3_suma_no_cumple(s3SumaNoCumple);
+        res.setS3_suma_parcialmente(s3SumaParcialmente);
+        res.setS3_suma_cumple(s3SumaCumple);
+        res.setTotal(total);
+        res.setAplicador(aplicador);
+        res.setIEId("1");
+        res.setInstitucion_educativa("");
+        res.setUERFC(UERFC);
+        res.setRazon_social("");
+        res.setAccion("CREATE");
+        anexo21Dao.create(res);
+        Objects.requireNonNull(getActivity()).onBackPressed();
+    }
+
     private void createEvaluation() {
-        String periodo = Objects.requireNonNull(periodTextInputLayout.getEditText()).getText().toString();
+        final String periodo = Objects.requireNonNull(periodTextInputLayout.getEditText()).getText().toString();
         int positionUE = unidadesEconomicasSpinner.getSelectedItemPosition();
-        String uERFC = ueArrayList.get(positionUE).RFC();
-        String aplicador = new Token(getContext()).getNombre();
+        final String uERFC = uesList.get(positionUE).getRFC();
+        final String aplicador = new Token(Objects.requireNonNull(getContext())).getNombre();
         CreateAnexo_2_1Mutation anexo21Mutation = CreateAnexo_2_1Mutation.builder()
                 .data(IAnexo_2_1.builder()
                         .periodo(periodo)
@@ -509,8 +568,8 @@ public class QuestionsUE extends Fragment {
                     }
                     @Override
                     public void onFailure(@NotNull ApolloException e) {
-                        System.out.println(e.toString());
                         errorMessage();
+                        createEvaluationLocal(periodo,uERFC,aplicador);
                     }
                 });
     }

@@ -52,38 +52,38 @@ public class ApolloConnector {
                 })
                 .build();
 
-        // Create the ApolloSqlHelper. Please note that if null is passed in as the name, you will get an in-memory
-        // Sqlite database that will not persist across restarts of the app.
-        ApolloSqlHelper apolloSqlHelper = ApolloSqlHelper.create(context, "db_name");
-
-        // Create NormalizedCacheFactory
-        NormalizedCacheFactory cacheFactory = new SqlNormalizedCacheFactory(apolloSqlHelper);
-
-        // Create the cache key resolver, this example works well when all types have globally unique ids.
-        CacheKeyResolver resolver =  new CacheKeyResolver() {
-            @NotNull @Override
-            public CacheKey fromFieldRecordSet(@NotNull ResponseField field, @NotNull Map<String, Object> recordSet) {
-                return formatCacheKey((String) recordSet.get("id"));
-            }
-
-            @NotNull @Override
-            public CacheKey fromFieldArguments(@NotNull ResponseField field, @NotNull Operation.Variables variables) {
-                return formatCacheKey((String) field.resolveArgument("id", variables));
-            }
-
-            private CacheKey formatCacheKey(String id) {
-                if (id == null || id.isEmpty()) {
-                    return CacheKey.NO_KEY;
-                } else {
-                    return CacheKey.from(id);
-                }
-            }
-        };
+//        // Create the ApolloSqlHelper. Please note that if null is passed in as the name, you will get an in-memory
+//        // Sqlite database that will not persist across restarts of the app.
+//        ApolloSqlHelper apolloSqlHelper = ApolloSqlHelper.create(context, "db_name");
+//
+//        // Create NormalizedCacheFactory
+//        NormalizedCacheFactory cacheFactory = new SqlNormalizedCacheFactory(apolloSqlHelper);
+//
+//        // Create the cache key resolver, this example works well when all types have globally unique ids.
+//        CacheKeyResolver resolver =  new CacheKeyResolver() {
+//            @NotNull @Override
+//            public CacheKey fromFieldRecordSet(@NotNull ResponseField field, @NotNull Map<String, Object> recordSet) {
+//                return formatCacheKey((String) recordSet.get("id"));
+//            }
+//
+//            @NotNull @Override
+//            public CacheKey fromFieldArguments(@NotNull ResponseField field, @NotNull Operation.Variables variables) {
+//                return formatCacheKey((String) field.resolveArgument("id", variables));
+//            }
+//
+//            private CacheKey formatCacheKey(String id) {
+//                if (id == null || id.isEmpty()) {
+//                    return CacheKey.NO_KEY;
+//                } else {
+//                    return CacheKey.from(id);
+//                }
+//            }
+//        };
 
         // Build the Apollo Client
         return ApolloClient.builder()
                 .serverUrl(BASE_URL)
-                .normalizedCache(cacheFactory, resolver)
+//                .normalizedCache(cacheFactory, resolver)
                 .okHttpClient(okHttpClient)
                 .build();
     }

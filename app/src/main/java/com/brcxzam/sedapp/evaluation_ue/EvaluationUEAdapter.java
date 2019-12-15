@@ -7,13 +7,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.brcxzam.sedapp.R;
-import com.brcxzam.sedapp.ReadAllAnexo_2_1Query;
+import com.brcxzam.sedapp.database.Anexo21;
 import com.chauthai.swipereveallayout.SwipeRevealLayout;
 import com.chauthai.swipereveallayout.ViewBinderHelper;
 
@@ -21,13 +20,12 @@ import java.util.List;
 
 public class EvaluationUEAdapter extends RecyclerView.Adapter<EvaluationUEAdapter.ViewHolder> {
 
-    private List<ReadAllAnexo_2_1Query.Anexo_2_1> anexo21ArrayList;
+    private List<Anexo21> anexo21ArrayList;
     private OnItemClickListener listener;
     private final ViewBinderHelper viewBinderHelper = new ViewBinderHelper();
 
     public interface OnItemClickListener {
         void onDeleteClick(int position);
-        void onEditClick(int position);
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
@@ -35,7 +33,7 @@ public class EvaluationUEAdapter extends RecyclerView.Adapter<EvaluationUEAdapte
     }
 
 
-    EvaluationUEAdapter(List<ReadAllAnexo_2_1Query.Anexo_2_1> anexo21ArrayList) {
+    EvaluationUEAdapter(List<Anexo21> anexo21ArrayList) {
         this.anexo21ArrayList = anexo21ArrayList;
     }
 
@@ -48,11 +46,11 @@ public class EvaluationUEAdapter extends RecyclerView.Adapter<EvaluationUEAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        ReadAllAnexo_2_1Query.Anexo_2_1 data = anexo21ArrayList.get(position);
+        Anexo21 data = anexo21ArrayList.get(position);
         viewBinderHelper.setOpenOnlyOne(true);
-        viewBinderHelper.bind(holder.swipelayout, data.id());
-        viewBinderHelper.closeLayout(data.id());
-        holder.bindData(data.periodo(),data.UE().razon_social(), data.total());
+        viewBinderHelper.bind(holder.swipelayout, data.getId());
+        viewBinderHelper.closeLayout(data.getId());
+        holder.bindData(data.getPeriodo(),data.getRazon_social(), data.getTotal());
     }
 
     @Override
@@ -63,7 +61,6 @@ public class EvaluationUEAdapter extends RecyclerView.Adapter<EvaluationUEAdapte
     class ViewHolder extends RecyclerView.ViewHolder {
         private ImageView icon;
         private TextView period, name;
-        private LinearLayout edit, delete;
         private SwipeRevealLayout swipelayout;
         int errorColor = Color.rgb(244,67,54);
         int warningColor = Color.rgb(255,152,0);
@@ -73,23 +70,9 @@ public class EvaluationUEAdapter extends RecyclerView.Adapter<EvaluationUEAdapte
             icon = itemView.findViewById(R.id.icon);
             period = itemView.findViewById(R.id.period);
             name = itemView.findViewById(R.id.name);
-            edit = itemView.findViewById(R.id.edit);
-            delete = itemView.findViewById(R.id.delete);
+            LinearLayout delete = itemView.findViewById(R.id.delete);
             swipelayout = itemView.findViewById(R.id.swipelayout);
 
-            edit.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (listener != null){
-                        int position = getAdapterPosition();
-                        if (position != RecyclerView.NO_POSITION) {
-                            listener.onEditClick(position);
-                            ReadAllAnexo_2_1Query.Anexo_2_1 data = anexo21ArrayList.get(position);
-                            viewBinderHelper.closeLayout(data.id());
-                        }
-                    }
-                }
-            });
             delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -97,8 +80,8 @@ public class EvaluationUEAdapter extends RecyclerView.Adapter<EvaluationUEAdapte
                         int position = getAdapterPosition();
                         if (position != RecyclerView.NO_POSITION) {
                             listener.onDeleteClick(position);
-                            ReadAllAnexo_2_1Query.Anexo_2_1 data = anexo21ArrayList.get(position);
-                            viewBinderHelper.closeLayout(data.id());
+                            Anexo21 data = anexo21ArrayList.get(position);
+                            viewBinderHelper.closeLayout(data.getId());
                         }
                     }
                 }
