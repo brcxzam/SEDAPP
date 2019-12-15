@@ -17,7 +17,7 @@ public interface Anexo21Dao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public void createALL(List<Anexo21> anexo21List);
 
-    @Query("SELECT * FROM Anexo_2_1")
+    @Query("SELECT * FROM Anexo_2_1 ORDER BY id DESC")
     public List<Anexo21> readALL();
 
     @Query("SELECT * FROM Anexo_2_1 WHERE accion == 'CREATE'")
@@ -31,4 +31,7 @@ public interface Anexo21Dao {
 
     @Delete
     public void delete(Anexo21 anexo21);
+
+    @Query("DELETE FROM Anexo_2_1 WHERE accion IS NULL")
+    public void deleteAll();
 }

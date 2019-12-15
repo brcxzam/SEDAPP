@@ -24,6 +24,7 @@ public class NetworkStateChecker extends BroadcastReceiver {
 
     Context context;
     Anexo21Dao anexo21Dao;
+    DeleteOfflineDao deleteOfflineDao;
     private static final String ERROR_REQUEST = "ERROR REQUEST GQL";
 
     @Override
@@ -38,7 +39,9 @@ public class NetworkStateChecker extends BroadcastReceiver {
 
         if (isConnected && networkInfo.getType() != ConnectivityManager.TYPE_MOBILE) {
 
-            anexo21Dao = AppDatabase.getAppDatabase(context).anexo21Dao();
+            AppDatabase appDatabase = AppDatabase.getAppDatabase(context);
+            anexo21Dao = appDatabase.anexo21Dao();
+            deleteOfflineDao = appDatabase.deleteOfflineDao();
 
             List<Anexo21> anexo21sUnsynced = anexo21Dao.readAllUnsynced();
             for (Anexo21 anexo21: anexo21sUnsynced) {
@@ -76,12 +79,12 @@ public class NetworkStateChecker extends BroadcastReceiver {
                 createEvaluation(anexo21Mutation,anexo21.getId());
             }
 
-            List<Anexo21> anexo21sDelete = anexo21Dao.readAllDelete();
-            for (Anexo21 anexo21: anexo21sDelete) {
+            List<DeleteOffline> anexo21sDelete = deleteOfflineDao.readAnexo21();
+            for (DeleteOffline deleteOffline: anexo21sDelete) {
                 DeleteAnexo_2_1Mutation deleteAnexo21Mutation = DeleteAnexo_2_1Mutation.builder().
-                        id(anexo21.getId())
+                        id(deleteOffline.getId_row())
                         .build();
-                deleteAnexo21(deleteAnexo21Mutation, anexo21.getId());
+                deleteAnexo21(deleteAnexo21Mutation, deleteOffline.getId_row(),deleteOffline.getId());
             }
 
         }
@@ -103,15 +106,15 @@ public class NetworkStateChecker extends BroadcastReceiver {
                 });
     }
 
-    private void deleteAnexo21(DeleteAnexo_2_1Mutation deleteAnexo21Mutation, final String id) {
+    private void deleteAnexo21(DeleteAnexo_2_1Mutation deleteAnexo21Mutation, final String id_row, final int id) {
         ApolloConnector.setupApollo(context).mutate(deleteAnexo21Mutation)
                 .enqueue(new ApolloCall.Callback<DeleteAnexo_2_1Mutation.Data>() {
                     @Override
                     public void onResponse(@NotNull Response<DeleteAnexo_2_1Mutation.Data> response) {
                         if (response.data() != null) {
-                            Anexo21 anexo21 = new Anexo21();
-                            anexo21.setId(id);
-                            anexo21Dao.delete(anexo21);
+                            DeleteOffline deleteOffline = new DeleteOffline("Anexo_2_1", id_row);
+                            deleteOffline.setId(id);
+                            deleteOfflineDao.delete(deleteOffline);
                         }
                     }
                     @Override

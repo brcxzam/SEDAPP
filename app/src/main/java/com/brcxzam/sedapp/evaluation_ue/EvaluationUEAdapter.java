@@ -28,12 +28,11 @@ public class EvaluationUEAdapter extends RecyclerView.Adapter<EvaluationUEAdapte
         void onDeleteClick(int position);
     }
 
-    public void setOnItemClickListener(OnItemClickListener listener) {
+    void setOnItemClickListener(OnItemClickListener listener) {
         this.listener = listener;
     }
 
-
-    EvaluationUEAdapter(List<Anexo21> anexo21ArrayList) {
+    public void setAnexo21ArrayList(List<Anexo21> anexo21ArrayList) {
         this.anexo21ArrayList = anexo21ArrayList;
     }
 

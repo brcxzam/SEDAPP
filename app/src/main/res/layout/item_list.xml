@@ -9,57 +9,27 @@
 
     <!--Swipe Layout-->
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:id="@+id/delete"
+        android:layout_width="100dp"
         android:layout_height="88dp"
-        android:orientation="horizontal">
+        android:orientation="vertical"
+        android:background="#F44336"
+        android:gravity="center">
 
-        <LinearLayout
-            android:id="@+id/edit"
-            android:layout_width="100dp"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:background="#FF9800"
-            android:gravity="center">
+        <ImageView
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:src="@drawable/ic_close_black_24dp"
+            android:tint="@android:color/white"
+            android:contentDescription="@string/delete"/>
 
-            <ImageView
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:src="@drawable/ic_dvr_black_24dp"
-                android:tint="@android:color/white"
-                android:contentDescription="@string/edit"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/edit"
-                android:textColor="#ffffff" />
-
-        </LinearLayout>
-        <LinearLayout
-            android:id="@+id/delete"
-            android:layout_width="100dp"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:background="#F44336"
-            android:gravity="center">
-
-            <ImageView
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:src="@drawable/ic_close_black_24dp"
-                android:tint="@android:color/white"
-                android:contentDescription="@string/delete"/>
-
-            <TextView
-                android:id="@+id/txtDelete"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/delete"
-                android:textColor="#ffffff" />
-
-        </LinearLayout>
+        <TextView
+            android:id="@+id/txtDelete"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/delete"
+            android:textColor="#ffffff" />
 
     </LinearLayout>
 

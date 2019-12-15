@@ -3,35 +3,33 @@ package com.brcxzam.sedapp.evaluation_ue;
 
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
-import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
-import com.apollographql.apollo.fetcher.ApolloResponseFetchers;
 import com.brcxzam.sedapp.DeleteAnexo_2_1Mutation;
 import com.brcxzam.sedapp.MainActivity;
 import com.brcxzam.sedapp.R;
 import com.brcxzam.sedapp.ReadAllAnexo_2_1Query;
-import com.brcxzam.sedapp.ReadAllUEsQuery;
 import com.brcxzam.sedapp.apollo_client.ApolloConnector;
+import com.brcxzam.sedapp.apollo_client.Token;
 import com.brcxzam.sedapp.database.Anexo21;
 import com.brcxzam.sedapp.database.Anexo21Dao;
 import com.brcxzam.sedapp.database.AppDatabase;
+import com.brcxzam.sedapp.database.DeleteOffline;
+import com.brcxzam.sedapp.database.DeleteOfflineDao;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -42,20 +40,27 @@ import java.util.List;
 import java.util.Objects;
 
 
-/**
- * A simple {@link Fragment} subclass.
- */
+
 public class EvaluationUE extends Fragment {
 
-    private RecyclerView recyclerView;
-    private EvaluationUEAdapter mAdapter;
-    private RecyclerView.LayoutManager layoutManager;
+    private EvaluationUEAdapter mAdapter = new EvaluationUEAdapter();;
     private View viewSnack;
-    // ArrayList contenedor de los datos de los Anexos 2.1
-    List<ReadAllAnexo_2_1Query.Anexo_2_1> anexo21List = new ArrayList<>();
 
-    AppDatabase appDatabase;
-    Anexo21Dao anexo21Dao;
+    private final String ERROR_CONNECTION = "ERROR CONNECTION GQL";
+
+    private Anexo21Dao anexo21Dao;
+    private DeleteOfflineDao deleteOfflineDao;
+
+    private List<Anexo21> list = new ArrayList<>();
+
+    Handler handler = new Handler();
+    Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            fetchAnexo21();
+            handler.postDelayed(runnable,1500);
+        }
+    };
 
     public EvaluationUE() {
         // Required empty public constructor
@@ -64,11 +69,13 @@ public class EvaluationUE extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        appDatabase = AppDatabase.getAppDatabase(getContext());
+        AppDatabase appDatabase = AppDatabase.getAppDatabase(getContext());
         anexo21Dao = appDatabase.anexo21Dao();
+        deleteOfflineDao = appDatabase.deleteOfflineDao();
 
         fetchAnexo21();
 
+        handler.postDelayed(runnable,1500);
         View view = inflater.inflate(R.layout.fragment_evaluation_ue, container, false);
         final FloatingActionButton fab = ((MainActivity) Objects.requireNonNull(getActivity())).findViewById(R.id.fab);
         final NavController navController = Navigation.findNavController(getActivity(),R.id.nav_host_fragment);
@@ -98,10 +105,31 @@ public class EvaluationUE extends Fragment {
             }
         });
         viewSnack = ((MainActivity) Objects.requireNonNull(getActivity())).findViewById(R.id.viewSnack);
-        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerViewUE);
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerViewUE);
         recyclerView.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(getContext());
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
+
+        mAdapter.setAnexo21ArrayList(list);
+        recyclerView.setAdapter(mAdapter);
+        mAdapter.setOnItemClickListener(new EvaluationUEAdapter.OnItemClickListener() {
+            @Override
+            public void onDeleteClick(int position) {
+                final Anexo21 data = list.get(position);
+                Snackbar.make(viewSnack, "¿Quieres eliminar la evaluación de \""+data.getRazon_social()+"\"?",
+                        Snackbar.LENGTH_LONG)
+                        .setAction(getString(R.string.positive_button), new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                deleteAnexo21(data.getId());
+                            }
+                        })
+                        .show();
+            }
+        });
+
+        getLocalData();
+
         return view;
     }
 
@@ -111,13 +139,14 @@ public class EvaluationUE extends Fragment {
     }
 
     private void fetchAnexo21() {
-        ApolloConnector.setupApollo(getContext()).query(new ReadAllAnexo_2_1Query())
-                .responseFetcher(ApolloResponseFetchers.CACHE_AND_NETWORK)
+        ApolloConnector
+                .setupApollo(getContext())
+                .query(ReadAllAnexo_2_1Query.builder().build())
                 .enqueue(new ApolloCall.Callback<ReadAllAnexo_2_1Query.Data>() {
                     @Override
                     public void onResponse(@NotNull Response<ReadAllAnexo_2_1Query.Data> response) {
                         if (response.data() != null) {
-                            anexo21List = response.data().Anexo_2_1s();
+                            List<ReadAllAnexo_2_1Query.Anexo_2_1> anexo21List = response.data().Anexo_2_1s();
                             List<Anexo21> anexo21s = new ArrayList<>();
                             for (ReadAllAnexo_2_1Query.Anexo_2_1 anexo21: anexo21List) {
                                 Anexo21 res = new Anexo21();
@@ -154,6 +183,7 @@ public class EvaluationUE extends Fragment {
                                 res.setAccion(null);
                                 anexo21s.add(res);
                             }
+                            anexo21Dao.deleteAll();
                             anexo21Dao.createALL(anexo21s);
                             Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
                                 @Override
@@ -165,54 +195,56 @@ public class EvaluationUE extends Fragment {
                     }
                     @Override
                     public void onFailure(@NotNull ApolloException e) {
+                        Log.d(ERROR_CONNECTION, Objects.requireNonNull(e.getMessage()));
+                    }
+                });
+    }
+
+    private void deleteAnexo21(final String id) {
+        DeleteAnexo_2_1Mutation deleteAnexo21Mutation = DeleteAnexo_2_1Mutation.builder()
+                .id(id)
+                .build();
+        ApolloConnector
+                .setupApollo(getContext())
+                .mutate(deleteAnexo21Mutation)
+                .refetchQueries(ReadAllAnexo_2_1Query.builder().build())
+                .enqueue(new ApolloCall.Callback<DeleteAnexo_2_1Mutation.Data>() {
+                    @Override
+                    public void onResponse(@NotNull Response<DeleteAnexo_2_1Mutation.Data> response) {
+                        if (response.data() != null) {
+                            Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    deleteLocalAnexo21(id);
+                                }
+                            });
+                        }
+                    }
+                    @Override
+                    public void onFailure(@NotNull ApolloException e) {
+                        Log.d(ERROR_CONNECTION, Objects.requireNonNull(e.getMessage()));
+                        deleteOfflineDao.create(new DeleteOffline("Anexo_2_1",id));
                         Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                errorMessage();
-                                getLocalData();
+                                deleteLocalAnexo21(id);
                             }
                         });
                     }
                 });
     }
 
-    private void deleteAnexo21(String id) {
-        DeleteAnexo_2_1Mutation deleteAnexo21Mutation = DeleteAnexo_2_1Mutation.builder().id(id).build();
-        ApolloConnector.setupApollo(getContext()).mutate(deleteAnexo21Mutation)
-                .enqueue(new ApolloCall.Callback<DeleteAnexo_2_1Mutation.Data>() {
-                    @Override
-                    public void onResponse(@NotNull Response<DeleteAnexo_2_1Mutation.Data> response) {
-                        if (response.data() != null) {
-                            fetchAnexo21();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NotNull ApolloException e) {
-                        errorMessage();
-                    }
-                });
+    private void deleteLocalAnexo21(String id) {
+        Anexo21 anexo21 = new Anexo21();
+        anexo21.setId(id);
+        anexo21Dao.delete(anexo21);
+        getLocalData();
     }
 
     private void getLocalData() {
-        final List<Anexo21> list = anexo21Dao.readALL();
-        mAdapter = new EvaluationUEAdapter(list);
-        recyclerView.setAdapter(mAdapter);
-        mAdapter.setOnItemClickListener(new EvaluationUEAdapter.OnItemClickListener() {
-            @Override
-            public void onDeleteClick(int position) {
-                final Anexo21 data = list.get(position);
-                Snackbar.make(viewSnack, "¿Quieres eliminar la evaluación de \""+data.getRazon_social()+"\"?",
-                        Snackbar.LENGTH_LONG)
-                        .setAction(getString(R.string.positive_button), new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                deleteAnexo21(data.getId());
-                            }
-                        })
-                        .show();
-            }
-        });
-        Toast.makeText(getContext(), ""+list.size(), Toast.LENGTH_SHORT).show();
+        list.clear();
+        list.addAll(anexo21Dao.readALL());
+        mAdapter.setAnexo21ArrayList(list);
+        mAdapter.notifyDataSetChanged();
     }
 }
