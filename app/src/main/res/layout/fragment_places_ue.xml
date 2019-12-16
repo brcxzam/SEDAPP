@@ -5,10 +5,70 @@
     android:layout_height="match_parent"
     tools:context=".places_ue.PlacesUE">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="PLACES UE" />
+        android:padding="20dp"
+        android:orientation="vertical"
+        android:isScrollContainer="true"
+        android:scrollbars="vertical">
+
+        <TextView
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Unidades Economicas"/>
+
+        <Spinner
+            android:id="@+id/unidadeseconomicasspinner"
+            android:layout_marginTop="10dp"
+            android:padding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:layout_marginTop="10dp"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Ubicacion de:"/>
+
+        <Spinner
+            android:id="@+id/ubicacionspinner"
+            android:layout_marginTop="10dp"
+            android:padding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <fragment
+                android:id="@+id/mapunidadeconomica"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                tools:context=".places_ue.PlacesUE" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_margin="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+                android:text="Unidad Economica Nombre"/>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_margin="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+
+
+    </LinearLayout>
 
 </FrameLayout>
