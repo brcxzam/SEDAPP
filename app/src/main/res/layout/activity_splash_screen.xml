@@ -10,7 +10,7 @@
         android:id="@+id/bg1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/login"
+        android:src="@mipmap/login"
         android:scaleType="centerCrop"
         android:contentDescription="@string/app_name"
         android:transitionName="bg1"/>

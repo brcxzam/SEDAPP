@@ -12,10 +12,6 @@
             android:title="@string/places"
             />
         <item
-            android:id="@+id/nav3"
-            android:icon="@drawable/ic_done_all_black_24dp"
-            android:title="@string/evaluationED" />
-        <item
             android:id="@+id/nav4"
             android:icon="@drawable/ic_business_black_24dp"
             android:title="@string/evaluationUE" />

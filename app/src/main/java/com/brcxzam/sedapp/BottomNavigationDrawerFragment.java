@@ -61,12 +61,6 @@ public class BottomNavigationDrawerFragment extends BottomSheetDialogFragment {
                         }
                         dismiss();
                         break;
-                    case R.id.nav3:
-                        if (navController.getCurrentDestination().getId() != R.id.evaluationED){
-                            navController.navigate(R.id.action_global_evaluationED,null,navOptions);
-                        }
-                        dismiss();
-                        break;
                     case R.id.nav4:
                         if (navController.getCurrentDestination().getId() != R.id.evaluationUE){
                             navController.navigate(R.id.action_global_evaluationUE,null,navOptions);

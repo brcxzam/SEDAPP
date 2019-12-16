@@ -53,19 +53,19 @@ public class EvaluationUE extends Fragment {
 
     private List<Anexo21> list = new ArrayList<>();
 
-    Handler handler = new Handler();
-    Runnable runnable = new Runnable() {
+    private Handler handler = new Handler();
+    private final int TIME = 1000 * 5;
+    private Runnable runnable = new Runnable() {
         @Override
         public void run() {
             fetchAnexo21();
-            handler.postDelayed(runnable,1500);
+            handler.postDelayed(runnable,TIME);
         }
     };
 
     public EvaluationUE() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -75,7 +75,7 @@ public class EvaluationUE extends Fragment {
 
         fetchAnexo21();
 
-        handler.postDelayed(runnable,1500);
+        handler.postDelayed(runnable,TIME);
         View view = inflater.inflate(R.layout.fragment_evaluation_ue, container, false);
         final FloatingActionButton fab = ((MainActivity) Objects.requireNonNull(getActivity())).findViewById(R.id.fab);
         final NavController navController = Navigation.findNavController(getActivity(),R.id.nav_host_fragment);
@@ -131,6 +131,12 @@ public class EvaluationUE extends Fragment {
         getLocalData();
 
         return view;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        handler.removeCallbacks(runnable);
     }
 
     private void errorMessage() {

@@ -13,10 +13,10 @@
     <string name="edit">Editar</string>
     <string name="delete">Eliminar</string>
 
-    <string name="charts">Graficas</string>
-    <string name="places">Ubicación UE</string>
+    <string name="charts">Estadisticas</string>
+    <string name="places">Direcciones</string>
     <string name="evaluationED">Evaluación Psicometrica</string>
-    <string name="evaluationUE">Evaluación de Selección de UE</string>
+    <string name="evaluationUE">Evaluación para seleccionar a la UE</string>
     <string name="sign_off">Cerrar Sesión</string>
     <string name="sign_off_message">¿Quieres cerrar sesión?</string>
 
