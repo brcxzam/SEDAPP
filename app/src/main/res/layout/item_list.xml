@@ -67,6 +67,30 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"/>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:gravity="center">
+                <TextView
+                    android:id="@+id/date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/delete"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                    android:layout_gravity="start|center"
+                    android:layout_weight="1"/>
+                <TextView
+                    android:id="@+id/total"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/delete"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                    android:layout_gravity="end|center"
+                    android:gravity="end"
+                    android:layout_weight="1"/>
+            </LinearLayout>
+
         </LinearLayout>
 
     </LinearLayout>

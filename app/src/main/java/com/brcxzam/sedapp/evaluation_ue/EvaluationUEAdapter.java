@@ -1,6 +1,9 @@
 package com.brcxzam.sedapp.evaluation_ue;
 
 import android.graphics.Color;
+import android.icu.text.DateFormat;
+import android.icu.text.DecimalFormat;
+import android.icu.text.SimpleDateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +19,10 @@ import com.brcxzam.sedapp.database.Anexo21;
 import com.chauthai.swipereveallayout.SwipeRevealLayout;
 import com.chauthai.swipereveallayout.ViewBinderHelper;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class EvaluationUEAdapter extends RecyclerView.Adapter<EvaluationUEAdapter.ViewHolder> {
 
@@ -49,7 +55,7 @@ public class EvaluationUEAdapter extends RecyclerView.Adapter<EvaluationUEAdapte
         viewBinderHelper.setOpenOnlyOne(true);
         viewBinderHelper.bind(holder.swipelayout, data.getId());
         viewBinderHelper.closeLayout(data.getId());
-        holder.bindData(data.getPeriodo(),data.getRazon_social(), data.getTotal());
+        holder.bindData(data.getPeriodo(),data.getRazon_social(), data.getTotal(),data.getFecha());
     }
 
     @Override
@@ -59,7 +65,7 @@ public class EvaluationUEAdapter extends RecyclerView.Adapter<EvaluationUEAdapte
 
     class ViewHolder extends RecyclerView.ViewHolder {
         private ImageView icon;
-        private TextView period, name;
+        private TextView period, name, total, date;
         private SwipeRevealLayout swipelayout;
         int errorColor = Color.rgb(244,67,54);
         int warningColor = Color.rgb(255,152,0);
@@ -69,6 +75,8 @@ public class EvaluationUEAdapter extends RecyclerView.Adapter<EvaluationUEAdapte
             icon = itemView.findViewById(R.id.icon);
             period = itemView.findViewById(R.id.period);
             name = itemView.findViewById(R.id.name);
+            total = itemView.findViewById(R.id.total);
+            date = itemView.findViewById(R.id.date);
             LinearLayout delete = itemView.findViewById(R.id.delete);
             swipelayout = itemView.findViewById(R.id.swipelayout);
 
@@ -86,9 +94,13 @@ public class EvaluationUEAdapter extends RecyclerView.Adapter<EvaluationUEAdapte
                 }
             });
         }
-        void bindData(String period, String name, double total) {
+        void bindData(String period, String name, double total, String date) {
+            DecimalFormat format = new DecimalFormat("#.00");
+            String[] dateArray = date.split("-");
             this.period.setText(period);
             this.name.setText(name);
+            this.total.setText(String.valueOf(format.format(total))+"%");
+            this.date.setText(dateFormat(Integer.valueOf(dateArray[0]),Integer.valueOf(dateArray[1]),Integer.valueOf(dateArray[2])));
             if (total <= 45) {
                 this.icon.setImageResource(R.drawable.ic_cancel_black_24dp);
                 this.icon.setColorFilter(errorColor);
@@ -99,6 +111,16 @@ public class EvaluationUEAdapter extends RecyclerView.Adapter<EvaluationUEAdapte
                 this.icon.setImageResource(R.drawable.ic_check_circle_black_24dp);
                 this.icon.setColorFilter(successColor);
             }
+        }
+        private String dateFormat(int year, int month, int dayOfMonth) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTimeInMillis(0);
+            cal.set(year, month, dayOfMonth, 0, 0, 0);
+
+            Date chosenDate = cal.getTime();
+
+            DateFormat dateLong = DateFormat.getDateInstance(DateFormat.LONG, Locale.forLanguageTag("spa"));
+            return dateLong.format(chosenDate);
         }
     }
 }
