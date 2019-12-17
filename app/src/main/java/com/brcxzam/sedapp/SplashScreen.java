@@ -38,7 +38,7 @@ public class SplashScreen extends AppCompatActivity {
 
     public void startSignIn() {
         Intent intent = new Intent(getApplicationContext(), SignInActivity.class);
-        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this, view, "bgGradient");
+        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this, view, "logo_tescha");
         startActivity(intent, options.toBundle());
         finishAfterTransition();
     }

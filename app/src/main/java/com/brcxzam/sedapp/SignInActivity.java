@@ -33,7 +33,7 @@ import java.util.concurrent.Executor;
 
 public class SignInActivity extends AppCompatActivity implements View.OnClickListener {
 
-    AnimationDrawable animationDrawable;
+//    AnimationDrawable animationDrawable;
     TextInputLayout email, password;
     MaterialButton signIn;
 
@@ -51,13 +51,13 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         getWindow().setEnterTransition(new ChangeBounds());
         getWindow().setSharedElementEnterTransition(new ChangeBounds().setDuration(400));
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_sign_in);
 
-        TextView relativeLayout = findViewById(R.id.title);
-
-        animationDrawable = (AnimationDrawable) relativeLayout.getBackground();
-        animationDrawable.setEnterFadeDuration(2500);
-        animationDrawable.setExitFadeDuration(5000);
+//        TextView relativeLayout = findViewById(R.id.title);
+//
+//        animationDrawable = (AnimationDrawable) relativeLayout.getBackground();
+//        animationDrawable.setEnterFadeDuration(2500);
+//        animationDrawable.setExitFadeDuration(5000);
 
         email = findViewById(R.id.email);
         password = findViewById(R.id.password);
@@ -78,7 +78,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     protected void onStart() {
         super.onStart();
-        animationDrawable.start();
+//        animationDrawable.start();
     }
 
     public static boolean isValidEmail(CharSequence target) {

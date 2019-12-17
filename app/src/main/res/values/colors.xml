@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#80ED99</color>
-    <color name="colorPrimaryDark">#57CC99</color>
+    <color name="colorPrimary">#97BF04</color>
+    <color name="colorPrimaryDark">#5A7324</color>
     <color name="colorPrimaryLight">#C7F9CC</color>
     <color name="colorAccent">#38A3A5</color>
 
-    <color name="colorGradientStart">#91F291</color>
-    <color name="colorGradientCenter">#61F2C2</color>
-    <color name="colorGradientEnd">#30F2F2</color>
+    <color name="colorGradientStart">#738C16</color>
+    <color name="colorGradientCenter">#97BF04</color>
+    <color name="colorGradientEnd">#5A7324</color>
 
     <color name="white">#FFFFFF</color>
     <color name="red">#F44336</color>
     <color name="yellow">#FF9800</color>
     <color name="green">@color/colorPrimary</color>
+
+    <color name="cardColorBackground">#99D9D9D9</color>
+    <color name="textFieldColorBackground">#737373</color>
 </resources>
