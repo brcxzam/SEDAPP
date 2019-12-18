@@ -1,12 +1,11 @@
 package com.brcxzam.sedapp;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityOptionsCompat;
 
-import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.View;
 
 import com.brcxzam.sedapp.apollo_client.Token;
 
@@ -26,26 +25,26 @@ public class SplashScreen extends AppCompatActivity {
             }
         }
     };
-    View view;
+    Bundle bundle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
         handler.postDelayed(runnable,1500);
-        view = findViewById(R.id.title);
+        bundle = ActivityOptionsCompat.makeCustomAnimation(getApplicationContext(),
+                android.R.anim.fade_in, android.R.anim.fade_out).toBundle();
     }
 
     public void startSignIn() {
         Intent intent = new Intent(getApplicationContext(), SignInActivity.class);
-        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this, view, "logo_tescha");
-        startActivity(intent, options.toBundle());
-        finishAfterTransition();
+        startActivity(intent, bundle);
+        finish();
     }
 
     public void inside() {
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(intent);
-        finishAfterTransition();
+        startActivity(intent, bundle);
+        finish();
     }
 }

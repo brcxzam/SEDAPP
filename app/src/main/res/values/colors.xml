@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#97BF04</color>
+    <color name="colorPrimary">#067b7a</color>
     <color name="colorPrimaryDark">#5A7324</color>
     <color name="colorPrimaryLight">#C7F9CC</color>
     <color name="colorAccent">#38A3A5</color>
@@ -14,7 +14,6 @@
     <color name="yellow">#FF9800</color>
     <color name="green">@color/colorPrimary</color>
 
-    <color name="background">#1A1A1A</color>
     <color name="cardColorBackground">#99D9D9D9</color>
     <color name="textFieldColorBackground">#737373</color>
 </resources>

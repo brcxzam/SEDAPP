@@ -4,25 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SplashScreen">
-
-    <ImageView
-        android:id="@+id/bg1"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@mipmap/login"
-        android:scaleType="centerCrop"
-        android:contentDescription="@string/app_name"
-        android:transitionName="bg1"/>
-
-    <ImageView
-        android:id="@+id/bg2"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#000000"
-        android:alpha="0.6"
-        android:contentDescription="@string/app_name"
-        android:transitionName="bg2"/>
+    tools:context=".SplashScreen"
+    android:background="@color/colorPrimary">
 
     <ImageView
         android:id="@+id/title"
