@@ -1,14 +1,13 @@
 package com.brcxzam.sedapp.evaluation_ue;
 
 import android.graphics.Color;
-import android.icu.text.DateFormat;
 import android.icu.text.DecimalFormat;
 import android.icu.text.SimpleDateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,11 +17,13 @@ import com.brcxzam.sedapp.R;
 import com.brcxzam.sedapp.database.Anexo21;
 import com.chauthai.swipereveallayout.SwipeRevealLayout;
 import com.chauthai.swipereveallayout.ViewBinderHelper;
+import com.google.android.material.card.MaterialCardView;
 
-import java.util.Calendar;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 public class EvaluationUEAdapter extends RecyclerView.Adapter<EvaluationUEAdapter.ViewHolder> {
 
@@ -38,7 +39,7 @@ public class EvaluationUEAdapter extends RecyclerView.Adapter<EvaluationUEAdapte
         this.listener = listener;
     }
 
-    public void setAnexo21ArrayList(List<Anexo21> anexo21ArrayList) {
+    void setAnexo21ArrayList(List<Anexo21> anexo21ArrayList) {
         this.anexo21ArrayList = anexo21ArrayList;
     }
 
@@ -65,7 +66,7 @@ public class EvaluationUEAdapter extends RecyclerView.Adapter<EvaluationUEAdapte
 
     class ViewHolder extends RecyclerView.ViewHolder {
         private ImageView icon;
-        private TextView period, name, total, date;
+        private TextView period, name, total, month, day, year;
         private SwipeRevealLayout swipelayout;
         int errorColor = Color.rgb(244,67,54);
         int warningColor = Color.rgb(255,152,0);
@@ -76,8 +77,10 @@ public class EvaluationUEAdapter extends RecyclerView.Adapter<EvaluationUEAdapte
             period = itemView.findViewById(R.id.period);
             name = itemView.findViewById(R.id.name);
             total = itemView.findViewById(R.id.total);
-            date = itemView.findViewById(R.id.date);
-            LinearLayout delete = itemView.findViewById(R.id.delete);
+            month = itemView.findViewById(R.id.month);
+            day = itemView.findViewById(R.id.day);
+            year = itemView.findViewById(R.id.year);
+            MaterialCardView delete = itemView.findViewById(R.id.delete);
             swipelayout = itemView.findViewById(R.id.swipelayout);
 
             delete.setOnClickListener(new View.OnClickListener() {
@@ -96,11 +99,14 @@ public class EvaluationUEAdapter extends RecyclerView.Adapter<EvaluationUEAdapte
         }
         void bindData(String period, String name, double total, String date) {
             DecimalFormat format = new DecimalFormat("#.00");
-            String[] dateArray = date.split("-");
+            String[] dateArray = dateFormat(date);
+            String totalString = format.format(total)+"%";
             this.period.setText(period);
             this.name.setText(name);
-            this.total.setText(String.valueOf(format.format(total))+"%");
-            this.date.setText(dateFormat(Integer.valueOf(dateArray[0]),Integer.valueOf(dateArray[1]),Integer.valueOf(dateArray[2])));
+            this.total.setText(totalString);
+            this.month.setText(dateArray[0]);
+            this.day.setText(dateArray[1]);
+            this.year.setText(dateArray[2]);
             if (total <= 45) {
                 this.icon.setImageResource(R.drawable.ic_cancel_black_24dp);
                 this.icon.setColorFilter(errorColor);
@@ -112,15 +118,21 @@ public class EvaluationUEAdapter extends RecyclerView.Adapter<EvaluationUEAdapte
                 this.icon.setColorFilter(successColor);
             }
         }
-        private String dateFormat(int year, int month, int dayOfMonth) {
-            Calendar cal = Calendar.getInstance();
-            cal.setTimeInMillis(0);
-            cal.set(year, month, dayOfMonth, 0, 0, 0);
-
-            Date chosenDate = cal.getTime();
-
-            DateFormat dateLong = DateFormat.getDateInstance(DateFormat.LONG, Locale.forLanguageTag("spa"));
-            return dateLong.format(chosenDate);
+        private String[] dateFormat(String dtStart) {
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = new Date();
+            try {
+                date = format.parse(dtStart);
+            } catch (ParseException e) {
+                Log.d("ERROR PARSE DATE", Objects.requireNonNull(e.getMessage()));
+            }
+            SimpleDateFormat month = new SimpleDateFormat("MMM", Locale.forLanguageTag("spa"));
+            String monthString = month.format(date).toUpperCase();
+            SimpleDateFormat day = new SimpleDateFormat("dd", Locale.forLanguageTag("spa"));
+            String dayString = day.format(date);
+            SimpleDateFormat year = new SimpleDateFormat("yyyy", Locale.forLanguageTag("spa"));
+            String yearString = year.format(date);
+            return new String[]{monthString,dayString,yearString};
         }
     }
 }

@@ -3,29 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".evaluation_ue.EvaluationUE"
-    android:layout_margin="@dimen/margin">
-
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/evaluationUE"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-        android:gravity="center"
-        android:layout_alignParentTop="true"
-        android:layout_marginBottom="@dimen/margin"/>
+    tools:context=".evaluation_ue.EvaluationUE">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/title">
+        android:layout_height="match_parent">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewUE"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingBottom="86dp"/>
+            android:layout_height="match_parent" />
 
     </androidx.core.widget.NestedScrollView>
 
