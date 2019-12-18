@@ -142,6 +142,18 @@ public class EvaluationUE extends Fragment {
         handler.removeCallbacks(runnable);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        handler.postDelayed(runnable,TIME);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        handler.removeCallbacks(runnable);
+    }
+
     private void errorMessage() {
         Snackbar.make(viewSnack, R.string.error_connection, Snackbar.LENGTH_SHORT)
                 .show();

@@ -2,20 +2,16 @@ package com.brcxzam.sedapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.biometric.BiometricPrompt;
+import androidx.core.app.ActivityOptionsCompat;
 
 import android.content.Intent;
-import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.transition.ChangeBounds;
 import android.view.View;
-import android.view.animation.LinearInterpolator;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.apollographql.apollo.ApolloCall;
@@ -35,7 +31,6 @@ import java.util.concurrent.Executor;
 
 public class SignInActivity extends AppCompatActivity implements View.OnClickListener {
 
-//    AnimationDrawable animationDrawable;
     TextInputLayout email, password;
     MaterialButton signIn;
 
@@ -43,7 +38,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
     private Executor executor = new Executor() {
         @Override
-        public void execute(Runnable command) {
+        public void execute(@NotNull Runnable command) {
             handler.post(command);
         }
     };
@@ -51,15 +46,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setEnterTransition(new ChangeBounds());
-        getWindow().setSharedElementEnterTransition(new ChangeBounds().setDuration(400));
         setContentView(R.layout.activity_sign_in);
-
-//        TextView relativeLayout = findViewById(R.id.title);
-//
-//        animationDrawable = (AnimationDrawable) relativeLayout.getBackground();
-//        animationDrawable.setEnterFadeDuration(2500);
-//        animationDrawable.setExitFadeDuration(5000);
 
         email = findViewById(R.id.email);
         password = findViewById(R.id.password);
@@ -75,12 +62,6 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         if (auth && status) {
             showBiometricPrompt();
         }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-//        animationDrawable.start();
     }
 
     public static boolean isValidEmail(CharSequence target) {
@@ -120,7 +101,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                 String password = this.password.getEditText().getText().toString();
                 signIn(email,password,v);
             } else {
-                String message = "Datos Incorrectos";
+                String message = getString(R.string.errorData);
                 email.setError(message);
                 password.setError(message);
             }
@@ -176,7 +157,9 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
     public void inside() {
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(intent);
+        Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(getApplicationContext(),
+                android.R.anim.fade_in, android.R.anim.fade_out).toBundle();
+        startActivity(intent, bundle);
         finish();
     }
 
