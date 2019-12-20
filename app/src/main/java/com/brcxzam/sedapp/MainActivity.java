@@ -2,7 +2,7 @@ package com.brcxzam.sedapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.appcompat.widget.Toolbar;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
@@ -14,6 +14,7 @@ import android.transition.ChangeBounds;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.brcxzam.sedapp.apollo_client.Token;
 import com.brcxzam.sedapp.database.NetworkStateChecker;
@@ -21,6 +22,7 @@ import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.roacult.backdrop.BackdropLayout;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,20 +30,35 @@ public class MainActivity extends AppCompatActivity {
 
     NetworkStateChecker checker = new NetworkStateChecker();
 
+    Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setEnterTransition(new ChangeBounds());
         getWindow().setSharedElementEnterTransition(new ChangeBounds().setDuration(400));
-        setContentView(R.layout.activity_main2);
-        final BottomAppBar bar = findViewById(R.id.bottom_app_bar);
-        setSupportActionBar(bar);
-        bar.replaceMenu(R.menu.bottomappbar_menu);
+        setContentView(R.layout.activity_main);
+        toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle(R.string.app_name);
+        setSupportActionBar(toolbar);
 
+//        final BottomAppBar bar = findViewById(R.id.bottom_app_bar);
+
+//        bar.replaceMenu(R.menu.bottomappbar_menu);
+//
         registerReceiver(checker, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+//
+//        fab = findViewById(R.id.fab);
+//        fab.hide();
+        final BackdropLayout backdropLayout = findViewById(R.id.container);
+        View back_layout = backdropLayout.getBackLayout();
+        back_layout.findViewById(R.id.charts).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                backdropLayout.close();
+            }
+        });
 
-        fab = findViewById(R.id.fab);
-        fab.hide();
     }
 
     @Override
@@ -51,15 +68,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onStart() {
+        super.onStart();
         registerReceiver(checker, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        unregisterReceiver(checker);
+    protected void onResume() {
+        super.onResume();
+        registerReceiver(checker, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
     }
 
     @Override
@@ -119,8 +136,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void snackMessage(String message) {
-        Snackbar.make(findViewById(R.id.viewSnack), message, Snackbar.LENGTH_SHORT)
-                .show();
+//        Snackbar.make(findViewById(R.id.viewSnack), message, Snackbar.LENGTH_SHORT)
+//                .show();
     }
 
     public void toggleFab(boolean show) {

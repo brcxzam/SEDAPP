@@ -109,112 +109,112 @@ public class QuestionsUE extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_questions_ue, container, false);
-
-        back = view.findViewById(R.id.back);
-        sectionTextView = view.findViewById(R.id.section);
-        unidadesEconomicasTextView = view.findViewById(R.id.text_view_ue);
-        unidadesEconomicasSpinner = view.findViewById(R.id.unidades_economicas);
-        periodTextInputLayout = view.findViewById(R.id.period);
-        dateTextInputLayout = view.findViewById(R.id.date);
-        questionCard = view.findViewById(R.id.question_card);
-        questionTextView = view.findViewById(R.id.question);
-        answers = view.findViewById(R.id.answers);
-        first = view.findViewById(R.id.first);
-        second = view.findViewById(R.id.second);
-        third = view.findViewById(R.id.third);
-        totalLayout = view.findViewById(R.id.totalLayout);
-        totalTextView = view.findViewById(R.id.total);
-
-        viewSnack = Objects.requireNonNull(getActivity()).findViewById(R.id.viewSnack);
-        fab = Objects.requireNonNull(getActivity()).findViewById(R.id.fab);
-
-        // Conexión con la base de datos
-        AppDatabase database = AppDatabase.getAppDatabase(getContext());
-        uesDao = database.uesDao();
-        anexo21Dao = database.anexo21Dao();
-
-        // Spinner con de UE
-        adapter = new ArrayAdapter<>(Objects.requireNonNull(getContext()), android.R.layout.simple_spinner_item, uesList);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        unidadesEconomicasSpinner.setAdapter(adapter);
-
-        // Carga de registros UE
-        showUEs(); fetchUEs();
-
-        final String[] questions = Objects.requireNonNull(getContext()).getResources().getStringArray(R.array.questions_ue);
-        totals = Objects.requireNonNull(getContext()).getResources().getStringArray(R.array.totals);
-
-        fab.hide(new FloatingActionButton.OnVisibilityChangedListener() {
-            @Override
-            public void onHidden(FloatingActionButton fab) {
-                super.onHidden(fab);
-                fab.setImageResource(R.drawable.ic_arrow_forward_black_24dp);
-                fab.show();
-            }
-        });
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (question == -1) {
-                    CharSequence period = Objects.requireNonNull(periodTextInputLayout.getEditText()).getText();
-                    CharSequence date = Objects.requireNonNull(dateTextInputLayout.getEditText()).getText();
-                    boolean perioV = isValidPeriod(period);
-                    boolean dateV = isValidDate(date);
-                    if (!perioV) {
-                        periodTextInputLayout.setError("Periodo invalido");
-                    }
-                    if (!dateV) {
-                        dateTextInputLayout.setError("Ingresa una fecha");
-                    }
-                    dateTextInputLayout.setErrorIconDrawable(null);
-                    if (perioV && dateV) {
-                        question++;
-                    }
-                } else {
-                    boolean answer = handleRadioButton();
-                    if (answer || question == 13) {
-                        question++;
-                    }
-                }
-                if (question < 14) {
-                    answers.clearCheck();
-                    handleQuestions(questions);
-                } else {
-                    createEvaluation();
-                }
-            }
-        });
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                question--;
-                handleQuestions(questions);
-            }
-        });
-
-        handleQuestions(questions);
-
-        final DialogFragment dialogFragment = new DatePickerFragment(new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                String[] dates = dateFormat(year, month, dayOfMonth);
-                fecha = dates[1];
-                Objects.requireNonNull(dateTextInputLayout.getEditText()).setText(dates[0]);
-            }
-        });
-        Objects.requireNonNull(dateTextInputLayout.getEditText()).setEnabled(false);
-        dateTextInputLayout.setEndIconOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                closeKeyboard();
-                dateTextInputLayout.setError(null);
-                dialogFragment.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(),"datePicker");
-            }
-        });
-
-        clearError(periodTextInputLayout);
-
-
+//
+//        back = view.findViewById(R.id.back);
+//        sectionTextView = view.findViewById(R.id.section);
+//        unidadesEconomicasTextView = view.findViewById(R.id.text_view_ue);
+//        unidadesEconomicasSpinner = view.findViewById(R.id.unidades_economicas);
+//        periodTextInputLayout = view.findViewById(R.id.period);
+//        dateTextInputLayout = view.findViewById(R.id.date);
+//        questionCard = view.findViewById(R.id.question_card);
+//        questionTextView = view.findViewById(R.id.question);
+//        answers = view.findViewById(R.id.answers);
+//        first = view.findViewById(R.id.first);
+//        second = view.findViewById(R.id.second);
+//        third = view.findViewById(R.id.third);
+//        totalLayout = view.findViewById(R.id.totalLayout);
+//        totalTextView = view.findViewById(R.id.total);
+//
+//        viewSnack = Objects.requireNonNull(getActivity()).findViewById(R.id.viewSnack);
+//        fab = Objects.requireNonNull(getActivity()).findViewById(R.id.fab);
+//
+//        // Conexión con la base de datos
+//        AppDatabase database = AppDatabase.getAppDatabase(getContext());
+//        uesDao = database.uesDao();
+//        anexo21Dao = database.anexo21Dao();
+//
+//        // Spinner con de UE
+//        adapter = new ArrayAdapter<>(Objects.requireNonNull(getContext()), android.R.layout.simple_spinner_item, uesList);
+//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        unidadesEconomicasSpinner.setAdapter(adapter);
+//
+//        // Carga de registros UE
+//        showUEs(); fetchUEs();
+//
+//        final String[] questions = Objects.requireNonNull(getContext()).getResources().getStringArray(R.array.questions_ue);
+//        totals = Objects.requireNonNull(getContext()).getResources().getStringArray(R.array.totals);
+//
+//        fab.hide(new FloatingActionButton.OnVisibilityChangedListener() {
+//            @Override
+//            public void onHidden(FloatingActionButton fab) {
+//                super.onHidden(fab);
+//                fab.setImageResource(R.drawable.ic_arrow_forward_black_24dp);
+//                fab.show();
+//            }
+//        });
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (question == -1) {
+//                    CharSequence period = Objects.requireNonNull(periodTextInputLayout.getEditText()).getText();
+//                    CharSequence date = Objects.requireNonNull(dateTextInputLayout.getEditText()).getText();
+//                    boolean perioV = isValidPeriod(period);
+//                    boolean dateV = isValidDate(date);
+//                    if (!perioV) {
+//                        periodTextInputLayout.setError("Periodo invalido");
+//                    }
+//                    if (!dateV) {
+//                        dateTextInputLayout.setError("Ingresa una fecha");
+//                    }
+//                    dateTextInputLayout.setErrorIconDrawable(null);
+//                    if (perioV && dateV) {
+//                        question++;
+//                    }
+//                } else {
+//                    boolean answer = handleRadioButton();
+//                    if (answer || question == 13) {
+//                        question++;
+//                    }
+//                }
+//                if (question < 14) {
+//                    answers.clearCheck();
+//                    handleQuestions(questions);
+//                } else {
+//                    createEvaluation();
+//                }
+//            }
+//        });
+//        back.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                question--;
+//                handleQuestions(questions);
+//            }
+//        });
+//
+//        handleQuestions(questions);
+//
+//        final DialogFragment dialogFragment = new DatePickerFragment(new DatePickerDialog.OnDateSetListener() {
+//            @Override
+//            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+//                String[] dates = dateFormat(year, month, dayOfMonth);
+//                fecha = dates[1];
+//                Objects.requireNonNull(dateTextInputLayout.getEditText()).setText(dates[0]);
+//            }
+//        });
+//        Objects.requireNonNull(dateTextInputLayout.getEditText()).setEnabled(false);
+//        dateTextInputLayout.setEndIconOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                closeKeyboard();
+//                dateTextInputLayout.setError(null);
+//                dialogFragment.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(),"datePicker");
+//            }
+//        });
+//
+//        clearError(periodTextInputLayout);
+//
+//
 
         return view;
     }

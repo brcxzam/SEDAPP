@@ -16,4 +16,6 @@
 
     <color name="cardColorBackground">#99D9D9D9</color>
     <color name="textFieldColorBackground">#737373</color>
+
+    <color name="iconColor">#99FFFFFF</color>
 </resources>

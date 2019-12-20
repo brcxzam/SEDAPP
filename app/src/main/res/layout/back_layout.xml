@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="@dimen/margin"
+    android:layout_marginStart="64dp">
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/charts"
+        style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/charts"
+        android:textColor="@android:color/white"
+        app:icon="@drawable/ic_bubble_chart_black_24dp"
+        app:iconTint="@color/iconColor"
+        app:rippleColor="@android:color/white"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/placesUE"
+        style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/places"
+        android:textColor="@android:color/white"
+        app:icon="@drawable/ic_business_black_24dp"
+        app:iconTint="@color/iconColor"
+        app:rippleColor="@android:color/white"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/unidades_economicas"
+        style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/unidades_economicas"
+        android:textColor="@android:color/white"
+        app:icon="@drawable/ic_playlist_add_check_black_24dp"
+        app:iconTint="@color/iconColor"
+        app:rippleColor="@android:color/white"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/evaluation_ue"
+        style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/evaluation_ue"
+        android:textColor="@android:color/white"
+        app:icon="@drawable/ic_check_black_24dp"
+        app:iconTint="@color/iconColor"
+        app:rippleColor="@android:color/white"/>
+
+</LinearLayout>

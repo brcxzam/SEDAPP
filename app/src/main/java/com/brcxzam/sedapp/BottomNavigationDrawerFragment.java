@@ -37,40 +37,40 @@ public class BottomNavigationDrawerFragment extends BottomSheetDialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_bottomsheet, container, false);
-        NavigationView navigationView = view.findViewById(R.id.navigation_view);
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                NavController navController = Navigation.findNavController(getActivity(),R.id.nav_host_fragment);
-                NavOptions navOptions = new NavOptions.Builder()
-                        .setEnterAnim(R.anim.slide_in_right)
-                        .setExitAnim(R.anim.slide_out_left)
-                        .setPopEnterAnim(R.anim.slide_in_left)
-                        .setPopExitAnim(R.anim.slide_out_right)
-                        .build();
-                switch (item.getItemId()) {
-                    case R.id.nav1:
-                        if (navController.getCurrentDestination().getId() != R.id.charts){
-                            navController.navigate(R.id.action_global_charts,null,navOptions);
-                        }
-                        dismiss();
-                        break;
-                    case R.id.nav2:
-                        if (navController.getCurrentDestination().getId() != R.id.placesUE){
-                            navController.navigate(R.id.action_global_placesUE, null,navOptions);
-                        }
-                        dismiss();
-                        break;
-                    case R.id.nav4:
-                        if (navController.getCurrentDestination().getId() != R.id.evaluationUE){
-                            navController.navigate(R.id.action_global_evaluationUE,null,navOptions);
-                        }
-                        dismiss();
-                        break;
-                }
-                return true;
-            }
-        });
+//        NavigationView navigationView = view.findViewById(R.id.navigation_view);
+//        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+//            @Override
+//            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+//                NavController navController = Navigation.findNavController(getActivity(),R.id.nav_host_fragment);
+//                NavOptions navOptions = new NavOptions.Builder()
+//                        .setEnterAnim(R.anim.slide_in_right)
+//                        .setExitAnim(R.anim.slide_out_left)
+//                        .setPopEnterAnim(R.anim.slide_in_left)
+//                        .setPopExitAnim(R.anim.slide_out_right)
+//                        .build();
+//                switch (item.getItemId()) {
+//                    case R.id.nav1:
+//                        if (navController.getCurrentDestination().getId() != R.id.charts){
+//                            navController.navigate(R.id.action_global_charts,null,navOptions);
+//                        }
+//                        dismiss();
+//                        break;
+//                    case R.id.nav2:
+//                        if (navController.getCurrentDestination().getId() != R.id.placesUE){
+//                            navController.navigate(R.id.action_global_placesUE, null,navOptions);
+//                        }
+//                        dismiss();
+//                        break;
+//                    case R.id.nav4:
+//                        if (navController.getCurrentDestination().getId() != R.id.evaluationUE){
+//                            navController.navigate(R.id.action_global_evaluationUE,null,navOptions);
+//                        }
+//                        dismiss();
+//                        break;
+//                }
+//                return true;
+//            }
+//        });
         return view;
     }
 

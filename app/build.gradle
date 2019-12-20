@@ -66,4 +66,6 @@ dependencies {
     // Test helpers
     testImplementation "androidx.room:room-testing:$room_version"
 
+    // backdrop
+    implementation 'com.github.roiacult:BackdropLayout:1.1'
 }

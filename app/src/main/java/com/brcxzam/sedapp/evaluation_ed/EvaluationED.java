@@ -35,10 +35,10 @@ public class EvaluationED extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         // Inflate the layout for this fragment
-        FloatingActionButton fab = ((MainActivity) getActivity()).findViewById(R.id.fab);
-        if (!fab.isShown()) {
-            fab.show();
-        }
+//        FloatingActionButton fab = ((MainActivity) getActivity()).findViewById(R.id.fab);
+//        if (!fab.isShown()) {
+//            fab.show();
+//        }
         return inflater.inflate(R.layout.fragment_evaluation_ue, container, false);
     }
 

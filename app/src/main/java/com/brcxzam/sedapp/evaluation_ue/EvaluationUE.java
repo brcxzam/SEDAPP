@@ -70,68 +70,68 @@ public class EvaluationUE extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        AppDatabase appDatabase = AppDatabase.getAppDatabase(getContext());
-        anexo21Dao = appDatabase.anexo21Dao();
-        deleteOfflineDao = appDatabase.deleteOfflineDao();
-
-        fetchAnexo21();
-
-        handler.postDelayed(runnable,TIME);
+//        AppDatabase appDatabase = AppDatabase.getAppDatabase(getContext());
+//        anexo21Dao = appDatabase.anexo21Dao();
+//        deleteOfflineDao = appDatabase.deleteOfflineDao();
+//
+//        fetchAnexo21();
+//
+//        handler.postDelayed(runnable,TIME);
         View view = inflater.inflate(R.layout.fragment_evaluation_ue, container, false);
-        final FloatingActionButton fab = ((MainActivity) Objects.requireNonNull(getActivity())).findViewById(R.id.fab);
-        final NavController navController = Navigation.findNavController(getActivity(),R.id.nav_host_fragment);
-        final NavOptions navOptions = new NavOptions.Builder()
-                .setEnterAnim(R.anim.slide_in_right)
-                .setExitAnim(R.anim.slide_out_left)
-                .setPopEnterAnim(R.anim.slide_in_left)
-                .setPopExitAnim(R.anim.slide_out_right)
-                .build();
-        if (!fab.isShown()) {
-            fab.show();
-        }
-        fab.hide(new FloatingActionButton.OnVisibilityChangedListener() {
-            @Override
-            public void onHidden(FloatingActionButton fab) {
-                super.onHidden(fab);
-                fab.setImageResource(R.drawable.ic_add_black_24dp);
-                fab.show();
-            }
-        });
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (navController.getCurrentDestination().getId() == R.id.evaluationUE) {
-                    navController.navigate(R.id.action_evaluationUE_to_questionsUE,null,navOptions);
-                }
-            }
-        });
-        viewSnack = ((MainActivity) Objects.requireNonNull(getActivity())).findViewById(R.id.viewSnack);
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerViewUE);
-        recyclerView.setHasFixedSize(true);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
-        recyclerView.setLayoutManager(layoutManager);
-        DividerItemDecoration itemDecor = new DividerItemDecoration(Objects.requireNonNull(getContext()),DividerItemDecoration.VERTICAL);
-        recyclerView.addItemDecoration(itemDecor);
-
-        mAdapter.setAnexo21ArrayList(list);
-        recyclerView.setAdapter(mAdapter);
-        mAdapter.setOnItemClickListener(new EvaluationUEAdapter.OnItemClickListener() {
-            @Override
-            public void onDeleteClick(int position) {
-                final Anexo21 data = list.get(position);
-                Snackbar.make(viewSnack, "¿Quieres eliminar la evaluación de \""+data.getRazon_social()+"\"?",
-                        Snackbar.LENGTH_LONG)
-                        .setAction(getString(R.string.positive_button), new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                deleteAnexo21(data.getId());
-                            }
-                        })
-                        .show();
-            }
-        });
-
-        getLocalData();
+//        final FloatingActionButton fab = ((MainActivity) Objects.requireNonNull(getActivity())).findViewById(R.id.fab);
+//        final NavController navController = Navigation.findNavController(getActivity(),R.id.nav_host_fragment);
+//        final NavOptions navOptions = new NavOptions.Builder()
+//                .setEnterAnim(R.anim.slide_in_right)
+//                .setExitAnim(R.anim.slide_out_left)
+//                .setPopEnterAnim(R.anim.slide_in_left)
+//                .setPopExitAnim(R.anim.slide_out_right)
+//                .build();
+//        if (!fab.isShown()) {
+//            fab.show();
+//        }
+//        fab.hide(new FloatingActionButton.OnVisibilityChangedListener() {
+//            @Override
+//            public void onHidden(FloatingActionButton fab) {
+//                super.onHidden(fab);
+//                fab.setImageResource(R.drawable.ic_add_black_24dp);
+//                fab.show();
+//            }
+//        });
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (navController.getCurrentDestination().getId() == R.id.evaluationUE) {
+//                    navController.navigate(R.id.action_evaluationUE_to_questionsUE,null,navOptions);
+//                }
+//            }
+//        });
+//        viewSnack = ((MainActivity) Objects.requireNonNull(getActivity())).findViewById(R.id.viewSnack);
+//        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerViewUE);
+//        recyclerView.setHasFixedSize(true);
+//        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+//        recyclerView.setLayoutManager(layoutManager);
+//        DividerItemDecoration itemDecor = new DividerItemDecoration(Objects.requireNonNull(getContext()),DividerItemDecoration.VERTICAL);
+//        recyclerView.addItemDecoration(itemDecor);
+//
+//        mAdapter.setAnexo21ArrayList(list);
+//        recyclerView.setAdapter(mAdapter);
+//        mAdapter.setOnItemClickListener(new EvaluationUEAdapter.OnItemClickListener() {
+//            @Override
+//            public void onDeleteClick(int position) {
+//                final Anexo21 data = list.get(position);
+//                Snackbar.make(viewSnack, "¿Quieres eliminar la evaluación de \""+data.getRazon_social()+"\"?",
+//                        Snackbar.LENGTH_LONG)
+//                        .setAction(getString(R.string.positive_button), new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                deleteAnexo21(data.getId());
+//                            }
+//                        })
+//                        .show();
+//            }
+//        });
+//
+//        getLocalData();
 
         return view;
     }

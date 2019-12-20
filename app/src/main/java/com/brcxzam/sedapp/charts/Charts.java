@@ -31,10 +31,10 @@ public class Charts extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        FloatingActionButton fab = ((MainActivity) getActivity()).findViewById(R.id.fab);
-        if (fab.isShown()) {
-            fab.hide();
-        }
+//        FloatingActionButton fab = ((MainActivity) getActivity()).findViewById(R.id.fab);
+//        if (fab.isShown()) {
+//            fab.hide();
+//        }
         return inflater.inflate(R.layout.fragment_charts, container, false);
     }
 
