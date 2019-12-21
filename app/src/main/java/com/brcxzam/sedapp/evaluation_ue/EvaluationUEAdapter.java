@@ -7,6 +7,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,16 +22,48 @@ import com.chauthai.swipereveallayout.ViewBinderHelper;
 import com.google.android.material.card.MaterialCardView;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
-public class EvaluationUEAdapter extends RecyclerView.Adapter<EvaluationUEAdapter.ViewHolder> {
+public class EvaluationUEAdapter extends RecyclerView.Adapter<EvaluationUEAdapter.ViewHolder> implements Filterable {
 
-    private List<Anexo21> anexo21ArrayList;
+    private List<Anexo21> anexo21List;
+    private List<Anexo21> anexo21ListFiltered;
     private OnItemClickListener listener;
     private final ViewBinderHelper viewBinderHelper = new ViewBinderHelper();
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                String constraintString = constraint.toString();
+                if (constraintString.isEmpty()){
+                    anexo21ListFiltered = anexo21List;
+                } else {
+                    List<Anexo21> filteredList = new ArrayList<>();
+                    for (Anexo21 row : anexo21List) {
+                        if (row.getRazon_social().toLowerCase().contains(constraintString.toLowerCase())) {
+                            filteredList.add(row);
+                        }
+                    }
+                    anexo21ListFiltered = filteredList;
+                }
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = anexo21ListFiltered;
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                anexo21ListFiltered = (ArrayList<Anexo21>) results.values;
+                notifyDataSetChanged();
+            }
+        };
+    }
 
     public interface OnItemClickListener {
         void onDeleteClick(int position);
@@ -39,8 +73,9 @@ public class EvaluationUEAdapter extends RecyclerView.Adapter<EvaluationUEAdapte
         this.listener = listener;
     }
 
-    void setAnexo21ArrayList(List<Anexo21> anexo21ArrayList) {
-        this.anexo21ArrayList = anexo21ArrayList;
+    void setAnexo21List(List<Anexo21> anexo21List) {
+        this.anexo21List = anexo21List;
+        this.anexo21ListFiltered = anexo21List;
     }
 
     @NonNull
@@ -52,7 +87,7 @@ public class EvaluationUEAdapter extends RecyclerView.Adapter<EvaluationUEAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Anexo21 data = anexo21ArrayList.get(position);
+        Anexo21 data = anexo21ListFiltered.get(position);
         viewBinderHelper.setOpenOnlyOne(true);
         viewBinderHelper.bind(holder.swipelayout, data.getId());
         viewBinderHelper.closeLayout(data.getId());
@@ -61,7 +96,7 @@ public class EvaluationUEAdapter extends RecyclerView.Adapter<EvaluationUEAdapte
 
     @Override
     public int getItemCount() {
-        return anexo21ArrayList.size();
+        return anexo21ListFiltered.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -90,7 +125,7 @@ public class EvaluationUEAdapter extends RecyclerView.Adapter<EvaluationUEAdapte
                         int position = getAdapterPosition();
                         if (position != RecyclerView.NO_POSITION) {
                             listener.onDeleteClick(position);
-                            Anexo21 data = anexo21ArrayList.get(position);
+                            Anexo21 data = anexo21ListFiltered.get(position);
                             viewBinderHelper.closeLayout(data.getId());
                         }
                     }

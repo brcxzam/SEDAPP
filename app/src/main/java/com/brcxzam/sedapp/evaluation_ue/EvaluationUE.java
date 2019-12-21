@@ -1,38 +1,42 @@
 package com.brcxzam.sedapp.evaluation_ue;
 
 
+import android.content.Context;
 import android.os.Bundle;
 
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.NavOptions;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
 import com.brcxzam.sedapp.DeleteAnexo_2_1Mutation;
-import com.brcxzam.sedapp.MainActivity;
 import com.brcxzam.sedapp.R;
 import com.brcxzam.sedapp.ReadAllAnexo_2_1Query;
 import com.brcxzam.sedapp.apollo_client.ApolloConnector;
-import com.brcxzam.sedapp.apollo_client.Token;
 import com.brcxzam.sedapp.database.Anexo21;
 import com.brcxzam.sedapp.database.Anexo21Dao;
 import com.brcxzam.sedapp.database.AppDatabase;
 import com.brcxzam.sedapp.database.DeleteOffline;
 import com.brcxzam.sedapp.database.DeleteOfflineDao;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputLayout;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -40,29 +44,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-
-
 public class EvaluationUE extends Fragment {
 
-    private EvaluationUEAdapter mAdapter = new EvaluationUEAdapter();;
-    private View viewSnack;
-
+    private EvaluationUEAdapter mAdapter = new EvaluationUEAdapter();
     private final String ERROR_CONNECTION = "ERROR CONNECTION GQL";
-
     private Anexo21Dao anexo21Dao;
     private DeleteOfflineDao deleteOfflineDao;
-
     private List<Anexo21> list = new ArrayList<>();
-
-    private Handler handler = new Handler();
-    private final int TIME = 1000 * 5;
-    private Runnable runnable = new Runnable() {
-        @Override
-        public void run() {
-            fetchAnexo21();
-            handler.postDelayed(runnable,TIME);
-        }
-    };
+    private SwipeRefreshLayout refreshLayout;
 
     public EvaluationUE() {
         // Required empty public constructor
@@ -70,93 +59,94 @@ public class EvaluationUE extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-//        AppDatabase appDatabase = AppDatabase.getAppDatabase(getContext());
-//        anexo21Dao = appDatabase.anexo21Dao();
-//        deleteOfflineDao = appDatabase.deleteOfflineDao();
-//
-//        fetchAnexo21();
-//
-//        handler.postDelayed(runnable,TIME);
         View view = inflater.inflate(R.layout.fragment_evaluation_ue, container, false);
-//        final FloatingActionButton fab = ((MainActivity) Objects.requireNonNull(getActivity())).findViewById(R.id.fab);
-//        final NavController navController = Navigation.findNavController(getActivity(),R.id.nav_host_fragment);
-//        final NavOptions navOptions = new NavOptions.Builder()
-//                .setEnterAnim(R.anim.slide_in_right)
-//                .setExitAnim(R.anim.slide_out_left)
-//                .setPopEnterAnim(R.anim.slide_in_left)
-//                .setPopExitAnim(R.anim.slide_out_right)
-//                .build();
-//        if (!fab.isShown()) {
-//            fab.show();
-//        }
-//        fab.hide(new FloatingActionButton.OnVisibilityChangedListener() {
-//            @Override
-//            public void onHidden(FloatingActionButton fab) {
-//                super.onHidden(fab);
-//                fab.setImageResource(R.drawable.ic_add_black_24dp);
-//                fab.show();
-//            }
-//        });
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (navController.getCurrentDestination().getId() == R.id.evaluationUE) {
-//                    navController.navigate(R.id.action_evaluationUE_to_questionsUE,null,navOptions);
-//                }
-//            }
-//        });
-//        viewSnack = ((MainActivity) Objects.requireNonNull(getActivity())).findViewById(R.id.viewSnack);
-//        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerViewUE);
-//        recyclerView.setHasFixedSize(true);
-//        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
-//        recyclerView.setLayoutManager(layoutManager);
-//        DividerItemDecoration itemDecor = new DividerItemDecoration(Objects.requireNonNull(getContext()),DividerItemDecoration.VERTICAL);
-//        recyclerView.addItemDecoration(itemDecor);
-//
-//        mAdapter.setAnexo21ArrayList(list);
-//        recyclerView.setAdapter(mAdapter);
-//        mAdapter.setOnItemClickListener(new EvaluationUEAdapter.OnItemClickListener() {
-//            @Override
-//            public void onDeleteClick(int position) {
-//                final Anexo21 data = list.get(position);
-//                Snackbar.make(viewSnack, "¿Quieres eliminar la evaluación de \""+data.getRazon_social()+"\"?",
-//                        Snackbar.LENGTH_LONG)
-//                        .setAction(getString(R.string.positive_button), new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View v) {
-//                                deleteAnexo21(data.getId());
-//                            }
-//                        })
-//                        .show();
-//            }
-//        });
-//
-//        getLocalData();
+        if (getActivity() == null) return view;
+
+        Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
+        toolbar.setTitle(R.string.unidades_economicas);
+
+        // Search
+        TextInputLayout inputLayoutSearch = view.findViewById(R.id.action_search);
+        EditText editTextSearch = inputLayoutSearch.getEditText();
+        assert editTextSearch != null;
+        editTextSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    closeKeyboard();
+                }
+                return false;
+            }
+        });
+        editTextSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                mAdapter.getFilter().filter(s);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        // Database
+        AppDatabase appDatabase = AppDatabase.getAppDatabase(getContext());
+        anexo21Dao = appDatabase.anexo21Dao();
+        deleteOfflineDao = appDatabase.deleteOfflineDao();
+
+        // RecyclerView
+        final RecyclerView recyclerView = view.findViewById(R.id.recyclerViewUE);
+        recyclerView.setHasFixedSize(true);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(layoutManager);
+        DividerItemDecoration itemDecor = new DividerItemDecoration(Objects.requireNonNull(getContext()),DividerItemDecoration.VERTICAL);
+        recyclerView.addItemDecoration(itemDecor);
+        mAdapter.setAnexo21List(list);
+        recyclerView.setAdapter(mAdapter);
+        mAdapter.setOnItemClickListener(new EvaluationUEAdapter.OnItemClickListener() {
+            @Override
+            public void onDeleteClick(int position) {
+                final Anexo21 data = list.get(position);
+                Snackbar.make(recyclerView, "¿Quieres eliminar la evaluación de \""+data.getRazon_social()+"\"?",
+                        Snackbar.LENGTH_LONG)
+                        .setAction(getString(R.string.positive_button), new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                deleteAnexo21(data.getId());
+                            }
+                        })
+                        .show();
+            }
+        });
+
+        // Refresh
+        refreshLayout = view.findViewById(R.id.refresh);
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                fetchAnexo21();
+            }
+        });
+
+        // Get Data Local and Remote
+        getLocalData();
+        fetchAnexo21();
 
         return view;
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        handler.removeCallbacks(runnable);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        handler.postDelayed(runnable,TIME);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        handler.removeCallbacks(runnable);
-    }
-
-    private void errorMessage() {
-        Snackbar.make(viewSnack, R.string.error_connection, Snackbar.LENGTH_SHORT)
-                .show();
+    private void closeKeyboard() {
+        View view = Objects.requireNonNull(getActivity()).getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            Objects.requireNonNull(imm).hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 
     private void fetchAnexo21() {
@@ -169,40 +159,42 @@ public class EvaluationUE extends Fragment {
                         if (response.data() != null) {
                             List<ReadAllAnexo_2_1Query.Anexo_2_1> anexo21List = response.data().Anexo_2_1s();
                             List<Anexo21> anexo21s = new ArrayList<>();
-                            for (ReadAllAnexo_2_1Query.Anexo_2_1 anexo21: anexo21List) {
-                                Anexo21 res = new Anexo21();
-                                res.setId(anexo21.id());
-                                res.setPeriodo(anexo21.periodo());
-                                res.setFecha(anexo21.fecha());
-                                res.setS1_p1(anexo21.s1_p1());
-                                res.setS1_p2(anexo21.s1_p2());
-                                res.setS1_p3(anexo21.s1_p3());
-                                res.setS1_p4(anexo21.s1_p4());
-                                res.setS1_total_no(anexo21.s1_total_no());
-                                res.setS1_total_si(anexo21.s1_total_si());
-                                res.setS2_p1(anexo21.s2_p1());
-                                res.setS2_p2(anexo21.s2_p2());
-                                res.setS2_p3(anexo21.s2_p3());
-                                res.setS2_p4(anexo21.s2_p4());
-                                res.setS2_p5(anexo21.s2_p5());
-                                res.setS2_p6(anexo21.s2_p6());
-                                res.setS2_suma_no_cumple(anexo21.s2_suma_no_cumple());
-                                res.setS2_suma_parcialmente(anexo21.s2_suma_parcialmente());
-                                res.setS2_suma_cumple(anexo21.s2_suma_cumple());
-                                res.setS3_p1(anexo21.s3_p1());
-                                res.setS3_p2(anexo21.s3_p2());
-                                res.setS3_p3(anexo21.s3_p3());
-                                res.setS3_suma_no_cumple(anexo21.s3_suma_no_cumple());
-                                res.setS3_suma_parcialmente(anexo21.s3_suma_parcialmente());
-                                res.setS3_suma_cumple(anexo21.s3_suma_cumple());
-                                res.setTotal(anexo21.total());
-                                res.setAplicador(anexo21.aplicador());
-                                res.setIEId(anexo21.IEId());
-                                res.setInstitucion_educativa(anexo21.IE().institucion_educativa());
-                                res.setUERFC(anexo21.UERFC());
-                                res.setRazon_social(anexo21.UE().razon_social());
-                                res.setAccion(null);
-                                anexo21s.add(res);
+                            if (anexo21List != null) {
+                                for (ReadAllAnexo_2_1Query.Anexo_2_1 anexo21: anexo21List) {
+                                    Anexo21 res = new Anexo21();
+                                    res.setId(Objects.requireNonNull(anexo21.id()));
+                                    res.setPeriodo(anexo21.periodo());
+                                    res.setFecha(anexo21.fecha());
+                                    res.setS1_p1(anexo21.s1_p1());
+                                    res.setS1_p2(anexo21.s1_p2());
+                                    res.setS1_p3(anexo21.s1_p3());
+                                    res.setS1_p4(anexo21.s1_p4());
+                                    res.setS1_total_no(anexo21.s1_total_no());
+                                    res.setS1_total_si(anexo21.s1_total_si());
+                                    res.setS2_p1(anexo21.s2_p1());
+                                    res.setS2_p2(anexo21.s2_p2());
+                                    res.setS2_p3(anexo21.s2_p3());
+                                    res.setS2_p4(anexo21.s2_p4());
+                                    res.setS2_p5(anexo21.s2_p5());
+                                    res.setS2_p6(anexo21.s2_p6());
+                                    res.setS2_suma_no_cumple(anexo21.s2_suma_no_cumple());
+                                    res.setS2_suma_parcialmente(anexo21.s2_suma_parcialmente());
+                                    res.setS2_suma_cumple(anexo21.s2_suma_cumple());
+                                    res.setS3_p1(anexo21.s3_p1());
+                                    res.setS3_p2(anexo21.s3_p2());
+                                    res.setS3_p3(anexo21.s3_p3());
+                                    res.setS3_suma_no_cumple(anexo21.s3_suma_no_cumple());
+                                    res.setS3_suma_parcialmente(anexo21.s3_suma_parcialmente());
+                                    res.setS3_suma_cumple(anexo21.s3_suma_cumple());
+                                    res.setTotal(anexo21.total());
+                                    res.setAplicador(anexo21.aplicador());
+                                    res.setIEId(anexo21.IEId());
+                                    res.setInstitucion_educativa(anexo21.IE().institucion_educativa());
+                                    res.setUERFC(anexo21.UERFC());
+                                    res.setRazon_social(anexo21.UE().razon_social());
+                                    res.setAccion(null);
+                                    anexo21s.add(res);
+                                }
                             }
                             anexo21Dao.deleteAll();
                             anexo21Dao.createALL(anexo21s);
@@ -217,6 +209,12 @@ public class EvaluationUE extends Fragment {
                     @Override
                     public void onFailure(@NotNull ApolloException e) {
                         Log.d(ERROR_CONNECTION, Objects.requireNonNull(e.getMessage()));
+                        Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                refreshLayout.setRefreshing(false);
+                            }
+                        });
                     }
                 });
     }
@@ -265,7 +263,8 @@ public class EvaluationUE extends Fragment {
     private void getLocalData() {
         list.clear();
         list.addAll(anexo21Dao.readALL());
-        mAdapter.setAnexo21ArrayList(list);
+        mAdapter.setAnexo21List(list);
         mAdapter.notifyDataSetChanged();
+        refreshLayout.setRefreshing(false);
     }
 }
