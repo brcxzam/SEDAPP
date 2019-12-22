@@ -19,7 +19,7 @@
         app:rippleColor="@android:color/white"/>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/placesUE"
+        android:id="@+id/places"
         style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -30,7 +30,7 @@
         app:rippleColor="@android:color/white"/>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/unidades_economicas"
+        android:id="@+id/evaluations"
         style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -41,7 +41,7 @@
         app:rippleColor="@android:color/white"/>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/evaluation_ue"
+        android:id="@+id/evaluation"
         style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

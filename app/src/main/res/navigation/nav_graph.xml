@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/evaluationUE">
+    app:startDestination="@id/evaluations">
 
     <fragment
         android:id="@+id/charts"
@@ -11,39 +11,32 @@
         android:label="fragment_charts"
         tools:layout="@layout/fragment_charts" />
     <fragment
-        android:id="@+id/placesUE"
+        android:id="@+id/places"
         android:name="com.brcxzam.sedapp.places_ue.PlacesUE"
         android:label="fragment_places_ue"
         tools:layout="@layout/fragment_places_ue" />
     <fragment
-        android:id="@+id/evaluationED"
-        android:name="com.brcxzam.sedapp.evaluation_ed.EvaluationED"
-        android:label="fragment_evaluation_ed"
-        tools:layout="@layout/fragment_evaluation_ed" />
-    <fragment
-        android:id="@+id/evaluationUE"
+        android:id="@+id/evaluations"
         android:name="com.brcxzam.sedapp.evaluation_ue.EvaluationUE"
         android:label="fragment_evaluation_ue"
-        tools:layout="@layout/fragment_evaluation_ue" >
-        <action
-            android:id="@+id/action_evaluationUE_to_questionsUE"
-            app:destination="@id/questionsUE" />
-    </fragment>
+        tools:layout="@layout/fragment_evaluation_ue" />
+    <fragment
+        android:id="@+id/evaluation"
+        android:name="com.brcxzam.sedapp.evaluation_ue.QuestionsUE"
+        android:label="fragment_questions_ue"
+        tools:layout="@layout/fragment_questions_ue" />
+
     <action
         android:id="@+id/action_global_charts"
         app:destination="@id/charts" />
     <action
-        android:id="@+id/action_global_evaluationUE"
-        app:destination="@id/evaluationUE" />
+        android:id="@+id/action_global_evaluations"
+        app:destination="@id/evaluations" />
     <action
-        android:id="@+id/action_global_evaluationED"
-        app:destination="@id/evaluationED" />
+        android:id="@+id/action_global_places"
+        app:destination="@id/places" />
     <action
-        android:id="@+id/action_global_placesUE"
-        app:destination="@id/placesUE" />
-    <fragment
-        android:id="@+id/questionsUE"
-        android:name="com.brcxzam.sedapp.evaluation_ue.QuestionsUE"
-        android:label="fragment_questions_ue"
-        tools:layout="@layout/fragment_questions_ue" />
+        android:id="@+id/action_global_evaluation"
+        app:destination="@id/evaluation" />
+
 </navigation>

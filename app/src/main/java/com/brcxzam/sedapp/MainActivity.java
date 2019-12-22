@@ -3,6 +3,9 @@ package com.brcxzam.sedapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.navigation.NavController;
+import androidx.navigation.NavOptions;
+import androidx.navigation.fragment.NavHostFragment;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
@@ -18,19 +21,22 @@ import android.view.View;
 
 import com.brcxzam.sedapp.apollo_client.Token;
 import com.brcxzam.sedapp.database.NetworkStateChecker;
-import com.google.android.material.bottomappbar.BottomAppBar;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.roacult.backdrop.BackdropLayout;
 
-public class MainActivity extends AppCompatActivity {
-
-    FloatingActionButton fab;
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     NetworkStateChecker checker = new NetworkStateChecker();
 
     Toolbar toolbar;
+    BackdropLayout backdropLayout;
+    View back_layout;
+    NavHostFragment hostFragment;
+    NavController navController;
+    NavOptions navOptions;
+    MaterialButton charts, places, evaluations, evaluation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,23 +48,29 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setTitle(R.string.app_name);
         setSupportActionBar(toolbar);
 
-//        final BottomAppBar bar = findViewById(R.id.bottom_app_bar);
-
-//        bar.replaceMenu(R.menu.bottomappbar_menu);
-//
         registerReceiver(checker, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
-//
-//        fab = findViewById(R.id.fab);
-//        fab.hide();
-        final BackdropLayout backdropLayout = findViewById(R.id.container);
-        View back_layout = backdropLayout.getBackLayout();
-        back_layout.findViewById(R.id.charts).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                backdropLayout.close();
-            }
-        });
 
+        backdropLayout = findViewById(R.id.container);
+        back_layout = backdropLayout.getBackLayout();
+
+        charts = back_layout.findViewById(R.id.charts);
+        places = back_layout.findViewById(R.id.places);
+        evaluation = back_layout.findViewById(R.id.evaluation);
+        evaluations = back_layout.findViewById(R.id.evaluations);
+
+        charts.setOnClickListener(this);
+        places.setOnClickListener(this);
+        evaluation.setOnClickListener(this);
+        evaluations.setOnClickListener(this);
+
+        hostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+        navController = hostFragment.getNavController();
+        navOptions = new NavOptions.Builder()
+                .setEnterAnim(R.anim.fragment_fade_enter)
+                .setExitAnim(R.anim.fragment_fade_exit)
+                .setPopEnterAnim(R.anim.fragment_fade_enter)
+                .setPopExitAnim(R.anim.fragment_fade_exit)
+                .build();
     }
 
     @Override
@@ -126,26 +138,39 @@ public class MainActivity extends AppCompatActivity {
                         })
                         .show();
                 break;
-            case android.R.id.home:
-                BottomNavigationDrawerFragment bottomNavigationDrawerFragment = new BottomNavigationDrawerFragment();
-                bottomNavigationDrawerFragment.show(getSupportFragmentManager(),
-                        bottomNavigationDrawerFragment.getTag());
-                break;
         }
         return super.onOptionsItemSelected(item);
     }
 
     public void snackMessage(String message) {
-//        Snackbar.make(findViewById(R.id.viewSnack), message, Snackbar.LENGTH_SHORT)
-//                .show();
+        Snackbar.make(back_layout, message, Snackbar.LENGTH_SHORT)
+                .show();
     }
 
-    public void toggleFab(boolean show) {
-        if (fab.isShown() && !show) {
-            fab.hide();
-        } else {
-            fab.show();
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.charts:
+                if (navController.getCurrentDestination().getId() != R.id.charts){
+                    navController.navigate(R.id.action_global_charts,null,navOptions);
+                }
+                break;
+            case R.id.places:
+                if (navController.getCurrentDestination().getId() != R.id.places){
+                    navController.navigate(R.id.action_global_places,null,navOptions);
+                }
+                break;
+            case R.id.evaluation:
+                if (navController.getCurrentDestination().getId() != R.id.evaluation){
+                    navController.navigate(R.id.action_global_evaluation,null,navOptions);
+                }
+                break;
+            case R.id.evaluations:
+                if (navController.getCurrentDestination().getId() != R.id.evaluations){
+                    navController.navigate(R.id.action_global_evaluations,null,navOptions);
+                }
+                break;
         }
+        backdropLayout.close();
     }
-
 }
