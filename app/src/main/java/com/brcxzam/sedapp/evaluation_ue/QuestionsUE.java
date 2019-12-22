@@ -7,12 +7,14 @@ import android.icu.text.DecimalFormat;
 import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
 
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -101,6 +103,10 @@ public class QuestionsUE extends Fragment {
 
     String[] totals;
 
+    private TextView date, period;
+    private String[] dates;
+    private final String ERROR_CONNECTION = "ERROR CONNECTION GQL " + getClass().getSimpleName();
+
     public QuestionsUE() {
         // Required empty public constructor
     }
@@ -109,7 +115,34 @@ public class QuestionsUE extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_questions_ue, container, false);
-//
+        if (getActivity() == null) return view;
+
+        Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
+        toolbar.setTitle(R.string.evaluation_ue);
+
+        date = view.findViewById(R.id.date);
+        period = view.findViewById(R.id.period);
+
+        dates = dateFormat();
+
+        date.setText(dates[0]);
+        period.setText(dates[2]);
+
+        // Conexión con la base de datos
+        AppDatabase database = AppDatabase.getAppDatabase(getContext());
+        uesDao = database.uesDao();
+        anexo21Dao = database.anexo21Dao();
+
+        // Spinner con de UE
+        unidadesEconomicasSpinner =  view.findViewById(R.id.unidades_economicas);
+        adapter = new ArrayAdapter<>(Objects.requireNonNull(getContext()), android.R.layout.simple_spinner_item, uesList);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        unidadesEconomicasSpinner.setAdapter(adapter);
+
+        // Carga de registros UE
+        showUEs(); fetchUEs();
+
+
 //        back = view.findViewById(R.id.back);
 //        sectionTextView = view.findViewById(R.id.section);
 //        unidadesEconomicasTextView = view.findViewById(R.id.text_view_ue);
@@ -128,18 +161,11 @@ public class QuestionsUE extends Fragment {
 //        viewSnack = Objects.requireNonNull(getActivity()).findViewById(R.id.viewSnack);
 //        fab = Objects.requireNonNull(getActivity()).findViewById(R.id.fab);
 //
-//        // Conexión con la base de datos
-//        AppDatabase database = AppDatabase.getAppDatabase(getContext());
-//        uesDao = database.uesDao();
-//        anexo21Dao = database.anexo21Dao();
+
 //
-//        // Spinner con de UE
-//        adapter = new ArrayAdapter<>(Objects.requireNonNull(getContext()), android.R.layout.simple_spinner_item, uesList);
-//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//        unidadesEconomicasSpinner.setAdapter(adapter);
+
 //
-//        // Carga de registros UE
-//        showUEs(); fetchUEs();
+
 //
 //        final String[] questions = Objects.requireNonNull(getContext()).getResources().getStringArray(R.array.questions_ue);
 //        totals = Objects.requireNonNull(getContext()).getResources().getStringArray(R.array.totals);
@@ -273,20 +299,28 @@ public class QuestionsUE extends Fragment {
     }
 
     // Formato de fecha
-    private String[] dateFormat(int year, int month, int dayOfMonth) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis(0);
-        cal.set(year, month, dayOfMonth, 0, 0, 0);
-
-        Date chosenDate = cal.getTime();
+    private String[] dateFormat() {
+        Date date = new Date();
 
         DateFormat dateLong = DateFormat.getDateInstance(DateFormat.LONG, Locale.forLanguageTag("spa"));
-        String dateLongString = dateLong.format(chosenDate);
+        String dateLongFormat = dateLong.format(date);
 
         SimpleDateFormat sqlFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.forLanguageTag("spa"));
-        String dateSqlFormat = sqlFormat.format(chosenDate);
+        String dateSqlFormat = sqlFormat.format(date);
 
-        return new String[]{dateLongString,dateSqlFormat};
+        SimpleDateFormat monthFormat = new SimpleDateFormat("MM", Locale.forLanguageTag("spa"));
+        int dateMonthFormat = Integer.valueOf(monthFormat.format(date));
+
+        SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy", Locale.forLanguageTag("spa"));
+        String dateYearFormat = yearFormat.format(date);
+
+        if (dateMonthFormat >= 3 && dateMonthFormat <= 8) {
+            dateYearFormat = dateYearFormat + "-1";
+        } else {
+            dateYearFormat = dateYearFormat + "-2";
+        }
+
+        return new String[]{dateLongFormat,dateSqlFormat, dateYearFormat};
     }
 
     private void handleQuestions(String[] questions) {
@@ -435,7 +469,7 @@ public class QuestionsUE extends Fragment {
                     }
                     @Override
                     public void onFailure(@NotNull ApolloException e) {
-                        errorMessage();
+                        Log.d(ERROR_CONNECTION, e.getMessage());
                     }
                 });
     }

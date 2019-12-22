@@ -4,8 +4,8 @@
     <solid android:color="@color/green" />
 
     <stroke
-        android:width="3dp"
-        android:color="@color/green" />
+        android:width="1dp"
+        android:color="@color/cardBackgroundColor" />
 
     <corners android:radius="15dp" />
 

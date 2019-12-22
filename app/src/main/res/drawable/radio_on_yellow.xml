@@ -5,8 +5,8 @@
     <solid android:color="@color/yellow" />
 
     <stroke
-        android:width="3dp"
-        android:color="@color/yellow" />
+        android:width="1dp"
+        android:color="@color/cardBackgroundColor" />
 
     <corners android:radius="15dp" />
 

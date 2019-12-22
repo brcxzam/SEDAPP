@@ -22,6 +22,7 @@
             android:layout_marginVertical="@dimen/margin">
 
             <TextView
+                android:id="@+id/date"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
@@ -29,6 +30,7 @@
                 android:gravity="center_vertical|start"/>
 
             <TextView
+                android:id="@+id/period"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
@@ -60,230 +62,7 @@
             android:id="@+id/unidades_economicas"
             android:layout_width="match_parent"
             android:layout_height="55dp"
-            android:layout_marginBottom="@dimen/margin" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginVertical="@dimen/margin">
-            <ImageView
-                android:layout_width="50dp"
-                android:layout_height="match_parent"
-                android:src="@drawable/ic_content_paste_black_24dp"
-                android:tint="@color/iconColor"
-                android:contentDescription="@string/ue" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="@string/section1"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-                android:gravity="center_vertical"/>
-        </LinearLayout>
-
-        <com.google.android.material.card.MaterialCardView
-            style="@style/Widget.MaterialComponents.CardView"
-            app:cardBackgroundColor="@color/cardBackgroundColor"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin"
-            android:minHeight="150dp">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/question1"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-                android:gravity="center"
-                android:layout_gravity="center"
-                android:layout_margin="@dimen/margin" />
-
-        </com.google.android.material.card.MaterialCardView>
-
-        <RadioGroup
-            android:id="@+id/answers1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:weightSum="3">
-            <RadioButton
-                android:id="@+id/first1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:button="@null"
-                android:background="@drawable/radio_states_red"
-                android:padding="10dp"
-                android:text="@string/answer_1"
-                android:textColor="@drawable/radio_text"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
-                android:gravity="center"
-                android:layout_marginBottom="@dimen/margin" />
-            <RadioButton
-                android:id="@+id/third1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:button="@null"
-                android:background="@drawable/radio_states_green"
-                android:padding="10dp"
-                android:text="@string/answer_2"
-                android:textColor="@drawable/radio_text"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
-                android:gravity="center"
-                android:layout_marginBottom="@dimen/margin" />
-        </RadioGroup>
-
-        <com.google.android.material.card.MaterialCardView
-            style="@style/Widget.MaterialComponents.CardView"
-            app:cardBackgroundColor="@color/cardBackgroundColor"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin"
-            android:minHeight="150dp">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/question2"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-                android:gravity="center"
-                android:layout_gravity="center"
-                android:layout_margin="@dimen/margin" />
-
-        </com.google.android.material.card.MaterialCardView>
-
-        <RadioGroup
-            android:id="@+id/answers2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:weightSum="3">
-            <RadioButton
-                android:id="@+id/first2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:button="@null"
-                android:background="@drawable/radio_states_red"
-                android:padding="10dp"
-                android:text="@string/answer_1"
-                android:textColor="@drawable/radio_text"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
-                android:gravity="center"
-                android:layout_marginBottom="@dimen/margin" />
-            <RadioButton
-                android:id="@+id/third2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:button="@null"
-                android:background="@drawable/radio_states_green"
-                android:padding="10dp"
-                android:text="@string/answer_2"
-                android:textColor="@drawable/radio_text"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
-                android:gravity="center"
-                android:layout_marginBottom="@dimen/margin" />
-        </RadioGroup>
-
-        <com.google.android.material.card.MaterialCardView
-            style="@style/Widget.MaterialComponents.CardView"
-            app:cardBackgroundColor="@color/cardBackgroundColor"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin"
-            android:minHeight="150dp">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/question3"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-                android:gravity="center"
-                android:layout_gravity="center"
-                android:layout_margin="@dimen/margin" />
-
-        </com.google.android.material.card.MaterialCardView>
-
-        <RadioGroup
-            android:id="@+id/answers3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:weightSum="3">
-            <RadioButton
-                android:id="@+id/first3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:button="@null"
-                android:background="@drawable/radio_states_red"
-                android:padding="10dp"
-                android:text="@string/answer_1"
-                android:textColor="@drawable/radio_text"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
-                android:gravity="center"
-                android:layout_marginBottom="@dimen/margin" />
-            <RadioButton
-                android:id="@+id/third3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:button="@null"
-                android:background="@drawable/radio_states_green"
-                android:padding="10dp"
-                android:text="@string/answer_2"
-                android:textColor="@drawable/radio_text"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
-                android:gravity="center"
-                android:layout_marginBottom="@dimen/margin" />
-        </RadioGroup>
-
-        <com.google.android.material.card.MaterialCardView
-            style="@style/Widget.MaterialComponents.CardView"
-            app:cardBackgroundColor="@color/cardBackgroundColor"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin"
-            android:minHeight="150dp">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/question4"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-                android:gravity="center"
-                android:layout_gravity="center"
-                android:layout_margin="@dimen/margin" />
-
-        </com.google.android.material.card.MaterialCardView>
-
-        <RadioGroup
-            android:id="@+id/answers4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:weightSum="3">
-            <RadioButton
-                android:id="@+id/first4"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:button="@null"
-                android:background="@drawable/radio_states_red"
-                android:padding="10dp"
-                android:text="@string/answer_1"
-                android:textColor="@drawable/radio_text"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
-                android:gravity="center"
-                android:layout_marginBottom="@dimen/margin" />
-            <RadioButton
-                android:id="@+id/third4"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:button="@null"
-                android:background="@drawable/radio_states_green"
-                android:padding="10dp"
-                android:text="@string/answer_2"
-                android:textColor="@drawable/radio_text"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
-                android:gravity="center"
-                android:layout_marginBottom="@dimen/margin" />
-        </RadioGroup>
+            android:popupBackground="@color/cardBackgroundColor"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -310,7 +89,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin"
-            android:minHeight="150dp">
+            android:minHeight="100dp">
 
             <TextView
                 android:layout_width="match_parent"
@@ -319,7 +98,7 @@
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
                 android:gravity="center"
                 android:layout_gravity="center"
-                android:layout_margin="@dimen/margin" />
+                android:layout_margin="@dimen/component_margin" />
 
         </com.google.android.material.card.MaterialCardView>
 
@@ -327,567 +106,28 @@
             android:id="@+id/answers5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:weightSum="3">
+            android:orientation="vertical">
             <RadioButton
                 android:id="@+id/first5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:button="@null"
+                style="@style/AppTheme.RadioButton"
                 android:background="@drawable/radio_states_red"
-                android:padding="10dp"
-                android:text="@string/answer_3"
-                android:textColor="@drawable/radio_text"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
-                android:gravity="center"
-                android:layout_marginBottom="@dimen/margin" />
+                android:text="@string/answer_3"/>
             <RadioButton
                 android:id="@+id/second5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:button="@null"
-                android:background="@drawable/radio_states_yellow"
-                android:padding="10dp"
-                android:text="@string/answer_4"
-                android:textColor="@drawable/radio_text"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
-                android:gravity="center"
-                android:layout_marginBottom="@dimen/margin" />
+                style="@style/AppTheme.RadioButton"
+                android:background="@drawable/radio_states_red"
+                android:text="@string/answer_4"/>
             <RadioButton
                 android:id="@+id/third5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:button="@null"
-                android:background="@drawable/radio_states_green"
-                android:padding="10dp"
-                android:text="@string/answer_5"
-                android:textColor="@drawable/radio_text"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
-                android:gravity="center"
-                android:layout_marginBottom="@dimen/margin" />
-        </RadioGroup>
-
-        <com.google.android.material.card.MaterialCardView
-            style="@style/Widget.MaterialComponents.CardView"
-            app:cardBackgroundColor="@color/cardBackgroundColor"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin"
-            android:minHeight="150dp">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/question6"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-                android:gravity="center"
-                android:layout_gravity="center"
-                android:layout_margin="@dimen/margin" />
-
-        </com.google.android.material.card.MaterialCardView>
-
-        <RadioGroup
-            android:id="@+id/answers6"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:weightSum="3">
-            <RadioButton
-                android:id="@+id/first6"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:button="@null"
+                style="@style/AppTheme.RadioButton"
                 android:background="@drawable/radio_states_red"
-                android:padding="10dp"
-                android:text="@string/answer_3"
-                android:textColor="@drawable/radio_text"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
-                android:gravity="center"
-                android:layout_marginBottom="@dimen/margin" />
-            <RadioButton
-                android:id="@+id/second6"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:button="@null"
-                android:background="@drawable/radio_states_yellow"
-                android:padding="10dp"
-                android:text="@string/answer_4"
-                android:textColor="@drawable/radio_text"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
-                android:gravity="center"
-                android:layout_marginBottom="@dimen/margin" />
-            <RadioButton
-                android:id="@+id/third6"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:button="@null"
-                android:background="@drawable/radio_states_green"
-                android:padding="10dp"
-                android:text="@string/answer_5"
-                android:textColor="@drawable/radio_text"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
-                android:gravity="center"
-                android:layout_marginBottom="@dimen/margin" />
-        </RadioGroup>
-
-        <com.google.android.material.card.MaterialCardView
-            style="@style/Widget.MaterialComponents.CardView"
-            app:cardBackgroundColor="@color/cardBackgroundColor"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin"
-            android:minHeight="150dp">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/question7"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-                android:gravity="center"
-                android:layout_gravity="center"
-                android:layout_margin="@dimen/margin" />
-
-        </com.google.android.material.card.MaterialCardView>
-
-        <RadioGroup
-            android:id="@+id/answers7"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:weightSum="3">
-            <RadioButton
-                android:id="@+id/first7"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:button="@null"
-                android:background="@drawable/radio_states_red"
-                android:padding="10dp"
-                android:text="@string/answer_3"
-                android:textColor="@drawable/radio_text"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
-                android:gravity="center"
-                android:layout_marginBottom="@dimen/margin" />
-            <RadioButton
-                android:id="@+id/second7"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:button="@null"
-                android:background="@drawable/radio_states_yellow"
-                android:padding="10dp"
-                android:text="@string/answer_4"
-                android:textColor="@drawable/radio_text"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
-                android:gravity="center"
-                android:layout_marginBottom="@dimen/margin" />
-            <RadioButton
-                android:id="@+id/third7"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:button="@null"
-                android:background="@drawable/radio_states_green"
-                android:padding="10dp"
-                android:text="@string/answer_5"
-                android:textColor="@drawable/radio_text"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
-                android:gravity="center"
-                android:layout_marginBottom="@dimen/margin" />
-        </RadioGroup>
-
-        <com.google.android.material.card.MaterialCardView
-            style="@style/Widget.MaterialComponents.CardView"
-            app:cardBackgroundColor="@color/cardBackgroundColor"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin"
-            android:minHeight="150dp">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/question8"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-                android:gravity="center"
-                android:layout_gravity="center"
-                android:layout_margin="@dimen/margin" />
-
-        </com.google.android.material.card.MaterialCardView>
-
-        <RadioGroup
-            android:id="@+id/answers8"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:weightSum="3">
-            <RadioButton
-                android:id="@+id/first8"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:button="@null"
-                android:background="@drawable/radio_states_red"
-                android:padding="10dp"
-                android:text="@string/answer_3"
-                android:textColor="@drawable/radio_text"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
-                android:gravity="center"
-                android:layout_marginBottom="@dimen/margin" />
-            <RadioButton
-                android:id="@+id/second8"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:button="@null"
-                android:background="@drawable/radio_states_yellow"
-                android:padding="10dp"
-                android:text="@string/answer_4"
-                android:textColor="@drawable/radio_text"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
-                android:gravity="center"
-                android:layout_marginBottom="@dimen/margin" />
-            <RadioButton
-                android:id="@+id/third8"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:button="@null"
-                android:background="@drawable/radio_states_green"
-                android:padding="10dp"
-                android:text="@string/answer_5"
-                android:textColor="@drawable/radio_text"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
-                android:gravity="center"
-                android:layout_marginBottom="@dimen/margin" />
-        </RadioGroup>
-
-        <com.google.android.material.card.MaterialCardView
-            style="@style/Widget.MaterialComponents.CardView"
-            app:cardBackgroundColor="@color/cardBackgroundColor"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin"
-            android:minHeight="150dp">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/question9"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-                android:gravity="center"
-                android:layout_gravity="center"
-                android:layout_margin="@dimen/margin" />
-
-        </com.google.android.material.card.MaterialCardView>
-
-        <RadioGroup
-            android:id="@+id/answers9"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:weightSum="3">
-            <RadioButton
-                android:id="@+id/first9"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:button="@null"
-                android:background="@drawable/radio_states_red"
-                android:padding="10dp"
-                android:text="@string/answer_3"
-                android:textColor="@drawable/radio_text"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
-                android:gravity="center"
-                android:layout_marginBottom="@dimen/margin" />
-            <RadioButton
-                android:id="@+id/second9"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:button="@null"
-                android:background="@drawable/radio_states_yellow"
-                android:padding="10dp"
-                android:text="@string/answer_4"
-                android:textColor="@drawable/radio_text"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
-                android:gravity="center"
-                android:layout_marginBottom="@dimen/margin" />
-            <RadioButton
-                android:id="@+id/third9"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:button="@null"
-                android:background="@drawable/radio_states_green"
-                android:padding="10dp"
-                android:text="@string/answer_5"
-                android:textColor="@drawable/radio_text"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
-                android:gravity="center"
-                android:layout_marginBottom="@dimen/margin" />
-        </RadioGroup>
-
-        <com.google.android.material.card.MaterialCardView
-            style="@style/Widget.MaterialComponents.CardView"
-            app:cardBackgroundColor="@color/cardBackgroundColor"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin"
-            android:minHeight="150dp">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/question10"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-                android:gravity="center"
-                android:layout_gravity="center"
-                android:layout_margin="@dimen/margin" />
-
-        </com.google.android.material.card.MaterialCardView>
-
-        <RadioGroup
-            android:id="@+id/answers10"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:weightSum="3">
-            <RadioButton
-                android:id="@+id/first10"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:button="@null"
-                android:background="@drawable/radio_states_red"
-                android:padding="10dp"
-                android:text="@string/answer_3"
-                android:textColor="@drawable/radio_text"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
-                android:gravity="center"
-                android:layout_marginBottom="@dimen/margin" />
-            <RadioButton
-                android:id="@+id/second10"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:button="@null"
-                android:background="@drawable/radio_states_yellow"
-                android:padding="10dp"
-                android:text="@string/answer_4"
-                android:textColor="@drawable/radio_text"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
-                android:gravity="center"
-                android:layout_marginBottom="@dimen/margin" />
-            <RadioButton
-                android:id="@+id/third10"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:button="@null"
-                android:background="@drawable/radio_states_green"
-                android:padding="10dp"
-                android:text="@string/answer_5"
-                android:textColor="@drawable/radio_text"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
-                android:gravity="center"
-                android:layout_marginBottom="@dimen/margin" />
-        </RadioGroup>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginVertical="@dimen/margin">
-            <ImageView
-                android:layout_width="50dp"
-                android:layout_height="match_parent"
-                android:src="@drawable/ic_attach_money_black_24dp"
-                android:tint="@color/iconColor"
-                android:contentDescription="@string/ue" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="@string/section3"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-                android:gravity="center_vertical"/>
-        </LinearLayout>
-
-        <com.google.android.material.card.MaterialCardView
-            style="@style/Widget.MaterialComponents.CardView"
-            app:cardBackgroundColor="@color/cardBackgroundColor"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin"
-            android:minHeight="150dp">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/question11"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-                android:gravity="center"
-                android:layout_gravity="center"
-                android:layout_margin="@dimen/margin" />
-
-        </com.google.android.material.card.MaterialCardView>
-
-        <RadioGroup
-            android:id="@+id/answers11"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:weightSum="3">
-            <RadioButton
-                android:id="@+id/first11"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:button="@null"
-                android:background="@drawable/radio_states_red"
-                android:padding="10dp"
-                android:text="@string/answer_3"
-                android:textColor="@drawable/radio_text"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
-                android:gravity="center"
-                android:layout_marginBottom="@dimen/margin" />
-            <RadioButton
-                android:id="@+id/second11"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:button="@null"
-                android:background="@drawable/radio_states_yellow"
-                android:padding="10dp"
-                android:text="@string/answer_4"
-                android:textColor="@drawable/radio_text"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
-                android:gravity="center"
-                android:layout_marginBottom="@dimen/margin" />
-            <RadioButton
-                android:id="@+id/third11"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:button="@null"
-                android:background="@drawable/radio_states_green"
-                android:padding="10dp"
-                android:text="@string/answer_5"
-                android:textColor="@drawable/radio_text"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
-                android:gravity="center"
-                android:layout_marginBottom="@dimen/margin" />
-        </RadioGroup>
-
-        <com.google.android.material.card.MaterialCardView
-            style="@style/Widget.MaterialComponents.CardView"
-            app:cardBackgroundColor="@color/cardBackgroundColor"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin"
-            android:minHeight="150dp">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/question12"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-                android:gravity="center"
-                android:layout_gravity="center"
-                android:layout_margin="@dimen/margin" />
-
-        </com.google.android.material.card.MaterialCardView>
-
-        <RadioGroup
-            android:id="@+id/answers12"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:weightSum="3">
-            <RadioButton
-                android:id="@+id/first12"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:button="@null"
-                android:background="@drawable/radio_states_red"
-                android:padding="10dp"
-                android:text="@string/answer_3"
-                android:textColor="@drawable/radio_text"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
-                android:gravity="center"
-                android:layout_marginBottom="@dimen/margin" />
-            <RadioButton
-                android:id="@+id/second12"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:button="@null"
-                android:background="@drawable/radio_states_yellow"
-                android:padding="10dp"
-                android:text="@string/answer_4"
-                android:textColor="@drawable/radio_text"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
-                android:gravity="center"
-                android:layout_marginBottom="@dimen/margin" />
-            <RadioButton
-                android:id="@+id/third12"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:button="@null"
-                android:background="@drawable/radio_states_green"
-                android:padding="10dp"
-                android:text="@string/answer_5"
-                android:textColor="@drawable/radio_text"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
-                android:gravity="center"
-                android:layout_marginBottom="@dimen/margin" />
-        </RadioGroup>
-
-        <com.google.android.material.card.MaterialCardView
-            style="@style/Widget.MaterialComponents.CardView"
-            app:cardBackgroundColor="@color/cardBackgroundColor"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin"
-            android:minHeight="150dp">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/question13"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-                android:gravity="center"
-                android:layout_gravity="center"
-                android:layout_margin="@dimen/margin" />
-
-        </com.google.android.material.card.MaterialCardView>
-
-        <RadioGroup
-            android:id="@+id/answers13"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:weightSum="3">
-            <RadioButton
-                android:id="@+id/first13"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:button="@null"
-                android:background="@drawable/radio_states_red"
-                android:padding="10dp"
-                android:text="@string/answer_3"
-                android:textColor="@drawable/radio_text"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
-                android:gravity="center"
-                android:layout_marginBottom="@dimen/margin" />
-            <RadioButton
-                android:id="@+id/second13"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:button="@null"
-                android:background="@drawable/radio_states_yellow"
-                android:padding="10dp"
-                android:text="@string/answer_4"
-                android:textColor="@drawable/radio_text"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
-                android:gravity="center"
-                android:layout_marginBottom="@dimen/margin" />
-            <RadioButton
-                android:id="@+id/third13"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:button="@null"
-                android:background="@drawable/radio_states_green"
-                android:padding="10dp"
-                android:text="@string/answer_5"
-                android:textColor="@drawable/radio_text"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
-                android:gravity="center"
-                android:layout_marginBottom="@dimen/margin" />
+                android:text="@string/answer_5"/>
         </RadioGroup>
 
         <LinearLayout
@@ -915,7 +155,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin"
-            android:minHeight="150dp">
+            android:minHeight="100dp">
 
             <TextView
                 android:layout_width="match_parent"
@@ -927,14 +167,35 @@
 
         </com.google.android.material.card.MaterialCardView>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/material_button"
-            style="@style/Widget.MaterialComponents.Button"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/save"
-            android:layout_gravity="center"
-            android:layout_marginVertical="@dimen/margin"/>
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/material_button"
+                style="@style/Widget.MaterialComponents.Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/save"
+                android:layout_gravity="center"
+                android:layout_marginVertical="@dimen/margin"
+                android:layout_marginEnd="@dimen/margin"
+                android:layout_weight="1"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/material_button1"
+                style="@style/Widget.MaterialComponents.Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/save"
+                android:layout_gravity="center"
+                android:layout_marginVertical="@dimen/margin"
+                android:layout_marginStart="@dimen/margin"
+                android:layout_weight="1"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 

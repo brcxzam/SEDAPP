@@ -47,7 +47,7 @@ import java.util.Objects;
 public class EvaluationUE extends Fragment {
 
     private EvaluationUEAdapter mAdapter = new EvaluationUEAdapter();
-    private final String ERROR_CONNECTION = "ERROR CONNECTION GQL";
+    private final String ERROR_CONNECTION = "ERROR CONNECTION GQL " + getClass().getSimpleName();
     private Anexo21Dao anexo21Dao;
     private DeleteOfflineDao deleteOfflineDao;
     private List<Anexo21> list = new ArrayList<>();
