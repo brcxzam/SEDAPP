@@ -250,15 +250,15 @@ public class QuestionsUE extends Fragment {
     private boolean handleRadioButton() {
         int checkedId = answers.getCheckedRadioButtonId();
         switch (checkedId) {
-            case R.id.first:
-                answersArray[question] = 1;
-                return true;
-            case R.id.second:
-                answersArray[question] = 2;
-                return true;
-            case R.id.third:
-                answersArray[question] = 3;
-                return true;
+//            case R.id.first:
+//                answersArray[question] = 1;
+//                return true;
+//            case R.id.second:
+//                answersArray[question] = 2;
+//                return true;
+//            case R.id.third:
+//                answersArray[question] = 3;
+//                return true;
             default:
                 return false;
         }
