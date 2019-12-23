@@ -1,41 +1,32 @@
 package com.brcxzam.sedapp.evaluation_ue;
 
-import android.app.DatePickerDialog;
-import android.content.Context;
 import android.icu.text.DateFormat;
 import android.icu.text.DecimalFormat;
 import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
 
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
-import android.text.Editable;
-import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
-import android.widget.DatePicker;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
-import com.apollographql.apollo.fetcher.ApolloResponseFetchers;
 import com.brcxzam.sedapp.CreateAnexo_2_1Mutation;
-import com.brcxzam.sedapp.DatePickerFragment;
 import com.brcxzam.sedapp.R;
-import com.brcxzam.sedapp.ReadAllAnexo_2_1Query;
 import com.brcxzam.sedapp.ReadAllUEsQuery;
 import com.brcxzam.sedapp.apollo_client.ApolloConnector;
 import com.brcxzam.sedapp.apollo_client.Token;
@@ -47,65 +38,51 @@ import com.brcxzam.sedapp.database.UEsDao;
 import com.brcxzam.sedapp.type.IAnexo_2_1;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.textfield.TextInputLayout;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.regex.Pattern;
 
 
-public class QuestionsUE extends Fragment {
-
-    private MaterialButton back;
-    private TextView sectionTextView;
-    private TextView unidadesEconomicasTextView;
-    private Spinner unidadesEconomicasSpinner;
-    private TextInputLayout periodTextInputLayout;
-    private TextInputLayout dateTextInputLayout;
-    private MaterialCardView questionCard;
-    private TextView questionTextView;
-    private RadioGroup answers;
-    private RadioButton first;
-    private RadioButton second;
-    private RadioButton third;
-    private FloatingActionButton fab;
-    private RelativeLayout totalLayout;
-    private TextView totalTextView;
+public class QuestionsUE extends Fragment implements View.OnClickListener {
 
     // Unidades Económicas
-    UEsDao uesDao;
-    List<UEs> uesList = new ArrayList<>();
-    ArrayAdapter<UEs> adapter;
+    private UEsDao uesDao;
+    private List<UEs> uesList = new ArrayList<>();
+    private ArrayAdapter<UEs> adapter;
 
     // Anexo 2.1
-    Anexo21Dao anexo21Dao;
+    private Anexo21Dao anexo21Dao;
 
     // Array contenedor de las respuestas a las preguntas
     private Integer[] answersArray = new Integer[13];
 
-    // Contadores de sección y número de pregunta; -1 Datos iniciales de la evaluación
-    private int section = 0;
-    private int question = -1;
+    // Contador de sección
+    private int section = 1;
 
-    // Ubicación de la notificación
-    private View viewSnack;
-
-    private String fecha;
-
-    String[] totals;
-
-    private TextView date, period;
     private String[] dates;
     private final String ERROR_CONNECTION = "ERROR CONNECTION GQL " + getClass().getSimpleName();
+    private Spinner unidadesEconomicasSpinner;
+    private ImageView icon;
+    private TextView sectionTextView;
+    private MaterialCardView cardView2, cardView3, cardView4, cardView5, cardView6;
+    private RadioGroup radioGroup1, radioGroup2, radioGroup3, radioGroup4, radioGroup5, radioGroup6;
+    private TextView textView1, textView2, textView3, textView4, textView5, textView6;
+    private MaterialButton previous, next;
+    private ScrollView scrollView;
+
+    private int s1TotalNo = 0, s1TotalSi = 0;
+    private int s2SumaNoCumple = 0, s2SumaParcialmente = 0, s2SumaCumple = 0;
+    private int s3SumaNoCumple = 0, s3SumaParcialmente = 0, s3SumaCumple = 0;
+    private double total = 0;
+
+    private NavController navController;
 
     public QuestionsUE() {
         // Required empty public constructor
@@ -117,11 +94,36 @@ public class QuestionsUE extends Fragment {
         View view = inflater.inflate(R.layout.fragment_questions_ue, container, false);
         if (getActivity() == null) return view;
 
+        navController = Navigation.findNavController(getActivity(),R.id.nav_host_fragment);
+
         Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.evaluation_ue);
 
-        date = view.findViewById(R.id.date);
-        period = view.findViewById(R.id.period);
+        TextView date = view.findViewById(R.id.date);
+        TextView period = view.findViewById(R.id.period);
+        unidadesEconomicasSpinner =  view.findViewById(R.id.unidades_economicas);
+        icon = view.findViewById(R.id.icon);
+        sectionTextView = view.findViewById(R.id.section);
+        cardView2 = view.findViewById(R.id.card2);
+        cardView3 = view.findViewById(R.id.card3);
+        cardView4 = view.findViewById(R.id.card4);
+        cardView5 = view.findViewById(R.id.card5);
+        cardView6 = view.findViewById(R.id.card6);
+        radioGroup1 = view.findViewById(R.id.answers1);
+        radioGroup2 = view.findViewById(R.id.answers2);
+        radioGroup3 = view.findViewById(R.id.answers3);
+        radioGroup4 = view.findViewById(R.id.answers4);
+        radioGroup5 = view.findViewById(R.id.answers5);
+        radioGroup6 = view.findViewById(R.id.answers6);
+        textView1 = view.findViewById(R.id.question1);
+        textView2 = view.findViewById(R.id.question2);
+        textView3 = view.findViewById(R.id.question3);
+        textView4 = view.findViewById(R.id.question4);
+        textView5 = view.findViewById(R.id.question5);
+        textView6 = view.findViewById(R.id.question6);
+        previous = view.findViewById(R.id.previous);
+        next = view.findViewById(R.id.next);
+        scrollView = view.findViewById(R.id.scrollView);
 
         dates = dateFormat();
 
@@ -134,7 +136,6 @@ public class QuestionsUE extends Fragment {
         anexo21Dao = database.anexo21Dao();
 
         // Spinner con de UE
-        unidadesEconomicasSpinner =  view.findViewById(R.id.unidades_economicas);
         adapter = new ArrayAdapter<>(Objects.requireNonNull(getContext()), android.R.layout.simple_spinner_item, uesList);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         unidadesEconomicasSpinner.setAdapter(adapter);
@@ -142,160 +143,250 @@ public class QuestionsUE extends Fragment {
         // Carga de registros UE
         showUEs(); fetchUEs();
 
+        previous.setOnClickListener(this);
+        next.setOnClickListener(this);
 
-//        back = view.findViewById(R.id.back);
-//        sectionTextView = view.findViewById(R.id.section);
-//        unidadesEconomicasTextView = view.findViewById(R.id.text_view_ue);
-//        unidadesEconomicasSpinner = view.findViewById(R.id.unidades_economicas);
-//        periodTextInputLayout = view.findViewById(R.id.period);
-//        dateTextInputLayout = view.findViewById(R.id.date);
-//        questionCard = view.findViewById(R.id.question_card);
-//        questionTextView = view.findViewById(R.id.question);
-//        answers = view.findViewById(R.id.answers);
-//        first = view.findViewById(R.id.first);
-//        second = view.findViewById(R.id.second);
-//        third = view.findViewById(R.id.third);
-//        totalLayout = view.findViewById(R.id.totalLayout);
-//        totalTextView = view.findViewById(R.id.total);
-//
-//        viewSnack = Objects.requireNonNull(getActivity()).findViewById(R.id.viewSnack);
-//        fab = Objects.requireNonNull(getActivity()).findViewById(R.id.fab);
-//
-
-//
-
-//
-
-//
-//        final String[] questions = Objects.requireNonNull(getContext()).getResources().getStringArray(R.array.questions_ue);
-//        totals = Objects.requireNonNull(getContext()).getResources().getStringArray(R.array.totals);
-//
-//        fab.hide(new FloatingActionButton.OnVisibilityChangedListener() {
-//            @Override
-//            public void onHidden(FloatingActionButton fab) {
-//                super.onHidden(fab);
-//                fab.setImageResource(R.drawable.ic_arrow_forward_black_24dp);
-//                fab.show();
-//            }
-//        });
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (question == -1) {
-//                    CharSequence period = Objects.requireNonNull(periodTextInputLayout.getEditText()).getText();
-//                    CharSequence date = Objects.requireNonNull(dateTextInputLayout.getEditText()).getText();
-//                    boolean perioV = isValidPeriod(period);
-//                    boolean dateV = isValidDate(date);
-//                    if (!perioV) {
-//                        periodTextInputLayout.setError("Periodo invalido");
-//                    }
-//                    if (!dateV) {
-//                        dateTextInputLayout.setError("Ingresa una fecha");
-//                    }
-//                    dateTextInputLayout.setErrorIconDrawable(null);
-//                    if (perioV && dateV) {
-//                        question++;
-//                    }
-//                } else {
-//                    boolean answer = handleRadioButton();
-//                    if (answer || question == 13) {
-//                        question++;
-//                    }
-//                }
-//                if (question < 14) {
-//                    answers.clearCheck();
-//                    handleQuestions(questions);
-//                } else {
-//                    createEvaluation();
-//                }
-//            }
-//        });
-//        back.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                question--;
-//                handleQuestions(questions);
-//            }
-//        });
-//
-//        handleQuestions(questions);
-//
-//        final DialogFragment dialogFragment = new DatePickerFragment(new DatePickerDialog.OnDateSetListener() {
-//            @Override
-//            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-//                String[] dates = dateFormat(year, month, dayOfMonth);
-//                fecha = dates[1];
-//                Objects.requireNonNull(dateTextInputLayout.getEditText()).setText(dates[0]);
-//            }
-//        });
-//        Objects.requireNonNull(dateTextInputLayout.getEditText()).setEnabled(false);
-//        dateTextInputLayout.setEndIconOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                closeKeyboard();
-//                dateTextInputLayout.setError(null);
-//                dialogFragment.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(),"datePicker");
-//            }
-//        });
-//
-//        clearError(periodTextInputLayout);
-//
-//
+        viewVisibility();
 
         return view;
     }
 
-    private boolean isValidPeriod(CharSequence target) {
-        Pattern pattern = Pattern.compile("^[0-9-]+$");
-        return !TextUtils.isEmpty(target) && pattern.matcher(target).matches() && target.length() <= 6;
-    }
-
-    private boolean isValidDate(CharSequence target) {
-        return !TextUtils.isEmpty(target);
-    }
-
-    private void clearError(final TextInputLayout textInputLayout) {
-        Objects.requireNonNull(textInputLayout.getEditText()).addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                textInputLayout.setError(null);
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-    }
-
-    private boolean handleRadioButton() {
-        int checkedId = answers.getCheckedRadioButtonId();
-        switch (checkedId) {
-//            case R.id.first:
-//                answersArray[question] = 1;
-//                return true;
-//            case R.id.second:
-//                answersArray[question] = 2;
-//                return true;
-//            case R.id.third:
-//                answersArray[question] = 3;
-//                return true;
-            default:
-                return false;
+    private void section1() {
+        icon.setImageDrawable(getActivity().getDrawable(R.drawable.ic_content_paste_black_24dp));
+        sectionTextView.setText(R.string.section1);
+        textView1.setText(R.string.question1);
+        textView2.setText(R.string.question2);
+        textView3.setText(R.string.question3);
+        textView4.setText(R.string.question4);
+        if (answersArray[0] != null) {
+            checkedSave(radioGroup1, answersArray[0]);
+        }
+        if (answersArray[1] != null) {
+            checkedSave(radioGroup2, answersArray[1]);
+        }
+        if (answersArray[2] != null) {
+            checkedSave(radioGroup3, answersArray[2]);
+        }
+        if (answersArray[3] != null) {
+            checkedSave(radioGroup4, answersArray[3]);
         }
     }
 
-    private void closeKeyboard() {
-        View view = Objects.requireNonNull(getActivity()).getCurrentFocus();
-        if (view != null) {
-            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            Objects.requireNonNull(imm).hideSoftInputFromWindow(view.getWindowToken(), 0);
+    private void section2() {
+        icon.setImageDrawable(getActivity().getDrawable(R.drawable.ic_school_black_24dp));
+        sectionTextView.setText(R.string.section2);
+        textView1.setText(R.string.question5);
+        textView2.setText(R.string.question6);
+        textView3.setText(R.string.question7);
+        textView4.setText(R.string.question8);
+        textView5.setText(R.string.question9);
+        textView6.setText(R.string.question10);
+        if (answersArray[4] != null) {
+            checkedSave(radioGroup1, answersArray[4]);
         }
+        if (answersArray[5] != null) {
+            checkedSave(radioGroup2, answersArray[5]);
+        }
+        if (answersArray[6] != null) {
+            checkedSave(radioGroup3, answersArray[6]);
+        }
+        if (answersArray[7] != null) {
+            checkedSave(radioGroup4, answersArray[7]);
+        }
+        if (answersArray[8] != null) {
+            checkedSave(radioGroup5, answersArray[8]);
+        }
+        if (answersArray[9] != null) {
+            checkedSave(radioGroup6, answersArray[9]);
+        }
+    }
+
+    private void section3() {
+        icon.setImageDrawable(getActivity().getDrawable(R.drawable.ic_attach_money_black_24dp));
+        sectionTextView.setText(R.string.section3);
+        textView1.setText(R.string.question11);
+        textView2.setText(R.string.question12);
+        textView3.setText(R.string.question13);
+        if (answersArray[10] != null) {
+            checkedSave(radioGroup1, answersArray[10]);
+        }
+        if (answersArray[11] != null) {
+            checkedSave(radioGroup2, answersArray[11]);
+        }
+        if (answersArray[12] != null) {
+            checkedSave(radioGroup3, answersArray[12]);
+        }
+    }
+
+    private void section4() {
+        icon.setImageDrawable(getActivity().getDrawable(R.drawable.ic_playlist_add_check_black_24dp));
+        sectionTextView.setText(R.string.section4);
+        String[] totals = getActivity().getResources().getStringArray(R.array.totals);
+        percentTotal();
+        DecimalFormat format = new DecimalFormat("#.00");
+        String totalString1 = format.format(total)+"% "+totals[0];
+        String totalString2 = format.format(total)+"% "+totals[1];
+        String totalString3 = format.format(total)+"% "+totals[2];
+        if (total <= 45) {
+            textView1.setText(totalString1);
+        } else if (total <= 66) {
+            textView1.setText(totalString2);
+        } else if (total <= 100) {
+            textView1.setText(totalString3);
+        }
+        next.setText(R.string.save);
+    }
+
+    private void checkedSave(RadioGroup group, int value) {
+        if (value == 1) {
+            group.check(group.getChildAt(0).getId());
+        } else if (value == 2 && section != 1) {
+            group.check(group.getChildAt(1).getId());
+        } else if (value == 3 || value == 2) {
+            group.check(group.getChildAt(2).getId());
+        }
+    }
+
+    private void viewVisibility() {
+        int section3 = section != 4 ? View.VISIBLE : View.GONE;
+        int section1 = section <= 2 ? View.VISIBLE : View.GONE;
+        int section2 = section == 2 ? View.VISIBLE : View.GONE;
+        int section4 = section >= 2 ? View.VISIBLE : View.INVISIBLE;
+        cardView2.setVisibility(section3);
+        cardView3.setVisibility(section3);
+        cardView4.setVisibility(section1);
+        cardView5.setVisibility(section2);
+        cardView6.setVisibility(section2);
+        radioGroup1.setVisibility(section3);
+        radioGroup2.setVisibility(section3);
+        radioGroup3.setVisibility(section3);
+        radioGroup4.setVisibility(section1);
+        radioGroup5.setVisibility(section2);
+        radioGroup6.setVisibility(section2);
+        previous.setVisibility(section4);
+        textRadioButton(radioGroup1);
+        textRadioButton(radioGroup2);
+        textRadioButton(radioGroup3);
+        textRadioButton(radioGroup4);
+        radioGroup1.clearCheck();
+        radioGroup2.clearCheck();
+        radioGroup3.clearCheck();
+        radioGroup4.clearCheck();
+        radioGroup5.clearCheck();
+        radioGroup6.clearCheck();
+        next.setText(R.string.next);
+        sections();
+    }
+
+    private void textRadioButton(RadioGroup group) {
+        RadioButton radioButton1 = (RadioButton) group.getChildAt(0);
+        RadioButton radioButton2 = (RadioButton) group.getChildAt(1);
+        RadioButton radioButton3 = (RadioButton) group.getChildAt(2);
+        if (section == 1) {
+            radioButton1.setText(R.string.answer_1);
+            radioButton2.setVisibility(View.GONE);
+            radioButton3.setText(R.string.answer_2);
+        } else {
+            radioButton1.setText(R.string.answer_3);
+            radioButton2.setVisibility(View.VISIBLE);
+            radioButton3.setText(R.string.answer_5);
+        }
+    }
+
+    private void sections() {
+        switch (section) {
+            case 1:
+                section1();
+                break;
+            case 2:
+                section2();
+                break;
+            case 3:
+                section3();
+                break;
+            case 4:
+                section4();
+                break;
+        }
+    }
+
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.previous:
+                if (section > 1) {
+                    section--;
+                    viewVisibility();
+                }
+                break;
+            case R.id.next:
+                if (section < 4) {
+                    if (beforeNext()) {
+                        section++;
+                        viewVisibility();
+                    } else {
+                        Snackbar.make(next, R.string.anwersEmpty, Snackbar.LENGTH_SHORT)
+                                .show();
+                    }
+                } else {
+                    createEvaluation();
+                }
+                break;
+        }
+        scrollView.scrollTo(0,unidadesEconomicasSpinner.getBottom());
+    }
+
+    private boolean beforeNext() {
+        int position;
+        if (section == 1) {
+            position = 0;
+        } else if (section == 2) {
+            position = 4;
+        } else if (section == 3) {
+            position = 10;
+        } else {
+            return true;
+        }
+        boolean answer1 = handleRadioButton(radioGroup1,position++);
+        boolean answer2 = handleRadioButton(radioGroup2,position++);
+        boolean answer3 = handleRadioButton(radioGroup3,position++);
+        boolean answer4 = false;
+        boolean answer5 = false;
+        boolean answer6 = false;
+        if (section <= 2) {
+            answer4 = handleRadioButton(radioGroup4,position++);
+        }
+        if (section == 2) {
+            answer5 = handleRadioButton(radioGroup5,position++);
+            answer6 = handleRadioButton(radioGroup6,position);
+        }
+        switch (section) {
+            case 1:
+                return answer1 && answer2 && answer3 && answer4;
+            case 2:
+                return answer1 && answer2 && answer3 && answer4 && answer5 && answer6;
+            case 3:
+                return answer1 && answer2 && answer3;
+        }
+        return true;
+    }
+
+    private boolean handleRadioButton(RadioGroup group, int position) {
+        int checkedId = group.getCheckedRadioButtonId();
+        int childId1 = group.getChildAt(0).getId();
+        int childId2 = group.getChildAt(1).getId();
+        int childId3 = group.getChildAt(2).getId();
+        if (checkedId == childId1) {
+            answersArray[position] = 1;
+        } else if (checkedId == childId2) {
+            answersArray[position] = 2;
+        } else if (checkedId == childId3) {
+            answersArray[position] = section == 1 ? 2 : 3;
+        } else {
+            return false;
+        }
+        return true;
     }
 
     // Formato de fecha
@@ -321,118 +412,6 @@ public class QuestionsUE extends Fragment {
         }
 
         return new String[]{dateLongFormat,dateSqlFormat, dateYearFormat};
-    }
-
-    private void handleQuestions(String[] questions) {
-        if (question == -1) {
-            section = 0;
-            sectionTextView.setText(R.string.ue);
-        } else if (question < 13) {
-            if (answersArray[question] != null){
-                int answer = answersArray[question];
-                switch (answer) {
-                    case 1:
-                        first.toggle();
-                        break;
-                    case 2:
-                        second.toggle();
-                        break;
-                    case 3:
-                        third.toggle();
-                        break;
-                }
-            }
-        }
-
-        if (question >= 0 && question < 4){
-            section = 1;
-        } else if (question >= 4 && question < 10){
-            section = 2;
-        } else if (question >= 10 && question < 13){
-            section = 3;
-        }
-
-        if (question != -1 && question < 13) {
-            questionTextView.setText(questions[question]);
-        }
-
-        if (question == 12) {
-            totalLayout.setVisibility(View.GONE);
-            fab.hide(new FloatingActionButton.OnVisibilityChangedListener() {
-                @Override
-                public void onHidden(FloatingActionButton fab) {
-                    super.onHidden(fab);
-                    fab.setImageResource(R.drawable.ic_arrow_forward_black_24dp);
-                    fab.show();
-                }
-            });
-        } else if (question == 13) {
-            percentTotal();
-            DecimalFormat format = new DecimalFormat("#.00");
-            if (total <= 45) {
-                totalTextView.setText(format.format(total)+"% "+totals[0]);
-            } else if (total <= 66) {
-                totalTextView.setText(format.format(total)+"% "+totals[1]);
-            } else if (total <= 100) {
-                totalTextView.setText(format.format(total)+"% "+totals[2]);
-            }
-            totalLayout.setVisibility(View.VISIBLE);
-            fab.hide(new FloatingActionButton.OnVisibilityChangedListener() {
-                @Override
-                public void onHidden(FloatingActionButton fab) {
-                    super.onHidden(fab);
-                    fab.setImageResource(R.drawable.ic_save_black_24dp);
-                    fab.show();
-                }
-            });
-        }
-
-        if (section == 1 && question < 4) {
-            sectionTextView.setText(R.string.section1);
-        } else if (section == 2 && question < 10) {
-            sectionTextView.setText(R.string.section2);
-        } else if (section == 3 && question < 13) {
-            sectionTextView.setText(R.string.section3);
-        } else {
-            sectionTextView.setText("Resultado");
-        }
-
-        int visibilityBack = section > 0 ? View.VISIBLE : View.INVISIBLE;
-        int visibilitySection0 = section == 0 && question < 13 ? View.VISIBLE : View.GONE;
-        int visibilitySection1 = section > 0 && question < 13 ? View.VISIBLE : View.GONE;
-        int visibilitySections2_3 = section > 1 && question < 13 ? View.VISIBLE : View.GONE;
-
-        back.setVisibility(visibilityBack);
-
-        unidadesEconomicasTextView.setVisibility(visibilitySection0);
-        unidadesEconomicasSpinner.setVisibility(visibilitySection0);
-        periodTextInputLayout.setVisibility(visibilitySection0);
-        dateTextInputLayout.setVisibility(visibilitySection0);
-
-        questionCard.setVisibility(visibilitySection1);
-        answers.setVisibility(visibilitySection1);
-
-        third.setVisibility(visibilitySections2_3);
-
-        if (section <= 1) {
-            first.setText(R.string.answer_1);
-            second.setText(R.string.answer_2);
-            first.setBackgroundResource(R.drawable.radio_states_red);
-            second.setBackgroundResource(R.drawable.radio_states_green);
-        } else {
-            first.setText(R.string.answer_3);
-            second.setText(R.string.answer_4);
-            third.setText(R.string.answer_5);
-            first.setBackgroundResource(R.drawable.radio_states_red);
-            second.setBackgroundResource(R.drawable.radio_states_yellow);
-            third.setBackgroundResource(R.drawable.radio_states_green);
-        }
-    }
-
-    // Mensaje de error de conexión con el servidor
-    private void errorMessage() {
-        Snackbar.make(viewSnack, R.string.error_connection, Snackbar.LENGTH_SHORT)
-                .show();
     }
 
     // Actualización de la lista con las UEs
@@ -474,11 +453,7 @@ public class QuestionsUE extends Fragment {
                 });
     }
 
-    int s1TotalNo = 0, s1TotalSi = 0;
-    int s2SumaNoCumple = 0, s2SumaParcialmente = 0, s2SumaCumple = 0;
-    int s3SumaNoCumple = 0, s3SumaParcialmente = 0, s3SumaCumple = 0;
-    double total = 0;
-    public void percentTotal() {
+    private void percentTotal() {
         s1TotalNo = 0; s1TotalSi = 0;
         s2SumaNoCumple = 0; s2SumaParcialmente = 0; s2SumaCumple = 0;
         s3SumaNoCumple = 0; s3SumaParcialmente = 0; s3SumaCumple = 0;
@@ -513,11 +488,11 @@ public class QuestionsUE extends Fragment {
         total = ( section1 + section2 + section3) / 3;
     }
 
-    private void createEvaluationLocal(String periodo, String UERFC, String aplicador) {
+    private void createEvaluationLocal(String periodo, String UERFC, String aplicador, String razon_social) {
         Anexo21 res = new Anexo21();
         res.setId(UUID.randomUUID().toString());
         res.setPeriodo(periodo);
-        res.setFecha(fecha);
+        res.setFecha(dates[1]);
         res.setS1_p1(answersArray[0]);
         res.setS1_p2(answersArray[1]);
         res.setS1_p3(answersArray[2]);
@@ -544,21 +519,27 @@ public class QuestionsUE extends Fragment {
         res.setIEId("1");
         res.setInstitucion_educativa("");
         res.setUERFC(UERFC);
-        res.setRazon_social("");
+        res.setRazon_social(razon_social);
         res.setAccion("CREATE");
         anexo21Dao.create(res);
-        Objects.requireNonNull(getActivity()).onBackPressed();
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                navController.navigate(R.id.action_global_evaluations);
+            }
+        });
     }
 
     private void createEvaluation() {
-        final String periodo = Objects.requireNonNull(periodTextInputLayout.getEditText()).getText().toString();
+        final String periodo = dates[2];
         int positionUE = unidadesEconomicasSpinner.getSelectedItemPosition();
         final String uERFC = uesList.get(positionUE).getRFC();
+        final String razon_social = uesList.get(positionUE).getRazon_social();
         final String aplicador = new Token(Objects.requireNonNull(getContext())).getNombre();
         CreateAnexo_2_1Mutation anexo21Mutation = CreateAnexo_2_1Mutation.builder()
                 .data(IAnexo_2_1.builder()
                         .periodo(periodo)
-                        .fecha(fecha)
+                        .fecha(dates[1])
                         .s1_p1(answersArray[0])
                         .s1_p2(answersArray[1])
                         .s1_p3(answersArray[2])
@@ -592,18 +573,23 @@ public class QuestionsUE extends Fragment {
                     public void onResponse(@NotNull final Response<CreateAnexo_2_1Mutation.Data> response) {
 
                         if (response.data() != null) {
-                            Objects.requireNonNull(getActivity()).onBackPressed();
-                            Snackbar.make(viewSnack, R.string.success_save, Snackbar.LENGTH_SHORT)
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    navController.navigate(R.id.action_global_evaluations);
+                                }
+                            });
+                            Snackbar.make(next, R.string.success_save, Snackbar.LENGTH_SHORT)
                                     .show();
                         } else {
-                            Snackbar.make(viewSnack, R.string.error_save, Snackbar.LENGTH_SHORT)
+                            Snackbar.make(next, R.string.error_save, Snackbar.LENGTH_SHORT)
                                     .show();
                         }
                     }
                     @Override
                     public void onFailure(@NotNull ApolloException e) {
-                        errorMessage();
-                        createEvaluationLocal(periodo,uERFC,aplicador);
+                        Log.d(ERROR_CONNECTION,e.getMessage());
+                        createEvaluationLocal(periodo,uERFC,aplicador,razon_social);
                     }
                 });
     }

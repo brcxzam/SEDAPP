@@ -69,5 +69,7 @@
     </string-array>
     <string name="save">Guardar</string>
     <string name="action_search">Buscar…</string>
-
+    <string name="previous">Anterior</string>
+    <string name="next">Siguiente</string>
+    <string name="anwersEmpty">Preguntas sin contestar</string>
 </resources>
