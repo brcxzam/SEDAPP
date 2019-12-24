@@ -21,6 +21,7 @@ import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.api.Response;
@@ -42,6 +43,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -146,9 +148,66 @@ public class QuestionsUE extends Fragment implements View.OnClickListener {
         previous.setOnClickListener(this);
         next.setOnClickListener(this);
 
+        if (getArguments() != null) {
+            toolbar.setTitle(getArguments().getString("razon_social"));
+            period.setText(getArguments().getString("periodo"));
+            date.setText(stringLongDate(getArguments().getString("fecha")));
+            int find = findUE(getArguments().getString("UERFC"));
+            if (find != -1) {
+                unidadesEconomicasSpinner.setSelection(find);
+            }
+            answersArray[0] = getArguments().getInt("s1_p1");
+            answersArray[1] = getArguments().getInt("s1_p2");
+            answersArray[2] = getArguments().getInt("s1_p3");
+            answersArray[3] = getArguments().getInt("s1_p4");
+            answersArray[4] = getArguments().getInt("s2_p5");
+            answersArray[5] = getArguments().getInt("s2_p6");
+            answersArray[6] = getArguments().getInt("s2_p7");
+            answersArray[7] = getArguments().getInt("s2_p8");
+            answersArray[8] = getArguments().getInt("s2_p9");
+            answersArray[9] = getArguments().getInt("s2_p10");
+            answersArray[10] = getArguments().getInt("s3_p11");
+            answersArray[11] = getArguments().getInt("s3_p12");
+            answersArray[12] = getArguments().getInt("s3_p13");
+            disableRadioGroup(radioGroup1);
+            disableRadioGroup(radioGroup2);
+            disableRadioGroup(radioGroup3);
+            disableRadioGroup(radioGroup4);
+            disableRadioGroup(radioGroup5);
+            disableRadioGroup(radioGroup6);
+        }
+
         viewVisibility();
 
         return view;
+    }
+
+    private int findUE(String UERFC) {
+        for (UEs ue: uesList) {
+            if (ue.getRFC().equals(UERFC)) {
+                return uesList.indexOf(ue);
+            }
+        }
+        return -1;
+    }
+
+    private String stringLongDate(String dateString) {
+        SimpleDateFormat sqlFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.forLanguageTag("spa"));
+        String dateLongFormat = null;
+        try {
+            Date date1 = sqlFormat.parse(dateString);
+            DateFormat dateLong = DateFormat.getDateInstance(DateFormat.LONG, Locale.forLanguageTag("spa"));
+            dateLongFormat = dateLong.format(date1);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return dateLongFormat;
+    }
+
+    private void disableRadioGroup(RadioGroup group) {
+        for(int i = 0; i < group.getChildCount(); i++){
+            group.getChildAt(i).setEnabled(false);
+        }
     }
 
     private void section1() {

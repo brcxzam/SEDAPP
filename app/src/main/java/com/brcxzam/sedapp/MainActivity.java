@@ -161,9 +161,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
             case R.id.evaluation:
-                if (navController.getCurrentDestination().getId() != R.id.evaluation){
-                    navController.navigate(R.id.action_global_evaluation,null,navOptions);
-                }
+                navController.navigate(R.id.action_global_evaluation,null,navOptions);
                 break;
             case R.id.evaluations:
                 if (navController.getCurrentDestination().getId() != R.id.evaluations){

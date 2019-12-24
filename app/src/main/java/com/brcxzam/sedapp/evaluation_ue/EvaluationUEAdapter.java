@@ -67,6 +67,7 @@ public class EvaluationUEAdapter extends RecyclerView.Adapter<EvaluationUEAdapte
 
     public interface OnItemClickListener {
         void onDeleteClick(int position);
+        void onItemClick(int position);
     }
 
     void setOnItemClickListener(OnItemClickListener listener) {
@@ -89,7 +90,7 @@ public class EvaluationUEAdapter extends RecyclerView.Adapter<EvaluationUEAdapte
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Anexo21 data = anexo21ListFiltered.get(position);
         viewBinderHelper.setOpenOnlyOne(true);
-        viewBinderHelper.bind(holder.swipelayout, data.getId());
+        viewBinderHelper.bind(holder.swipeLayout, data.getId());
         viewBinderHelper.closeLayout(data.getId());
         holder.bindData(data.getPeriodo(),data.getRazon_social(), data.getTotal(),data.getFecha());
     }
@@ -102,7 +103,7 @@ public class EvaluationUEAdapter extends RecyclerView.Adapter<EvaluationUEAdapte
     class ViewHolder extends RecyclerView.ViewHolder {
         private ImageView icon;
         private TextView period, name, total, month, day, year;
-        private SwipeRevealLayout swipelayout;
+        private SwipeRevealLayout swipeLayout;
         int errorColor = Color.rgb(244,67,54);
         int warningColor = Color.rgb(255,152,0);
         int successColor = Color.rgb(128,237,153);
@@ -115,8 +116,9 @@ public class EvaluationUEAdapter extends RecyclerView.Adapter<EvaluationUEAdapte
             month = itemView.findViewById(R.id.month);
             day = itemView.findViewById(R.id.day);
             year = itemView.findViewById(R.id.year);
+            swipeLayout = itemView.findViewById(R.id.swipelayout);
             MaterialCardView delete = itemView.findViewById(R.id.delete);
-            swipelayout = itemView.findViewById(R.id.swipelayout);
+            MaterialCardView mainLayout = itemView.findViewById(R.id.main_layout);
 
             delete.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -125,6 +127,19 @@ public class EvaluationUEAdapter extends RecyclerView.Adapter<EvaluationUEAdapte
                         int position = getAdapterPosition();
                         if (position != RecyclerView.NO_POSITION) {
                             listener.onDeleteClick(position);
+                            Anexo21 data = anexo21ListFiltered.get(position);
+                            viewBinderHelper.closeLayout(data.getId());
+                        }
+                    }
+                }
+            });
+            mainLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null){
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            listener.onItemClick(position);
                             Anexo21 data = anexo21ListFiltered.get(position);
                             viewBinderHelper.closeLayout(data.getId());
                         }

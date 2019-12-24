@@ -6,6 +6,8 @@ import android.os.Bundle;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -61,6 +63,8 @@ public class EvaluationUE extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_evaluation_ue, container, false);
         if (getActivity() == null) return view;
+
+        final NavController navController = Navigation.findNavController(getActivity(),R.id.nav_host_fragment);
 
         Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.unidades_economicas);
@@ -122,6 +126,30 @@ public class EvaluationUE extends Fragment {
                             }
                         })
                         .show();
+            }
+
+            @Override
+            public void onItemClick(int position) {
+                Anexo21 data = list.get(position);
+                Bundle bundle = new Bundle();
+                bundle.putString("razon_social",data.getRazon_social());
+                bundle.putString("periodo",data.getPeriodo());
+                bundle.putString("fecha",data.getFecha());
+                bundle.putString("UERFC",data.getUERFC());
+                bundle.putInt("s1_p1",data.getS1_p1());
+                bundle.putInt("s1_p2",data.getS1_p2());
+                bundle.putInt("s1_p3",data.getS1_p3());
+                bundle.putInt("s1_p4",data.getS1_p4());
+                bundle.putInt("s2_p5",data.getS2_p1());
+                bundle.putInt("s2_p6",data.getS2_p2());
+                bundle.putInt("s2_p7",data.getS2_p3());
+                bundle.putInt("s2_p8",data.getS2_p4());
+                bundle.putInt("s2_p9",data.getS2_p5());
+                bundle.putInt("s2_p10",data.getS2_p6());
+                bundle.putInt("s3_p11",data.getS3_p1());
+                bundle.putInt("s3_p12",data.getS3_p2());
+                bundle.putInt("s3_p13",data.getS3_p3());
+                navController.navigate(R.id.action_global_evaluation, bundle);
             }
         });
 
