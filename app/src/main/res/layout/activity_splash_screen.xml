@@ -16,6 +16,7 @@
         android:contentDescription="@string/app_name"
         android:layout_margin="@dimen/margin"
         android:layout_centerInParent="true"
-        android:transitionName="logo_tescha"/>
+        android:transitionName="logo_tescha"
+        android:layout_alignParentTop="true"/>
 
 </RelativeLayout>

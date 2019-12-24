@@ -293,7 +293,11 @@ public class QuestionsUE extends Fragment implements View.OnClickListener {
         } else if (total <= 100) {
             textView1.setText(totalString3);
         }
-        next.setText(R.string.save);
+        if (getArguments() != null) {
+            next.setText(R.string.close);
+        } else {
+            next.setText(R.string.save);
+        }
     }
 
     private void checkedSave(RadioGroup group, int value) {
@@ -389,7 +393,11 @@ public class QuestionsUE extends Fragment implements View.OnClickListener {
                                 .show();
                     }
                 } else {
-                    createEvaluation();
+                    if (getArguments() != null) {
+                        navController.navigate(R.id.action_global_evaluations);
+                    } else {
+                        createEvaluation();
+                    }
                 }
                 break;
         }
