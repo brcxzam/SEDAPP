@@ -1,14 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".places_ue.PlacesUE">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
+        android:id="@+id/ues"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="@dimen/margin"
+        android:layout_marginHorizontal="32dp">
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_business_black_24dp"
+            android:tint="@color/iconColor"
+            android:contentDescription="@string/ue" />
+        <TextView
+            android:id="@+id/text_view_ue"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/ue"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+            android:gravity="center_vertical"/>
+    </LinearLayout>
+
+    <Spinner
+        android:id="@+id/unidades_economicas"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:popupBackground="@color/cardBackgroundColor"
+        android:layout_below="@id/ues"
+        android:layout_marginHorizontal="32dp"/>
+
+    <fragment
+        android:name="com.google.android.gms.maps.MapFragment"
+        android:id="@+id/map"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="PLACES UE" />
+        class="com.google.android.gms.maps.MapFragment"
+        android:layout_below="@id/unidades_economicas"/>
 
-</FrameLayout>
+</RelativeLayout>
