@@ -9,10 +9,12 @@ public class UEs {
     @PrimaryKey
     @NonNull private String RFC;
     private String razon_social;
+    private String domicilio;
 
-    public UEs(String RFC, String razon_social) {
+    public UEs(String RFC, String razon_social, String domicilio) {
         this.RFC = RFC;
         this.razon_social = razon_social;
+        this.domicilio = domicilio;
     }
 
     public String getRFC() {
@@ -22,6 +24,8 @@ public class UEs {
     public String getRazon_social() {
         return razon_social;
     }
+
+    public String getDomicilio() { return  domicilio; }
 
     @NonNull
     @Override

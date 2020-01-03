@@ -3,45 +3,126 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".places_ue.PlacesUE">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".places_ue.PlacesUE"
+    android:background="@drawable/background_sign_in">
 
-    <LinearLayout
-        android:id="@+id/ues"
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="@dimen/margin"
-        android:layout_marginHorizontal="32dp">
-        <ImageView
-            android:layout_width="50dp"
-            android:layout_height="match_parent"
-            android:src="@drawable/ic_business_black_24dp"
-            android:tint="@color/iconColor"
-            android:contentDescription="@string/ue" />
-        <TextView
-            android:id="@+id/text_view_ue"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="@string/ue"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-            android:gravity="center_vertical"/>
-    </LinearLayout>
+        android:layout_margin="@dimen/margin">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <LinearLayout
+                android:id="@+id/ues"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="@dimen/margin"
+                android:layout_marginHorizontal="@dimen/margin">
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_business_black_24dp"
+                    android:tint="@color/iconColor"
+                    android:contentDescription="@string/ue" />
+                <TextView
+                    android:id="@+id/text_view_ue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="@string/ue"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                    android:gravity="center_vertical"/>
+            </LinearLayout>
 
-    <Spinner
-        android:id="@+id/unidades_economicas"
-        android:layout_width="match_parent"
-        android:layout_height="55dp"
-        android:popupBackground="@color/cardBackgroundColor"
-        android:layout_below="@id/ues"
-        android:layout_marginHorizontal="32dp"/>
+            <Spinner
+                android:id="@+id/unidades_economicas"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:popupBackground="@color/cardBackgroundColor"
+                android:layout_marginHorizontal="@dimen/margin"
+                android:layout_marginBottom="@dimen/margin"/>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
 
-    <fragment
-        android:name="com.google.android.gms.maps.MapFragment"
-        android:id="@+id/map"
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card3"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        class="com.google.android.gms.maps.MapFragment"
-        android:layout_below="@id/unidades_economicas"/>
+        app:cardElevation="0dp"
+        app:cardCornerRadius="36dp"
+        android:layout_marginBottom="-36dp">
+        <fragment
+            android:name="com.google.android.gms.maps.MapFragment"
+            android:id="@+id/map"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </com.google.android.material.card.MaterialCardView>
+
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="@dimen/margin"
+        android:minHeight="150dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_margin="@dimen/margin">
+                <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Dirección: "
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"/>
+                <TextView
+                    android:id="@+id/domicilio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Distancia actual: "
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"/>
+                <TextView
+                    android:id="@+id/distancia1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Distancia de IE: "
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"/>
+                <TextView
+                    android:id="@+id/distancia2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"/>
+            </LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
 
 </RelativeLayout>

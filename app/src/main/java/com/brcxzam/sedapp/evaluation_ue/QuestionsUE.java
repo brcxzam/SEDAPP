@@ -21,7 +21,6 @@ import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.api.Response;
@@ -137,7 +136,7 @@ public class QuestionsUE extends Fragment implements View.OnClickListener {
         uesDao = database.uesDao();
         anexo21Dao = database.anexo21Dao();
 
-        // Spinner con de UE
+        // Spinner con registros de UE
         adapter = new ArrayAdapter<>(Objects.requireNonNull(getContext()), android.R.layout.simple_spinner_item, uesList);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         unidadesEconomicasSpinner.setAdapter(adapter);
@@ -501,7 +500,7 @@ public class QuestionsUE extends Fragment implements View.OnClickListener {
 
                             for (ReadAllUEsQuery.UE ue:
                                     Objects.requireNonNull(response.data().UEs())) {
-                                uesList.add(new UEs(ue.RFC(),ue.razon_social()));
+                                uesList.add(new UEs(ue.RFC(),ue.razon_social(), ue.domicilio()));
                             }
 
                             uesDao.insertAll(uesList);

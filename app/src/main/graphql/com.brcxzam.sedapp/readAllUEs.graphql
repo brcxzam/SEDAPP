@@ -1,6 +1,7 @@
 query readAllUEs {
     UEs {
-    RFC
-    razon_social
-  }
+        RFC
+        razon_social
+        domicilio
+    }
 }

@@ -10,8 +10,8 @@ import java.util.List;
 @Dao
 public interface UEsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    public void insertAll(List<UEs> uEs);
+    void insertAll(List<UEs> uEs);
 
     @Query("SELECT * FROM UE")
-    public List<UEs> readAll();
+    List<UEs> readAll();
 }
