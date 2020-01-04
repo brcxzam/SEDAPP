@@ -4,6 +4,7 @@ package com.brcxzam.sedapp.places_ue;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -41,12 +42,17 @@ import com.brcxzam.sedapp.database.UEs;
 import com.brcxzam.sedapp.database.UEsDao;
 import com.brcxzam.sedapp.places_ue.directionModules.DirectionFinder;
 import com.brcxzam.sedapp.places_ue.directionModules.DirectionFinderListener;
+import com.brcxzam.sedapp.places_ue.directionModules.Distance;
+import com.brcxzam.sedapp.places_ue.directionModules.Duration;
 import com.brcxzam.sedapp.places_ue.directionModules.Route;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
@@ -54,11 +60,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static androidx.constraintlayout.widget.Constraints.TAG;
 import static com.brcxzam.sedapp.places_ue.util.GoogleMapHelper.buildCameraUpdate;
 import static com.brcxzam.sedapp.places_ue.util.GoogleMapHelper.defaultMapSettings;
 import static com.brcxzam.sedapp.places_ue.util.GoogleMapHelper.getDottedPolylines;
@@ -70,14 +76,11 @@ import static com.brcxzam.sedapp.places_ue.util.GoogleMapHelper.getDottedPolylin
 public class PlacesUE extends Fragment implements OnMapReadyCallback, DirectionFinderListener, LocationListener {
 
     private GoogleMap googleMap;
-    private SupportMapFragment mapFragment;
     private static View view;
     private final String ERROR_MAP = "Mapa ya cargado " + getClass().getSimpleName();
     private final String ERROR_DIRECTION = "Error direction " + getClass().getSimpleName();
     private Polyline polyline;
-    protected LocationManager locationManager;
-    protected LocationListener locationListener;
-    private LatLng TESCHA;
+    private LocationManager locationManager;
     private String originString = "";
     private Location origin;
 
@@ -87,7 +90,7 @@ public class PlacesUE extends Fragment implements OnMapReadyCallback, DirectionF
     private ArrayAdapter<UEs> adapter;
     private final String ERROR_CONNECTION = "ERROR CONNECTION GQL " + getClass().getSimpleName();
     private Spinner unidadesEconomicasSpinner;
-    private TextView domicilioTextView, distancia1, distancia2;
+    private TextView domicilioTextView, distanceTextView, durationTextView;
 
 
     public PlacesUE() {
@@ -116,8 +119,8 @@ public class PlacesUE extends Fragment implements OnMapReadyCallback, DirectionF
 
         unidadesEconomicasSpinner =  view.findViewById(R.id.unidades_economicas);
         domicilioTextView = view.findViewById(R.id.domicilio);
-        distancia1 = view.findViewById(R.id.distancia1);
-        distancia2 = view.findViewById(R.id.distancia2);
+        distanceTextView = view.findViewById(R.id.distance);
+        durationTextView = view.findViewById(R.id.duration);
 
         // Conexión con la base de datos
         AppDatabase database = AppDatabase.getAppDatabase(getContext());
@@ -153,7 +156,7 @@ public class PlacesUE extends Fragment implements OnMapReadyCallback, DirectionF
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000 * 60, 0, this);
         }
 
-        mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         if (mapFragment == null) {
             FragmentManager manager = getChildFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
@@ -175,7 +178,20 @@ public class PlacesUE extends Fragment implements OnMapReadyCallback, DirectionF
     public void onMapReady(GoogleMap googleMap) {
         defaultMapSettings(googleMap);
         this.googleMap = googleMap;
-        TESCHA = new LatLng(19.233411, -98.840860);
+        try {
+            // Customise the styling of the base map using a JSON object defined
+            // in a raw resource file.
+            boolean success = googleMap.setMapStyle(
+                    MapStyleOptions.loadRawResourceStyle(
+                            getContext(), R.raw.style_json));
+
+            if (!success) {
+                Log.e(TAG, "Style parsing failed.");
+            }
+        } catch (Resources.NotFoundException e) {
+            Log.e(TAG, "Can't find style. Error: ", e);
+        }
+        LatLng TESCHA = new LatLng(19.233411, -98.840860);
         this.googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(TESCHA,16));
 
     }
@@ -204,6 +220,10 @@ public class PlacesUE extends Fragment implements OnMapReadyCallback, DirectionF
                 PolylineOptions polylineOptions = getDottedPolylines(route.points);
                 polyline = googleMap.addPolyline(polylineOptions);
             }
+            Duration duration = routes.get(0).duration;
+            Distance distance = routes.get(0).distance;
+            durationTextView.setText(duration.text);
+            distanceTextView.setText(distance.text);
         } catch (Exception e) {
             Toast.makeText(getContext(), "Error occurred on finding the directions...", Toast.LENGTH_SHORT).show();
         }
@@ -217,21 +237,16 @@ public class PlacesUE extends Fragment implements OnMapReadyCallback, DirectionF
             String destinationString = destination.latitude + "," + destination.longitude;
 
             fetchDirections(originString,destinationString);
-            Location targetLocation = new Location("1");//provider name is unnecessary
-            targetLocation.setLatitude(destination.latitude);//your coords of course
-            targetLocation.setLongitude(destination.longitude);
 
-            Location teschaLocation = new Location("2");//provider name is unnecessary
-            teschaLocation.setLatitude(TESCHA.latitude);//your coords of course
-            teschaLocation.setLongitude(TESCHA.longitude);
-
-            float distanceInMeters1 = targetLocation.distanceTo(origin);
-            float distanceInMeters2 = targetLocation.distanceTo(teschaLocation);
-            DecimalFormat decimalFormat = new DecimalFormat("#.##");
-            String distance1 =  Float.valueOf(decimalFormat.format(distanceInMeters1 / 1000)) + " Km";
-            String distance2 =  Float.valueOf(decimalFormat.format(distanceInMeters2 / 1000)) + " Km";
-            distancia1.setText(distance1);
-            distancia2.setText(distance2);
+            googleMap.clear();
+            googleMap.addMarker(new MarkerOptions()
+                    .position(destination)
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.bandera))
+                    .title(unidadesEconomicasSpinner.getSelectedItem().toString()));
+            googleMap.addMarker(new MarkerOptions()
+                    .position(new LatLng(origin.getLatitude(),origin.getLongitude()))
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.pin_ubicacion))
+                    .title("Mi Ubicación"));
         }
     }
 
@@ -257,7 +272,7 @@ public class PlacesUE extends Fragment implements OnMapReadyCallback, DirectionF
 
     }
 
-    public LatLng getLocationFromAddress(Context context,String strAddress) {
+    private LatLng getLocationFromAddress(Context context, String strAddress) {
 
         Geocoder coder = new Geocoder(context);
         List<Address> address;

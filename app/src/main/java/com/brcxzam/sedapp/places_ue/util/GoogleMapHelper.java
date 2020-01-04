@@ -16,14 +16,14 @@ import java.util.Arrays;
 import java.util.List;
 
 public class GoogleMapHelper {
-    private static final int ZOOM_LEVEL = 17;
+    private static final int ZOOM_LEVEL = 18;
     private static final int TILT_LEVEL = 25;
     private static final int PATTERN_GAP_LENGTH_PX = 10;
     private static final Gap GAP = new Gap(PATTERN_GAP_LENGTH_PX);
     private static final Dot DOT = new Dot();
     private static final List<PatternItem> PATTERN_DOTTED = Arrays.asList(DOT, GAP);
 
-    public static PolylineOptions getDefaultPolyLines(List<LatLng> points) {
+    private static PolylineOptions getDefaultPolyLines(List<LatLng> points) {
         PolylineOptions polylineOptions = new PolylineOptions()
                 .color(Color.parseColor("#067b7a"));
         for (LatLng point : points) polylineOptions.add(point);

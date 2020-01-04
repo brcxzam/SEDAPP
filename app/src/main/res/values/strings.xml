@@ -73,4 +73,8 @@
     <string name="next">Siguiente</string>
     <string name="anwersEmpty">Preguntas sin contestar</string>
     <string name="close">Cerrar</string>
+    <string name="direccion">Dirección:</string>
+    <string name="viaje">Información de viaje:</string>
+    <string name="distance">Distancia:</string>
+    <string name="duration">Duración:</string>
 </resources>
