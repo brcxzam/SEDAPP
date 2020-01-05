@@ -10,17 +10,23 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.widget.ProgressBar;
 
+import com.anychart.APIlib;
 import com.anychart.AnyChart;
 import com.anychart.AnyChartView;
 import com.anychart.chart.common.dataentry.DataEntry;
 import com.anychart.chart.common.dataentry.ValueDataEntry;
-import com.anychart.chart.common.listener.Event;
-import com.anychart.chart.common.listener.ListenersInterface;
+import com.anychart.charts.Cartesian;
 import com.anychart.charts.Pie;
+import com.anychart.core.cartesian.series.Bar;
+import com.anychart.data.Mapping;
+import com.anychart.data.Set;
 import com.anychart.enums.Align;
+import com.anychart.enums.HoverMode;
 import com.anychart.enums.LegendLayout;
+import com.anychart.enums.TooltipDisplayMode;
+import com.anychart.enums.TooltipPositionMode;
 import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
@@ -33,6 +39,7 @@ import com.brcxzam.sedapp.database.AppDatabase;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -45,9 +52,10 @@ public class Charts extends Fragment {
 
     private final String ERROR_CONNECTION = "ERROR CONNECTION GQL " + getClass().getSimpleName();
     private Anexo21Dao anexo21Dao;
-    private List<Anexo21> list = new ArrayList<>();
-    private AnyChartView anyChartView;
-    private Pie pie;
+    private AnyChartView anyChartView1, anyChartView2;
+    private DecimalFormat formater = new DecimalFormat("0.00");
+    private String[] palette = new String[] { "#80deea", "#00acc1", "#00838f", "#29b6f6", "#0277bd", "#0277bd", "#8c9eff", "#9575cd", "#ce93d8", "#8e24aa"};
+    private ProgressBar progressBar;
 
     public Charts() {
         // Required empty public constructor
@@ -68,17 +76,9 @@ public class Charts extends Fragment {
         AppDatabase appDatabase = AppDatabase.getAppDatabase(getContext());
         anexo21Dao = appDatabase.anexo21Dao();
 
-        anyChartView = view.findViewById(R.id.any_chart_view);
-        anyChartView.setProgressBar(view.findViewById(R.id.progress_bar));
-
-        pie = AnyChart.pie();
-
-        pie.setOnClickListener(new ListenersInterface.OnClickListener(new String[]{"x", "value"}) {
-            @Override
-            public void onClick(Event event) {
-                Toast.makeText(getContext(), event.getData().get("x") + ":" + event.getData().get("value"), Toast.LENGTH_SHORT).show();
-            }
-        });
+        anyChartView1 = view.findViewById(R.id.any_chart_view);
+        anyChartView2 = view.findViewById(R.id.any_chart_view1);
+        progressBar = view.findViewById(R.id.progress_bar);
 
         getLocalData();
         fetchAnexo21();
@@ -157,12 +157,24 @@ public class Charts extends Fragment {
     }
 
     private void getLocalData() {
-        list.clear();
-        list.addAll(anexo21Dao.readALL());
+        firstChart();
+        secondChart();
+    }
+
+    private void firstChart() {
+        APIlib.getInstance().setActiveAnyChartView(anyChartView1);
+        anyChartView1.setProgressBar(progressBar);
+
+        Pie pie = AnyChart.pie();
+
+        int alta = anexo21Dao.readCountAltaVulnerabilidad();
+        int mediana = anexo21Dao.readCountMedianaVulnerabilidad();
+        int baja = anexo21Dao.readCountBajaVulnerabilidad();
+
         List<DataEntry> data = new ArrayList<>();
-        data.add(new ValueDataEntry("Alta Vulnerabilidad", anexo21Dao.readCountAltaVulnerabilidad()));
-        data.add(new ValueDataEntry("Mediana Vulnerabilidad", anexo21Dao.readCountMedianaVulnerabilidad()));
-        data.add(new ValueDataEntry("Baja Vulnerabilidad", anexo21Dao.readCountBajaVulnerabilidad()));
+        data.add(new ValueDataEntry("Alta", alta));
+        data.add(new ValueDataEntry("Mediana", mediana));
+        data.add(new ValueDataEntry("Baja", baja));
         pie.data(data);
 
         pie.title("Unidades Económicas Evaluadas");
@@ -171,15 +183,69 @@ public class Charts extends Fragment {
 
         pie.legend().title().enabled(true);
         pie.legend().title()
-                .text("Descripción")
+                .text("Vulnerabilidad")
                 .padding(0d, 0d, 10d, 0d);
 
         pie.legend()
                 .position("center-bottom")
-                .itemsLayout(LegendLayout.VERTICAL_EXPANDABLE)
+                .itemsLayout(LegendLayout.HORIZONTAL_EXPANDABLE)
                 .align(Align.CENTER);
 
-        anyChartView.setChart(pie);
+        pie.animation(true);
+
+        pie.palette(palette);
+
+        anyChartView1.setChart(pie);
     }
 
+    private void secondChart() {
+        APIlib.getInstance().setActiveAnyChartView(anyChartView2);
+        Cartesian vertical = AnyChart.vertical();
+
+        vertical.animation(true)
+                .title("Porcentaje por Unidad Económica");
+
+        List<DataEntry> data = new ArrayList<>();
+        List<Anexo21> anexo21List = anexo21Dao.readALL();
+
+
+        for (Anexo21 anexo21 :  anexo21List) {
+            double total = Double.parseDouble(formater.format(anexo21.getTotal()));
+            data.add(new ValueDataEntry(anexo21.getRazon_social(),total));
+        }
+
+        Set set = Set.instantiate();
+        set.data(data);
+        Mapping barData = set.mapAs("{ x: 'x', value: 'value' }");
+
+        Bar bar = vertical.bar(barData);
+        bar.labels()
+                .position("center")
+                .fontColor("#FFFFFF")
+                .format("{%X}, {%Value} %");
+
+        bar.color("#38A3A5");
+
+        vertical.yScale().minimum(0d);
+
+        vertical.labels(true);
+
+        vertical.tooltip()
+                .displayMode(TooltipDisplayMode.UNION)
+                .positionMode(TooltipPositionMode.POINT)
+                .unionFormat(
+                        "function() {\n" +
+                                "      return 'Plain: $' + this.points[1].value + ' mln' +\n" +
+                                "        '\\n' + 'Fact: $' + this.points[0].value + ' mln';\n" +
+                                "    }");
+
+        vertical.interactivity().hoverMode(HoverMode.BY_X);
+
+        vertical.xAxis(true);
+        vertical.xAxis(0).labels().format(" ");
+        vertical.yAxis(true);
+        vertical.yAxis(0).labels().format("{%Value} %");
+
+        anyChartView2.setChart(vertical);
+    }
 }
