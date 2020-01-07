@@ -54,7 +54,6 @@ public class Charts extends Fragment {
     private Anexo21Dao anexo21Dao;
     private AnyChartView anyChartView1, anyChartView2;
     private DecimalFormat formater = new DecimalFormat("0.00");
-    private String[] palette = new String[] { "#80deea", "#00acc1", "#00838f", "#29b6f6", "#0277bd", "#0277bd", "#8c9eff", "#9575cd", "#ce93d8", "#8e24aa"};
     private ProgressBar progressBar;
 
     public Charts() {
@@ -193,7 +192,7 @@ public class Charts extends Fragment {
 
         pie.animation(true);
 
-        pie.palette(palette);
+        pie.palette(new String[] { "#80deea", "#00acc1", "#00838f", "#29b6f6", "#0277bd", "#0277bd", "#8c9eff", "#9575cd", "#ce93d8", "#8e24aa"});
 
         anyChartView1.setChart(pie);
     }
@@ -207,11 +206,14 @@ public class Charts extends Fragment {
 
         List<DataEntry> data = new ArrayList<>();
         List<Anexo21> anexo21List = anexo21Dao.readALL();
-
+        int count = 0;
 
         for (Anexo21 anexo21 :  anexo21List) {
             double total = Double.parseDouble(formater.format(anexo21.getTotal()));
             data.add(new ValueDataEntry(anexo21.getRazon_social(),total));
+            if (count++ == 2) {
+                break;
+            }
         }
 
         Set set = Set.instantiate();
