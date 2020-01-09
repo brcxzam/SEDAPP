@@ -9,7 +9,6 @@
     <color name="yellow">#FFD253</color>
     <color name="green">#7AD3B9</color>
 
-<!--    <color name="iconColor">#99FFFFFF</color>-->
-    <color name="iconColor">@color/green</color>
+    <color name="iconColor">#99FFFFFF</color>
     <color name="cardBackgroundColor">#dbdde1</color>
 </resources>
