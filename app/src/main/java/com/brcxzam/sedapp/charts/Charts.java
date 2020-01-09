@@ -192,7 +192,7 @@ public class Charts extends Fragment {
 
         pie.animation(true);
 
-        pie.palette(new String[] { "#80deea", "#00acc1", "#00838f", "#29b6f6", "#0277bd", "#0277bd", "#8c9eff", "#9575cd", "#ce93d8", "#8e24aa"});
+        pie.palette(new String[] {"#FFDBCC", "#ECEAE4", "#A2E1DB"});
 
         anyChartView1.setChart(pie);
     }
@@ -226,7 +226,7 @@ public class Charts extends Fragment {
                 .fontColor("#FFFFFF")
                 .format("{%X}, {%Value} %");
 
-        bar.color("#38A3A5");
+        bar.color("#55CBCD");
 
         vertical.yScale().minimum(0d);
 

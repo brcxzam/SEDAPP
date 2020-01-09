@@ -10,9 +10,9 @@
     <color name="colorGradientEnd">#5A7324</color>
 
     <color name="white">#FFFFFF</color>
-    <color name="red">#F44336</color>
-    <color name="yellow">#FF9800</color>
-    <color name="green">@color/colorPrimary</color>
+    <color name="red">#F8625A</color>
+    <color name="yellow">#FFD253</color>
+    <color name="green">#7AD3B9</color>
 
     <color name="iconColor">#99FFFFFF</color>
     <color name="cardBackgroundColor">#dbdde1</color>

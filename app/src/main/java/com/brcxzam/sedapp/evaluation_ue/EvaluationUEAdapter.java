@@ -104,9 +104,9 @@ public class EvaluationUEAdapter extends RecyclerView.Adapter<EvaluationUEAdapte
         private ImageView icon;
         private TextView period, name, total, month, day, year;
         private SwipeRevealLayout swipeLayout;
-        int errorColor = Color.rgb(244,67,54);
-        int warningColor = Color.rgb(255,152,0);
-        int successColor = Color.rgb(128,237,153);
+        int errorColor = Color.parseColor("#F8625A");
+        int warningColor = Color.parseColor("#FFD253");
+        int successColor = Color.parseColor("#7AD3B9");
         ViewHolder(@NonNull View itemView, final OnItemClickListener listener) {
             super(itemView);
             icon = itemView.findViewById(R.id.icon);

@@ -17,7 +17,7 @@ public interface Anexo21Dao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void createALL(List<Anexo21> anexo21List);
 
-    @Query("SELECT * FROM Anexo_2_1 ORDER BY id DESC")
+    @Query("SELECT * FROM Anexo_2_1 ORDER BY fecha DESC")
     List<Anexo21> readALL();
 
     @Query("SELECT * FROM Anexo_2_1 WHERE accion == 'CREATE'")
