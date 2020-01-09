@@ -5,15 +5,11 @@
     <color name="colorPrimaryLight">#4caba9</color>
     <color name="colorAccent">#38A3A5</color>
 
-    <color name="colorGradientStart">#738C16</color>
-    <color name="colorGradientCenter">#97BF04</color>
-    <color name="colorGradientEnd">#5A7324</color>
-
-    <color name="white">#FFFFFF</color>
     <color name="red">#F8625A</color>
     <color name="yellow">#FFD253</color>
     <color name="green">#7AD3B9</color>
 
-    <color name="iconColor">#99FFFFFF</color>
+<!--    <color name="iconColor">#99FFFFFF</color>-->
+    <color name="iconColor">@color/green</color>
     <color name="cardBackgroundColor">#dbdde1</color>
 </resources>

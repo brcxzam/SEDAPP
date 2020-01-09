@@ -83,23 +83,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/direccion"
-                        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"/>
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/ic_place_black_24dp"
+                        android:tint="@color/iconColor"
+                        android:contentDescription="@string/ue" />
                     <TextView
                         android:id="@+id/domicilio"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:text="@string/answer_3"
                         android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"/>
                 </LinearLayout>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/viaje"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -112,11 +108,12 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:layout_weight="1">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/distance"
-                            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"/>
+                        <ImageView
+                            android:layout_width="50dp"
+                            android:layout_height="match_parent"
+                            android:src="@drawable/ic_near_me_black_24dp"
+                            android:tint="@color/iconColor"
+                            android:contentDescription="@string/ue" />
                         <TextView
                             android:id="@+id/distance"
                             android:layout_width="wrap_content"
@@ -128,11 +125,12 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:layout_weight="1">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/duration"
-                            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"/>
+                        <ImageView
+                            android:layout_width="50dp"
+                            android:layout_height="match_parent"
+                            android:src="@drawable/ic_access_time_black_24dp"
+                            android:tint="@color/iconColor"
+                            android:contentDescription="@string/ue" />
                         <TextView
                             android:id="@+id/duration"
                             android:layout_width="wrap_content"
