@@ -337,6 +337,7 @@ public class QuestionsUE extends Fragment implements View.OnClickListener {
         radioGroup5.clearCheck();
         radioGroup6.clearCheck();
         next.setText(R.string.next);
+        unidadesEconomicasSpinner.setEnabled(section == 1);
         sections();
     }
 
