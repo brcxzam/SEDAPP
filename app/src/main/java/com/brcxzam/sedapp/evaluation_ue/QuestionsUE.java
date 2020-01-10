@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
@@ -77,6 +78,7 @@ public class QuestionsUE extends Fragment implements View.OnClickListener {
     private TextView textView1, textView2, textView3, textView4, textView5, textView6;
     private MaterialButton previous, next;
     private ScrollView scrollView;
+    private LinearLayout labelSpinner;
 
     private int s1TotalNo = 0, s1TotalSi = 0;
     private int s2SumaNoCumple = 0, s2SumaParcialmente = 0, s2SumaCumple = 0;
@@ -125,6 +127,7 @@ public class QuestionsUE extends Fragment implements View.OnClickListener {
         previous = view.findViewById(R.id.previous);
         next = view.findViewById(R.id.next);
         scrollView = view.findViewById(R.id.scrollView);
+        labelSpinner = view.findViewById(R.id.labelSpinner);
 
         dates = dateFormat();
 
@@ -337,6 +340,8 @@ public class QuestionsUE extends Fragment implements View.OnClickListener {
         radioGroup5.clearCheck();
         radioGroup6.clearCheck();
         next.setText(R.string.next);
+        labelSpinner.setVisibility(section == 1 ? View.VISIBLE : View.GONE);
+        unidadesEconomicasSpinner.setVisibility(section == 1 ? View.VISIBLE : View.GONE);
         sections();
     }
 
