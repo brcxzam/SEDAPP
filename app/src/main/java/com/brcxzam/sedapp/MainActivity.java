@@ -11,6 +11,7 @@ import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.transition.ChangeBounds;
@@ -111,6 +112,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             public void onClick(DialogInterface dialog, int which) {
                                 new Token(getApplicationContext()).clearToken();
                                 Intent intent = new Intent(getApplicationContext(), SplashScreen.class);
+                                startActivity(intent);
+                                finishAfterTransition();
+                            }
+                        })
+                        .show();
+                break;
+            case R.id.app_bar_chat:
+                new MaterialAlertDialogBuilder(this, R.style.ThemeOverlay_MaterialComponents_MaterialAlertDialog_Centered)
+                        .setTitle("Ingresar al chat")
+                        .setMessage("¿Estas seguro de ingresar al chat?")
+                        .setPositiveButton(R.string.positive_button, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                new Token(getApplicationContext()).clearToken();
+                                Intent intent = new Intent(getApplicationContext(), list_users.class);
                                 startActivity(intent);
                                 finishAfterTransition();
                             }

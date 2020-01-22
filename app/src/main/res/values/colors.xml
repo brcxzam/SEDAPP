@@ -4,6 +4,9 @@
     <color name="colorPrimaryDark">#004e4e</color>
     <color name="colorPrimaryLight">#4caba9</color>
     <color name="colorAccent">#38A3A5</color>
+    <color name="colorBoder">#000000</color>
+    <color name="colorMe">#38A3A5</color>
+    <color name="colorOther">#4caba9</color>
 
     <color name="red">#F8625A</color>
     <color name="yellow">#FFD253</color>

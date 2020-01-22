@@ -6,6 +6,7 @@ import androidx.biometric.BiometricPrompt;
 import androidx.core.app.ActivityOptionsCompat;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -109,6 +110,8 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     public void signIn(final String email, final String password, final View view) {
+        // Aqui llamare a guardar el correo electronico
+        saveEmailSharedReferences(email);
         ApolloConnector.setupApollo().mutate(
                 SignInMutation
                         .builder()
@@ -198,5 +201,17 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         });
 
         biometricPrompt.authenticate(promptInfo);
+    }
+
+    /**
+     * Este metodo guardara el correo electronico en un sharedpreference
+     * @param email: Correo electronico
+     */
+    private void saveEmailSharedReferences(String email){
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("emailreference", 0);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("email", email);
+        editor.apply();
+        editor.commit();
     }
 }

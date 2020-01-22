@@ -25,7 +25,11 @@ import okhttp3.Response;
 
 public class ApolloConnector {
 
-    private static final String BASE_URL = "http://192.168.0.5:3001/graphql";
+    public static final String IP = "192.168.1.15";
+
+    private static final String PORT = "3000";
+
+    private static final String BASE_URL = "http://"+IP+":"+PORT+"/graphql";
 
     public static ApolloClient setupApollo(){
 
