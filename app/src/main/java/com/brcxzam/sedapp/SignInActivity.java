@@ -123,28 +123,30 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                     public void onResponse(@NotNull Response<SignInMutation.Data> response) {
                         if (response.data() != null) {
                             assert response.data().signIn != null;
-                            boolean success = Boolean.valueOf(response.data().signIn.success);
-                            if (success) {
-                                assert response.data().signIn != null;
-                                String cargo = response.data().signIn.cargo;
-                                String token = response.data().signIn.token;
-                                String nombre = response.data().signIn.nombre;
-                                Token tokenSP = new Token(getApplicationContext());
-                                tokenSP.setStatus(true);
-                                tokenSP.setCargo(cargo);
-                                tokenSP.setToken(token);
-                                tokenSP.setNombre(nombre);
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        inside();
-                                    }
-                                });
-                            } else {
-                                Snackbar.make(view,
-                                        Objects.requireNonNull(Objects.requireNonNull(response.data().signIn()).message),
-                                        Snackbar.LENGTH_SHORT)
-                                        .show();
+                            if (response.data().signIn != null) {
+                                boolean success = Boolean.valueOf(response.data().signIn.success);
+                                if (success) {
+                                    assert response.data().signIn != null;
+                                    String cargo = response.data().signIn.cargo;
+                                    String token = response.data().signIn.token;
+                                    String nombre = response.data().signIn.nombre;
+                                    Token tokenSP = new Token(getApplicationContext());
+                                    tokenSP.setStatus(true);
+                                    tokenSP.setCargo(cargo);
+                                    tokenSP.setToken(token);
+                                    tokenSP.setNombre(nombre);
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            inside();
+                                        }
+                                    });
+                                } else {
+                                    Snackbar.make(view,
+                                            Objects.requireNonNull(Objects.requireNonNull(response.data().signIn()).message),
+                                            Snackbar.LENGTH_SHORT)
+                                            .show();
+                                }
                             }
                         }
                     }

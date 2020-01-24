@@ -69,6 +69,7 @@ public class list_users extends AppCompatActivity {
     private void showUsers(){
         StringRequest postRequest = new StringRequest(Request.Method.POST, IPURL,
                 new Response.Listener<String>() {
+                    @SuppressLint("LongLogTag")
                     @Override
                     public void onResponse(String response) {
                         // Dentro de este metodo recibo los tados en json de nuestros usuarios disponibles para mostrar
@@ -88,7 +89,6 @@ public class list_users extends AppCompatActivity {
                         } catch (JSONException e) {
                             Log.e("-> Error al convertir en JSON", e.getMessage());
                         }
-                        Log.d("-> Response: elementos: "+usuarios.size(), response);
                     }
                 }, new Response.ErrorListener() {
                     @Override

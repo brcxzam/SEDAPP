@@ -14,5 +14,8 @@ public class Usuario {
         this.cargo = cargo;
     }
 
-
+    @Override
+    public String toString(){
+        return "Nombre "+nombre+", correo: "+email+", cargo "+cargo;
+    }
 }
